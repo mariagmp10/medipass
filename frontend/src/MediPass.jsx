@@ -347,6 +347,27 @@ export default function MediPass() {
       </header>
 
       <main style={{ maxWidth: 720, margin: "0 auto", padding: "0 20px 64px" }}>
+        {/* DISCLAIMER */}
+        <div
+          style={{
+            marginTop: 16,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 8,
+            background: COLORS.warnBg,
+            border: `1px solid ${COLORS.warnBorder}`,
+            borderRadius: 10,
+            padding: 12,
+            fontSize: 13,
+            color: COLORS.warnText,
+          }}
+        >
+          <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} />
+          <span>
+            Información orientativa, no sustituye el consejo de un farmacéutico o médico.
+          </span>
+        </div>
+
         {/* BUSCADOR */}
         <div
           style={{
@@ -552,7 +573,7 @@ export default function MediPass() {
             <div style={{ marginTop: 12, display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: COLORS.slateLight }}>
               <Info size={13} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>
-                Datos servidos por el backend local desde medipass.db (CIMA para España, placeholders manuales para el resto). No sustituye el consejo de un farmacéutico.
+                Datos servidos por el backend local desde medipass.db (CIMA para España, placeholders manuales para el resto).
               </span>
             </div>
           </section>
