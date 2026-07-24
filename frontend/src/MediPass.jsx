@@ -228,6 +228,10 @@ export default function MediPass() {
   const [from, setFrom] = useState("ES");
   const [to, setTo] = useState("DE");
   const [showESList, setShowESList] = useState(false);
+  // Cuando el usuario encuentra un principio activo buscando por una marca
+  // concreta (ej. "Cristalmina"), recordamos esa marca para mostrarla en
+  // vez del producto representativo por defecto de ese país.
+  const [preferredBrand, setPreferredBrand] = useState(null);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/equivalences`)
@@ -248,10 +252,18 @@ export default function MediPass() {
   const filtered = useMemo(() => {
     if (!query.trim()) return meds;
     const q = query.toLowerCase();
-    return meds.filter(
-      (m) => m.name.toLowerCase().includes(q) || m.principio.toLowerCase().includes(q)
+    // Busca también por nombre de marca (ej. "Cristalmina"), no solo por
+    // principio activo — hay muchas marcas por principio activo en España.
+    const ingredientsWithMatchingBrand = new Set(
+      rows.filter((r) => r.brand_name.toLowerCase().includes(q)).map((r) => r.inn_name)
     );
-  }, [meds, query]);
+    return meds.filter(
+      (m) =>
+        m.name.toLowerCase().includes(q) ||
+        m.principio.toLowerCase().includes(q) ||
+        ingredientsWithMatchingBrand.has(m.id)
+    );
+  }, [meds, rows, query]);
 
   const esProducts = useMemo(
     () =>
@@ -262,8 +274,20 @@ export default function MediPass() {
   );
 
   const selected = meds.find((m) => m.id === selectedId);
-  const fromData = selected?.equivalencias[from];
-  const toData = selected?.equivalencias[to];
+
+  function equivalenceFor(countryCode) {
+    if (
+      preferredBrand &&
+      preferredBrand.ingredientId === selectedId &&
+      preferredBrand.countryCode === countryCode
+    ) {
+      return { marca: preferredBrand.marca, receta: preferredBrand.receta };
+    }
+    return selected?.equivalencias[countryCode];
+  }
+
+  const fromData = selected && equivalenceFor(from);
+  const toData = selected && equivalenceFor(to);
   const receWarning = selected && fromData && toData && fromData.receta !== toData.receta;
 
   if (status === "loading") {
@@ -363,6 +387,20 @@ export default function MediPass() {
                 <button
                   key={m.id}
                   onClick={() => {
+                    const q = query.trim().toLowerCase();
+                    const matchedRow = rows.find(
+                      (r) => r.inn_name === m.id && r.brand_name.toLowerCase().includes(q)
+                    );
+                    setPreferredBrand(
+                      matchedRow
+                        ? {
+                            ingredientId: m.id,
+                            countryCode: matchedRow.country_code,
+                            marca: matchedRow.brand_name,
+                            receta: !!matchedRow.requires_prescription,
+                          }
+                        : null
+                    );
                     setSelectedId(m.id);
                     setQuery("");
                   }}
