@@ -5,6 +5,10 @@ __pycache__/
 venv/
 env/
 
+# Node
+node_modules/
+frontend/dist/
+
 # Claude Code local settings
 .claude/settings.local.json
 
