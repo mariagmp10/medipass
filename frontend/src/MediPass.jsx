@@ -83,6 +83,7 @@ function groupEquivalences(rows) {
       med.equivalencias[row.country_code] = {
         marca: row.brand_name,
         receta: !!row.requires_prescription,
+        sourceRef: row.source_ref,
       };
     }
   }
@@ -249,20 +250,50 @@ export default function MediPass() {
       .catch(() => setStatus("error"));
   }, []);
 
-  const filtered = useMemo(() => {
-    if (!query.trim()) return meds;
-    const q = query.toLowerCase();
-    // Busca también por nombre de marca (ej. "Cristalmina"), no solo por
-    // principio activo — hay muchas marcas por principio activo en España.
-    const ingredientsWithMatchingBrand = new Set(
-      rows.filter((r) => r.brand_name.toLowerCase().includes(q)).map((r) => r.inn_name)
-    );
-    return meds.filter(
-      (m) =>
-        m.name.toLowerCase().includes(q) ||
-        m.principio.toLowerCase().includes(q) ||
-        ingredientsWithMatchingBrand.has(m.id)
-    );
+  // Resultados del buscador: una fila por principio activo que coincide
+  // (ej. "clorhexidina") y una fila por cada producto/marca que coincide
+  // (ej. "Cristalmina"), hasta un máximo de 8 marcas para no saturar la lista.
+  const searchResults = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+
+    const results = [];
+
+    meds.forEach((m) => {
+      if (m.name.toLowerCase().includes(q) || m.principio.toLowerCase().includes(q)) {
+        results.push({
+          key: `ingredient-${m.id}`,
+          ingredientId: m.id,
+          title: m.name,
+          subtitle: m.uso,
+          icon: m.icon,
+          brandMatch: null,
+        });
+      }
+    });
+
+    rows
+      .filter((r) => r.brand_name.toLowerCase().includes(q))
+      .slice(0, 8)
+      .forEach((r) => {
+        const med = meds.find((m) => m.id === r.inn_name);
+        const countryName = COUNTRIES.find((c) => c.code === r.country_code)?.name ?? r.country_code;
+        results.push({
+          key: `product-${r.inn_name}-${r.brand_name}-${r.country_code}`,
+          ingredientId: r.inn_name,
+          title: r.brand_name,
+          subtitle: `${capitalize(r.inn_name)} · ${countryName}`,
+          icon: med?.icon ?? Pill,
+          brandMatch: {
+            countryCode: r.country_code,
+            marca: r.brand_name,
+            receta: !!r.requires_prescription,
+            sourceRef: r.source_ref,
+          },
+        });
+      });
+
+    return results;
   }, [meds, rows, query]);
 
   const esProducts = useMemo(
@@ -281,7 +312,11 @@ export default function MediPass() {
       preferredBrand.ingredientId === selectedId &&
       preferredBrand.countryCode === countryCode
     ) {
-      return { marca: preferredBrand.marca, receta: preferredBrand.receta };
+      return {
+        marca: preferredBrand.marca,
+        receta: preferredBrand.receta,
+        sourceRef: preferredBrand.sourceRef,
+      };
     }
     return selected?.equivalencias[countryCode];
   }
@@ -289,6 +324,31 @@ export default function MediPass() {
   const fromData = selected && equivalenceFor(from);
   const toData = selected && equivalenceFor(to);
   const receWarning = selected && fromData && toData && fromData.receta !== toData.receta;
+
+  // Solo los productos de España tienen número de registro real (nregistro),
+  // así que solo para ese lado pedimos foto/descripción en vivo a CIMA.
+  const esSideData = from === "ES" ? fromData : to === "ES" ? toData : null;
+  const [productDetail, setProductDetail] = useState(null);
+  const [productDetailStatus, setProductDetailStatus] = useState("idle"); // idle | loading | ready | error
+
+  useEffect(() => {
+    if (!esSideData?.sourceRef) {
+      setProductDetail(null);
+      setProductDetailStatus("idle");
+      return;
+    }
+    setProductDetailStatus("loading");
+    fetch(`${API_BASE_URL}/api/product-detail/${esSideData.sourceRef}`)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        setProductDetail(data);
+        setProductDetailStatus("ready");
+      })
+      .catch(() => setProductDetailStatus("error"));
+  }, [esSideData?.sourceRef]);
 
   if (status === "loading") {
     return (
@@ -350,19 +410,21 @@ export default function MediPass() {
         {/* DISCLAIMER */}
         <div
           style={{
-            marginTop: 16,
+            marginTop: 20,
+            marginBottom: 20,
             display: "flex",
-            alignItems: "flex-start",
-            gap: 8,
-            background: COLORS.warnBg,
-            border: `1px solid ${COLORS.warnBorder}`,
+            alignItems: "center",
+            gap: 10,
+            background: "rgba(255,182,39,0.1)",
+            border: `1px solid rgba(255,182,39,0.35)`,
             borderRadius: 10,
-            padding: 12,
+            padding: "10px 14px",
             fontSize: 13,
-            color: COLORS.warnText,
+            lineHeight: 1.4,
+            color: COLORS.ink,
           }}
         >
-          <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} />
+          <Info size={16} color={COLORS.warnIcon} style={{ flexShrink: 0 }} />
           <span>
             Información orientativa, no sustituye el consejo de un farmacéutico o médico.
           </span>
@@ -399,30 +461,19 @@ export default function MediPass() {
 
           {query.trim() && (
             <div style={{ marginTop: 8, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, overflow: "hidden" }}>
-              {filtered.length === 0 && (
+              {searchResults.length === 0 && (
                 <div style={{ padding: 12, fontSize: 14, color: COLORS.slate }}>
                   No hay resultados para "{query}".
                 </div>
               )}
-              {filtered.map((m, i) => (
+              {searchResults.map((r, i) => (
                 <button
-                  key={m.id}
+                  key={r.key}
                   onClick={() => {
-                    const q = query.trim().toLowerCase();
-                    const matchedRow = rows.find(
-                      (r) => r.inn_name === m.id && r.brand_name.toLowerCase().includes(q)
-                    );
                     setPreferredBrand(
-                      matchedRow
-                        ? {
-                            ingredientId: m.id,
-                            countryCode: matchedRow.country_code,
-                            marca: matchedRow.brand_name,
-                            receta: !!matchedRow.requires_prescription,
-                          }
-                        : null
+                      r.brandMatch ? { ingredientId: r.ingredientId, ...r.brandMatch } : null
                     );
-                    setSelectedId(m.id);
+                    setSelectedId(r.ingredientId);
                     setQuery("");
                   }}
                   style={{
@@ -438,10 +489,10 @@ export default function MediPass() {
                     cursor: "pointer",
                   }}
                 >
-                  <m.icon size={16} color={COLORS.ink} />
+                  <r.icon size={16} color={COLORS.ink} />
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 500 }}>{m.name}</div>
-                    <div style={{ fontSize: 12, color: COLORS.slate }}>{m.principio}</div>
+                    <div style={{ fontSize: 14, fontWeight: 500 }}>{r.title}</div>
+                    <div style={{ fontSize: 12, color: COLORS.slate }}>{r.subtitle}</div>
                   </div>
                 </button>
               ))}
@@ -547,6 +598,33 @@ export default function MediPass() {
                 </div>
               )}
             </div>
+
+            {productDetailStatus === "loading" && (
+              <p style={{ marginTop: 14, fontSize: 12, color: COLORS.slateLight }}>
+                Cargando información del producto…
+              </p>
+            )}
+
+            {productDetailStatus === "ready" && productDetail && (
+              <div style={{ marginTop: 14, display: "flex", gap: 12, alignItems: "center" }}>
+                {productDetail.foto_url && (
+                  <img
+                    src={productDetail.foto_url}
+                    alt={esSideData?.marca ?? ""}
+                    style={{ width: 72, height: 72, objectFit: "contain", background: "#fff", borderRadius: 8, border: `1px solid ${COLORS.cardBorder}` }}
+                  />
+                )}
+                <p style={{ fontSize: 12, color: COLORS.slate, margin: 0 }}>
+                  {[productDetail.dosis, productDetail.forma_farmaceutica].filter(Boolean).join(" · ")}
+                </p>
+              </div>
+            )}
+
+            {(productDetailStatus === "idle" || productDetailStatus === "error") && !esSideData?.sourceRef && (
+              <p style={{ marginTop: 14, fontSize: 12, color: COLORS.slateLight }}>
+                Sin foto disponible para este producto.
+              </p>
+            )}
 
             {receWarning && (
               <div

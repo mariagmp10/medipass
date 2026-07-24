@@ -44,7 +44,8 @@ SELECT
   c.name AS country_name,
   p.brand_name,
   p.requires_prescription,
-  p.source
+  p.source,
+  p.source_ref
 FROM products p
 JOIN active_ingredients ai ON ai.id = p.active_ingredient_id
 JOIN countries c ON c.code = p.country_code;
