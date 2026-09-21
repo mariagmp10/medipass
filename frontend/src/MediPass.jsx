@@ -56,39 +56,89 @@ function capitalize(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
+/* CIMA da las formas en mayúsculas y a veces sin tildes ("LIQUIDO USO TOPICO").
+   Las pasamos a minúsculas y restauramos las tildes de las palabras habituales. */
+const FORM_ACCENTS = {
+  liquido: "líquido",
+  topico: "tópico",
+  capsula: "cápsula",
+  solucion: "solución",
+  suspension: "suspensión",
+  inhalacion: "inhalación",
+  aposito: "apósito",
+  emulsion: "emulsión",
+  supositorio: "supositorio",
+  efervescente: "efervescente",
+};
+
+function formLabel(form) {
+  if (!form) return "";
+  const text = form
+    .toLowerCase()
+    .replace(/[a-záéíóúñ]+/g, (word) => FORM_ACCENTS[word] ?? word);
+  return capitalize(text);
+}
+
+/* La unidad de equivalencia es principio activo + forma farmacéutica
+   ("diclofenaco · gel"), no solo el principio activo: un gel y unas pastillas
+   del mismo principio activo no son intercambiables. */
+function groupId(row) {
+  return `${row.inn_name}||${row.form ?? ""}`;
+}
+
+function productFromRow(row) {
+  return {
+    marca: row.brand_name,
+    receta: !!row.requires_prescription,
+    sourceRef: row.source_ref,
+    dose: row.dose,
+    form: row.form,
+    composition: row.composition,
+    photoUrl: row.photo_url,
+  };
+}
+
 /* Convierte las filas planas de GET /api/equivalences (una fila por
-   producto) en una lista agrupada por principio activo, con una tarjeta
-   por país. España puede tener varios productos por principio activo
-   (datos reales de CIMA); nos quedamos con el primero que llega para
-   mantener el diseño original de "una marca por país". */
+   producto) en una lista de grupos (principio activo + forma), con una
+   tarjeta por país. España tiene muchos productos por grupo (datos reales de
+   CIMA); mostramos el primero y contamos cuántos hay en total. */
 function groupEquivalences(rows) {
-  const byIngredient = new Map();
+  const groups = new Map();
 
   for (const row of rows) {
-    const key = row.inn_name;
-    if (!byIngredient.has(key)) {
-      byIngredient.set(key, {
-        id: key,
+    const id = groupId(row);
+    if (!groups.has(id)) {
+      groups.set(id, {
+        id,
         name: capitalize(row.inn_name),
+        forma: formLabel(row.form),
         principio: capitalize(row.inn_name),
-        uso: row.common_use,
+        commonUse: row.common_use,
+        atcGroup: null,
         categoria: row.category,
         icon: ICONS_BY_CATEGORY[row.category] || Pill,
         equivalencias: {},
       });
     }
 
-    const med = byIngredient.get(key);
-    if (!med.equivalencias[row.country_code]) {
-      med.equivalencias[row.country_code] = {
-        marca: row.brand_name,
-        receta: !!row.requires_prescription,
-        sourceRef: row.source_ref,
-      };
+    const med = groups.get(id);
+    const entry = med.equivalencias[row.country_code];
+    if (entry) {
+      entry.total += 1;
+    } else {
+      med.equivalencias[row.country_code] = { ...productFromRow(row), total: 1 };
+    }
+    if (row.country_code === "ES" && row.atc_group && !med.atcGroup) {
+      med.atcGroup = row.atc_group;
     }
   }
 
-  return Array.from(byIngredient.values());
+  // Descripción: el grupo terapéutico (ATC) de los productos españoles describe
+  // mejor cada grupo que la nota genérica del principio activo.
+  return Array.from(groups.values()).map((med) => ({
+    ...med,
+    uso: med.atcGroup ?? med.commonUse,
+  }));
 }
 
 /* --------------------------------------------------------- */
@@ -198,6 +248,11 @@ function FlapCard({ country, data, highlight }) {
         >
           {data.marca}
         </div>
+        {data.total > 1 && (
+          <div style={{ marginTop: 8, fontSize: 12, color: COLORS.slateLight }}>
+            y {data.total - 1} más de esta forma en {countryName}
+          </div>
+        )}
         <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 6 }}>
           {data.receta ? (
             <>
@@ -244,52 +299,54 @@ export default function MediPass() {
         setRows(data);
         const grouped = groupEquivalences(data);
         setMeds(grouped);
-        setSelectedId(grouped[0]?.id ?? null);
+        // Al abrir, mostramos el primer grupo que ya se puede comparar
+        // (tiene España y al menos otro país).
+        const comparable = grouped.find(
+          (g) => g.equivalencias.ES && Object.keys(g.equivalencias).length > 1
+        );
+        setSelectedId((comparable ?? grouped[0])?.id ?? null);
         setStatus("ready");
       })
       .catch(() => setStatus("error"));
   }, []);
 
-  // Resultados del buscador: una fila por principio activo que coincide
-  // (ej. "clorhexidina") y una fila por cada producto/marca que coincide
-  // (ej. "Cristalmina"), hasta un máximo de 8 marcas para no saturar la lista.
+  // Resultados del buscador: hasta 6 grupos (principio activo + forma) que
+  // coinciden por nombre o forma (ej. "diclofenaco gel") y hasta 8 productos
+  // cuya marca coincide (ej. "Cristalmina"), para no saturar la lista.
   const searchResults = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
     const results = [];
 
-    meds.forEach((m) => {
-      if (m.name.toLowerCase().includes(q) || m.principio.toLowerCase().includes(q)) {
+    meds
+      .filter((m) => `${m.name} ${m.forma}`.toLowerCase().includes(q))
+      .slice(0, 6)
+      .forEach((m) => {
         results.push({
-          key: `ingredient-${m.id}`,
-          ingredientId: m.id,
-          title: m.name,
-          subtitle: m.uso,
+          key: `group-${m.id}`,
+          groupId: m.id,
+          title: m.forma ? `${m.name} · ${m.forma}` : m.name,
+          subtitle: m.uso ?? "",
           icon: m.icon,
           brandMatch: null,
         });
-      }
-    });
+      });
 
     rows
       .filter((r) => r.brand_name.toLowerCase().includes(q))
       .slice(0, 8)
       .forEach((r) => {
-        const med = meds.find((m) => m.id === r.inn_name);
+        const gid = groupId(r);
+        const med = meds.find((m) => m.id === gid);
         const countryName = COUNTRIES.find((c) => c.code === r.country_code)?.name ?? r.country_code;
         results.push({
-          key: `product-${r.inn_name}-${r.brand_name}-${r.country_code}`,
-          ingredientId: r.inn_name,
+          key: `product-${gid}-${r.brand_name}-${r.country_code}`,
+          groupId: gid,
           title: r.brand_name,
-          subtitle: `${capitalize(r.inn_name)} · ${countryName}`,
+          subtitle: [capitalize(r.inn_name), formLabel(r.form), countryName].filter(Boolean).join(" · "),
           icon: med?.icon ?? Pill,
-          brandMatch: {
-            countryCode: r.country_code,
-            marca: r.brand_name,
-            receta: !!r.requires_prescription,
-            sourceRef: r.source_ref,
-          },
+          brandMatch: { countryCode: r.country_code, data: productFromRow(r) },
         });
       });
 
@@ -307,48 +364,23 @@ export default function MediPass() {
   const selected = meds.find((m) => m.id === selectedId);
 
   function equivalenceFor(countryCode) {
+    const representative = selected?.equivalencias[countryCode];
     if (
       preferredBrand &&
-      preferredBrand.ingredientId === selectedId &&
+      preferredBrand.groupId === selectedId &&
       preferredBrand.countryCode === countryCode
     ) {
-      return {
-        marca: preferredBrand.marca,
-        receta: preferredBrand.receta,
-        sourceRef: preferredBrand.sourceRef,
-      };
+      return { ...preferredBrand.data, total: representative?.total ?? 1 };
     }
-    return selected?.equivalencias[countryCode];
+    return representative;
   }
 
   const fromData = selected && equivalenceFor(from);
   const toData = selected && equivalenceFor(to);
   const receWarning = selected && fromData && toData && fromData.receta !== toData.receta;
 
-  // Solo los productos de España tienen número de registro real (nregistro),
-  // así que solo para ese lado pedimos foto/descripción en vivo a CIMA.
+  // Foto y composición solo existen para los productos de España (vienen de CIMA).
   const esSideData = from === "ES" ? fromData : to === "ES" ? toData : null;
-  const [productDetail, setProductDetail] = useState(null);
-  const [productDetailStatus, setProductDetailStatus] = useState("idle"); // idle | loading | ready | error
-
-  useEffect(() => {
-    if (!esSideData?.sourceRef) {
-      setProductDetail(null);
-      setProductDetailStatus("idle");
-      return;
-    }
-    setProductDetailStatus("loading");
-    fetch(`${API_BASE_URL}/api/product-detail/${esSideData.sourceRef}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        setProductDetail(data);
-        setProductDetailStatus("ready");
-      })
-      .catch(() => setProductDetailStatus("error"));
-  }, [esSideData?.sourceRef]);
 
   if (status === "loading") {
     return (
@@ -471,9 +503,9 @@ export default function MediPass() {
                   key={r.key}
                   onClick={() => {
                     setPreferredBrand(
-                      r.brandMatch ? { ingredientId: r.ingredientId, ...r.brandMatch } : null
+                      r.brandMatch ? { groupId: r.groupId, ...r.brandMatch } : null
                     );
-                    setSelectedId(r.ingredientId);
+                    setSelectedId(r.groupId);
                     setQuery("");
                   }}
                   style={{
@@ -541,7 +573,9 @@ export default function MediPass() {
                 >
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 500 }}>{p.brand_name}</div>
-                    <div style={{ fontSize: 12, color: COLORS.slate }}>{capitalize(p.inn_name)}</div>
+                    <div style={{ fontSize: 12, color: COLORS.slate }}>
+                      {[capitalize(p.inn_name), p.dose, formLabel(p.form)].filter(Boolean).join(" · ")}
+                    </div>
                   </div>
                   {p.requires_prescription ? (
                     <span style={{ fontSize: 11, fontWeight: 500, color: COLORS.warnIcon, whiteSpace: "nowrap" }}>
@@ -563,7 +597,9 @@ export default function MediPass() {
           <section key={`${selected.id}-${from}-${to}`} className="flap-enter" style={{ marginTop: 28 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <selected.icon size={16} color={COLORS.ink} />
-              <h2 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>{selected.name}</h2>
+              <h2 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>
+                {selected.forma ? `${selected.name} · ${selected.forma}` : selected.name}
+              </h2>
               <span
                 style={{
                   fontSize: 11,
@@ -580,7 +616,8 @@ export default function MediPass() {
               </span>
             </div>
             <p style={{ fontSize: 12, color: COLORS.slate, marginBottom: 14 }}>
-              Principio activo: {selected.principio} · {selected.uso}
+              Principio activo: {selected.principio}
+              {selected.uso ? ` · ${selected.uso}` : ""}
             </p>
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "stretch" }}>
@@ -599,30 +636,24 @@ export default function MediPass() {
               )}
             </div>
 
-            {productDetailStatus === "loading" && (
-              <p style={{ marginTop: 14, fontSize: 12, color: COLORS.slateLight }}>
-                Cargando información del producto…
-              </p>
-            )}
-
-            {productDetailStatus === "ready" && productDetail && (
+            {esSideData?.sourceRef ? (
               <div style={{ marginTop: 14, display: "flex", gap: 12, alignItems: "center" }}>
-                {productDetail.foto_url && (
+                {esSideData.photoUrl && (
                   <img
-                    src={productDetail.foto_url}
-                    alt={esSideData?.marca ?? ""}
+                    src={esSideData.photoUrl}
+                    alt={esSideData.marca}
                     style={{ width: 72, height: 72, objectFit: "contain", background: "#fff", borderRadius: 8, border: `1px solid ${COLORS.cardBorder}` }}
                   />
                 )}
                 <p style={{ fontSize: 12, color: COLORS.slate, margin: 0 }}>
-                  {[productDetail.dosis, productDetail.forma_farmaceutica].filter(Boolean).join(" · ")}
+                  {[esSideData.composition, esSideData.dose, formLabel(esSideData.form)]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </p>
               </div>
-            )}
-
-            {(productDetailStatus === "idle" || productDetailStatus === "error") && !esSideData?.sourceRef && (
+            ) : (
               <p style={{ marginTop: 14, fontSize: 12, color: COLORS.slateLight }}>
-                Sin foto disponible para este producto.
+                Sin foto ni composición disponibles para este producto.
               </p>
             )}
 
@@ -651,7 +682,7 @@ export default function MediPass() {
             <div style={{ marginTop: 12, display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: COLORS.slateLight }}>
               <Info size={13} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>
-                Datos servidos por el backend local desde medipass.db (CIMA para España, placeholders manuales para el resto).
+                Datos servidos por el backend local desde medipass.db. España: medicamentos comercializados sin receta (CIMA). Resto de países: ejemplos manuales sin verificar.
               </span>
             </div>
           </section>

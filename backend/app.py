@@ -2,57 +2,47 @@
 Backend mínimo de MediPass.
 
 Expone GET /api/equivalences, que lee la vista `equivalences` (definida en
-schema.sql) y la devuelve como JSON para que el frontend deje de usar el
-array MEDS en memoria.
-
-También expone GET /api/product-detail/<nregistro>, que consulta en vivo la
-API de CIMA (no medipass.db) para traer dosis, forma farmacéutica y una foto
-real del envase. Solo tiene sentido para productos españoles, que son los
-únicos con número de registro real.
+schema.sql) y la devuelve como JSON. Incluye forma, dosis, composición, ATC y
+foto de cada producto, que fetch_cima.py ya guardó en medipass.db.
 """
 
+import gzip
+import json
 import os
 import sqlite3
 
-import requests
-from flask import Flask, jsonify
+from flask import Flask, Response, request
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "medipass.db")
-CIMA_BASE = "https://cima.aemps.es/cima/rest"
 
 
 @app.get("/api/equivalences")
 def equivalences():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
-    rows = conn.execute("SELECT * FROM equivalences").fetchall()
+    # El orden es explícito para que el producto "representativo" de cada país
+    # sea siempre el mismo (el primero por nombre) entre una carga y otra.
+    rows = conn.execute(
+        "SELECT * FROM equivalences ORDER BY inn_name, form, country_code, brand_name"
+    ).fetchall()
     conn.close()
-    return jsonify([dict(row) for row in rows])
 
+    body = json.dumps([dict(row) for row in rows], ensure_ascii=False, separators=(",", ":"))
+    body = body.encode("utf-8")
+    headers = {"Vary": "Accept-Encoding"}
 
-@app.get("/api/product-detail/<nregistro>")
-def product_detail(nregistro):
-    resp = requests.get(f"{CIMA_BASE}/medicamento", params={"nregistro": nregistro}, timeout=10)
-    if not resp.ok:
-        return jsonify({"error": "not_found"}), 404
+    # El catálogo completo pesa ~450 KB en JSON. Se comprime (~10x menos) por
+    # ancho de banda y porque en algunas máquinas Windows las respuestas
+    # grandes por localhost se cortan a medias y la conexión se cuelga ~19 s.
+    if "gzip" in request.headers.get("Accept-Encoding", ""):
+        body = gzip.compress(body, compresslevel=6)
+        headers["Content-Encoding"] = "gzip"
 
-    data = resp.json()
-    fotos = data.get("fotos") or []
-    foto_url = next((f["url"] for f in fotos if f.get("tipo") == "formafarmac"), None)
-    if not foto_url and fotos:
-        foto_url = fotos[0].get("url")
-
-    return jsonify(
-        {
-            "dosis": data.get("dosis"),
-            "forma_farmaceutica": (data.get("formaFarmaceutica") or {}).get("nombre"),
-            "foto_url": foto_url,
-        }
-    )
+    return Response(body, mimetype="application/json", headers=headers)
 
 
 if __name__ == "__main__":
