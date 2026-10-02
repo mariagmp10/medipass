@@ -682,7 +682,7 @@ export default function MediPass() {
             <div style={{ marginTop: 12, display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: COLORS.slateLight }}>
               <Info size={13} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>
-                Datos servidos por el backend local desde medipass.db. España: medicamentos comercializados sin receta (CIMA). Resto de países: ejemplos manuales sin verificar.
+                Datos servidos por el backend local desde medipass.db. España (CIMA) y Francia (BDPM): medicamentos comercializados sin receta, de fuentes oficiales. Alemania, Italia, Portugal y Reino Unido: ejemplos manuales sin verificar.
               </span>
             </div>
           </section>

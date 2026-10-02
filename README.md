@@ -23,7 +23,8 @@ combinaciones también son grupos aparte ("dimenhidrinato" no es lo mismo que
 | País | Filas | Fuente | Fiabilidad |
 |---|---|---|---|
 | 🇪🇸 España | 1.014 | **CIMA API (AEMPS)** — pública, JSON, sin login | Real, oficial |
-| 🇩🇪🇫🇷🇮🇹🇵🇹🇬🇧 DE/FR/IT/PT/UK | 6 por país | `manual_seed` (escritos a mano, de memoria) | **Sin verificar** — ejemplos para poder probar la app, no para producción |
+| 🇫🇷 Francia | 1.624 | **BDPM (ANSM/data.gouv.fr)** — descarga pública oficial | Real, oficial |
+| 🇩🇪🇮🇹🇵🇹🇬🇧 DE/IT/PT/UK | 6 por país | `manual_seed` (escritos a mano, de memoria) | **Sin verificar** — ejemplos para poder probar la app, no para producción |
 
 **España** es el catálogo de CIMA de medicamentos **comercializados y sin
 receta** (`comerc=1&receta=0`): 1.066 registros, de los que se guardan 1.014
@@ -31,22 +32,49 @@ receta** (`comerc=1&receta=0`): 1.066 registros, de los que se guardan 1.014
 registro y, para el usuario, serían filas idénticas). Cada producto lleva
 forma, dosis, composición, código ATC y grupo terapéutico; 395 tienen foto.
 
+**Francia** es la BDPM filtrada a comercializados, sin ninguna condición de
+receta y sin homeopáticos (`fetch_bdpm.py`): 1.643 candidatos, de los que se
+guardan 1.624 (19 se omiten por el mismo motivo que en España). A diferencia
+de CIMA:
+- La BDPM **no tiene un campo booleano de receta**. Se infiere: un
+  medicamento es sin receta si está comercializado y su código CIS **no**
+  aparece en el archivo de condiciones de prescripción (`CIS_CPD_bdpm.txt`).
+  Verificado con un caso real: Doliprane (paracetamol solo) no aparece ahí;
+  Codoliprane (paracetamol + codeína) sí.
+- **No tiene foto ni código ATC** en los archivos públicos — esas columnas
+  quedan vacías para Francia.
+- La forma es texto libre en francés (no una categoría fija como en CIMA).
+  Solo se traduce al vocabulario de CIMA para los 4 principios activos que
+  ya existían en España (ver `INGREDIENT_MAP`/`FORM_RULES` en
+  `fetch_bdpm.py`); el resto de Francia queda con su forma en francés.
+- Los archivos vienen en **Windows-1252**, no UTF-8.
+- Licencia: reutilización libre citando fuente y fecha, sin alterar los
+  datos ([texto de la licencia](https://base-donnees-publique.medicaments.gouv.fr/docs/telechargement/licence_bdpm.pdf)).
+
 Esto es intencional: no existe un "CIMA europeo" único. Cada país tiene su
-propia agencia, y conectarlas todas de golpe no era realista. La ruta lógica
-es: dejar el esquema listo para todos, conectar España de verdad primero, y
-sustituir cada país manual por una fuente real cuando la investiguemos.
+propia agencia, con su propio formato. La ruta lógica es: dejar el esquema
+listo para todos, conectar cada país de verdad, y sustituir cada ejemplo
+manual por una fuente real cuando la investiguemos.
 
-Comparaciones que hoy funcionan de verdad (España + ejemplos de otros países,
-misma forma): dimenhidrinato · comprimido y diclofenaco · gel. El resto de
-grupos de España existen, pero aún no tienen con qué compararse.
+**Comparaciones que hoy funcionan con datos reales de dos países** (España +
+Francia, mismo principio activo y misma forma):
+- Diclofenaco · gel (43 productos entre los dos)
+- Diclofenaco · líquido uso tópico
+- Clorhexidina · líquido uso tópico (antisépticos de piel; los enjuagues
+  bucales franceses quedan aparte, ver abajo)
+- Dimenhidrinato · comprimido (España real + el ejemplo manual de Francia,
+  porque Francia no tiene ningún comprimido suelto de dimenhidrinato sin
+  receta — solo jarabe y cápsula, que son grupos distintos)
 
-Lo que CIMA **no** cubre:
-- **Docusato sódico**: no está comercializado en España (0 resultados).
-- **Enjuagues bucales de clorhexidina**: CIMA solo tiene antisépticos
-  cutáneos sin receta; los enjuagues son parafarmacia. Por eso los ejemplos
-  manuales de clorhexidina no se emparejan con nada de España.
-- **Productos sanitarios y parafarmacia** (apósitos, etc.): CIMA es una base
-  de medicamentos.
+Lo que ninguna de las dos fuentes cubre:
+- **Docusato sódico**: no comercializado sin receta en España. Francia tiene
+  1 producto (un gel), pero España no tiene nada con qué compararlo todavía.
+- **Enjuagues/pastillas de garganta con clorhexidina**: en España no existen
+  sin receta (son parafarmacia); en Francia sí existen, pero se guardan como
+  su propio grupo en francés (p.ej. "clorhexidina · solution pour bain de
+  bouche"), sin forzarlos a compararse con los antisépticos de piel.
+- **Productos sanitarios y parafarmacia** (apósitos, etc.): ni CIMA ni la
+  BDPM son bases de datos de eso.
 
 ## Alcance legal
 
@@ -62,15 +90,15 @@ MediPass, para uso con usuarios reales, debería limitarse a tres categorías:
 y excluir cualquier medicamento con receta del catálogo público.
 
 **Estado actual de la implementación, tal como es hoy:**
-- Para **España** ya se cumple por construcción: `fetch_cima.py` solo importa
-  medicamentos sin receta, así que la base no contiene ningún medicamento
-  español con receta.
+- Para **España y Francia** ya se cumple por construcción: `fetch_cima.py` y
+  `fetch_bdpm.py` solo importan medicamentos sin receta, así que la base no
+  contiene ningún medicamento real de esos dos países con receta.
 - **Todavía no hay campo `legal_category`** en el esquema ni filtro en la app.
 - **Productos sanitarios y parafarmacia** no tienen ninguna fuente real
   todavía (ver "Próximos pasos"); solo hay ejemplos manuales.
-- Los ejemplos manuales de otros países no están verificados y uno de ellos
-  (Voltaren Schmerzgel Forte, Alemania) está marcado como "con receta", lo que
-  es un dato de ejemplo, no una fuente.
+- Los ejemplos manuales de los países restantes (DE/IT/PT/UK) no están
+  verificados y uno de ellos (Voltaren Schmerzgel Forte, Alemania) está
+  marcado como "con receta", lo que es un dato de ejemplo, no una fuente.
 
 **Esto no es asesoría legal.** Es una interpretación de no-abogados de un
 texto normativo. Antes de lanzar esto a usuarios reales hay que consultarlo
@@ -101,8 +129,10 @@ medipass.db  ←── backend/app.py (Flask, puerto 5000)  ←── frontend/ 
 - `schema.sql` — esquema (tablas + vista `equivalences`); se puede volver a
   ejecutar, recrea la vista
 - `seed_base.sql` — países + principios activos base
-- `seed_manual_non_es.sql` — productos de ejemplo para DE/FR/IT/PT/UK
+- `seed_manual_non_es.sql` — productos de ejemplo para DE/IT/PT/UK (y los que
+  Francia todavía no tiene con qué reemplazar, como los apósitos)
 - `fetch_cima.py` — sincroniza España desde CIMA (ver abajo)
+- `fetch_bdpm.py` — sincroniza Francia desde la BDPM (ver abajo)
 - `medipass.db` — la base ya construida
 - `backend/app.py` — servidor Flask
 - `frontend/` — app Vite + React
@@ -129,23 +159,27 @@ Queda escuchando en `http://localhost:5173`.
 
 Con ambos corriendo, abre **`http://localhost:5173`** en el navegador.
 
-## Actualizar los datos de España
+## Actualizar los datos de España y Francia
 
-`fetch_cima.py` es una sincronización: se puede ejecutar cuando quieras sin
-duplicar nada. Actualiza lo que existe, añade lo nuevo y borra los productos
-de España de CIMA que ya no cumplan el filtro (retirados, o que pasaron a
-requerir receta).
+Ambos scripts son sincronizaciones: se pueden ejecutar cuando quieras sin
+duplicar nada. Actualizan lo que existe, añaden lo nuevo, borran lo que ya
+no cumpla el filtro, y quitan los ejemplos manuales de un país en cuanto
+llega un dato real de la misma forma que los sustituye.
 
 ```bash
 pip install requests
+
 python fetch_cima.py                    # sincroniza y completa el detalle que falte
 python fetch_cima.py --no-details       # solo el listado (rápido, sin ATC/composición)
 python fetch_cima.py --refresh-details  # vuelve a pedir el detalle de todos (~5 min)
 python fetch_cima.py --debug            # imprime el JSON crudo de 1 medicamento
+
+python fetch_bdpm.py                    # sincroniza Francia (descarga ~10 MB cada vez)
+python fetch_bdpm.py --debug            # descarga y analiza, sin tocar medipass.db
 ```
 
-El detalle se pide con 4 peticiones en paralelo, por cortesía con la API
-pública (unos 5 minutos para ~1.000 productos).
+El detalle de CIMA se pide con 4 peticiones en paralelo, por cortesía con la
+API pública (unos 5 minutos para ~1.000 productos).
 
 ### Construir la base desde cero
 
@@ -157,6 +191,7 @@ for f in ('schema.sql', 'seed_base.sql', 'seed_manual_non_es.sql'):
     c.executescript(open(f, encoding='utf-8').read())
 "
 python fetch_cima.py
+python fetch_bdpm.py
 ```
 
 ## Consultar la base directamente
@@ -172,25 +207,43 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 
 ## Límites conocidos
 
-- Los datos de los otros cinco países son ejemplos sin verificar.
+- Los datos de Alemania, Italia, Portugal y Reino Unido son ejemplos sin
+  verificar.
 - Cada grupo enseña **un** producto por país (el primero por nombre) y cuenta
   los demás; puedes elegir uno concreto buscando su marca.
-- La forma es la "simplificada" de CIMA (67 valores): una solución cutánea y
-  un enjuague bucal pueden caer en el mismo grupo, y por eso los ejemplos de
-  clorhexidina no se emparejan.
-- La dosis se muestra tal como la da CIMA, que a veces no indica a qué
-  unidad se refiere.
-- Los grupos terapéuticos (ATC) de CIMA vienen sin tildes.
-- Solo ~39 % de los productos de España tienen foto en CIMA.
+- La forma de España es la "simplificada" de CIMA (67 valores fijos); la de
+  Francia es texto libre en francés, traducido a mano solo para 4 principios
+  activos (los que ya existían). Para el resto de Francia, y para todo lo
+  demás, una solución cutánea y un enjuague bucal pueden caer en el mismo
+  grupo o en grupos que no se comparan cuando deberían.
+- Que un medicamento francés sea "sin receta" es una regla **inferida**
+  (no aparece en el archivo de condiciones de prescripción), no un campo
+  explícito como en CIMA. Se verificó con un caso real, pero no se auditó
+  exhaustivamente.
+- La dosis de España se muestra tal como la da CIMA, que a veces no indica a
+  qué unidad se refiere. Francia no tiene columna de dosis única: se guarda
+  solo la composición (nombres de sustancias, sin cantidades).
+- Los grupos terapéuticos (ATC) de CIMA vienen sin tildes. Francia no tiene
+  ATC ni foto en los archivos que usamos.
+- Solo ~39 % de los productos de España tienen foto en CIMA; Francia no
+  tiene ninguna.
+- La tabla `active_ingredients` mezcla nombres en español (los que ya
+  existían) y en francés (los ~655 que trajo la BDPM y no tenían aún
+  equivalente en España, de un total de 933) — no hay todavía una capa de
+  traducción entre idiomas, solo un mapeo a mano para los 4 principios
+  activos compartidos (ver `INGREDIENT_MAP` en `fetch_bdpm.py`).
 
 ## Próximos pasos
 
 - Conseguir acceso a **BotPlus/BADIS** o **Medipim** para datos reales de
   parafarmacia y productos sanitarios (hoy no hay ninguna fuente real);
   antes, preguntarles si su licencia permite una app para el público
-- Conectar **Francia (ANSM, base BDPM)** y **Reino Unido (MHRA/dm+d)** con
-  fuentes reales, sustituyendo sus ejemplos manuales; después Alemania, Italia
-  (AIFA) y Portugal (INFARMED), verificando antes cómo acceder a cada una
+- Conectar **Reino Unido (MHRA/dm+d)** con una fuente real, sustituyendo su
+  ejemplo manual; después Alemania (AMIce/PharmNet.Bund), Italia (AIFA) y
+  Portugal (INFARMED), verificando antes cómo acceder a cada una
+- Ampliar `INGREDIENT_MAP`/`FORM_RULES` en `fetch_bdpm.py` a más principios
+  activos compartidos entre España y Francia, no solo los 4 que ya existían
 - Implementar de verdad el `legal_category` y el filtrado descrito en
-  "Alcance legal" — hoy solo se cumple para España por cómo se importa
+  "Alcance legal" — hoy solo se cumple para España y Francia por cómo se
+  importan, no por un filtro explícito en el esquema
 - Desplegar a **Vercel** cuando esté lista para compartir con otras personas
