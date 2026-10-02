@@ -1,0 +1,60 @@
+forma_fr,via_fr,forma_cima,productos_fr,evidencia
+solution buvable,orale,SOLUCION/SUSPENSION ORAL,105,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+comprime pellicule,orale,COMPRIMIDO,90,CIMA: «comprimido recubierto con película» → COMPRIMIDO (4.896)
+comprime,orale,COMPRIMIDO,88,CIMA: «comprimido» → COMPRIMIDO (2.169 medicamentos)
+solution pour application,cutanee,LIQUIDO USO TOPICO,71,CIMA: «solución cutánea» (76) y «solución para pulverización cutánea» (23) → LIQUIDO USO TOPICO
+gelule,orale,CAPSULA,66,CIMA: «cápsula dura» (1.236) y «cápsula blanda» (142) → CAPSULA
+creme,cutanee,CREMA,61,CIMA: «crema» → CREMA (137); toda la crema sin receta de España es de uso cutáneo
+poudre pour solution buvable,orale,SOLUCION/SUSPENSION ORAL,54,CIMA: «polvo para solución oral» (81) y «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
+comprime enrobe,orale,COMPRIMIDO,46,CIMA: «comprimido recubierto» → COMPRIMIDO (249)
+suspension buvable,orale,SOLUCION/SUSPENSION ORAL,45,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+gel,cutanee,GEL,44,CIMA: «gel» → GEL (89); todo el gel sin receta de España es de uso cutáneo
+collyre en solution,ophtalmique,COLIRIO,35,CIMA: «colirio en solución» (155) y «colirio en suspensión» (20) → COLIRIO
+comprime effervescent(e),orale,COMPRIMIDO EFERVESCENTE,33,CIMA: «comprimido efervescente» → COMPRIMIDO EFERVESCENTE (49)
+suppositoire,rectale,SUPOSITORIO,32,CIMA: «supositorio» → SUPOSITORIO (33)
+sirop,orale,SOLUCION/SUSPENSION ORAL,29,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+comprime gastro-resistant(e),orale,COMPRIMIDO,26,CIMA: «comprimido gastrorresistente» → COMPRIMIDO (251)
+comprime pellicule secable,orale,COMPRIMIDO,23,CIMA: «comprimido recubierto con película» → COMPRIMIDO (4.896)
+comprime secable,orale,COMPRIMIDO,22,CIMA: «comprimido» → COMPRIMIDO (2.169 medicamentos)
+vernis a ongles medicamenteux(se),cutanee,BARNIZ DE UNAS,22,CIMA: «barniz de uñas medicamentoso» → BARNIZ DE UNAS (16)
+capsule molle,orale,CAPSULA,21,CIMA: «cápsula dura» (1.236) y «cápsula blanda» (142) → CAPSULA
+pastille,buccale,COMPRIMIDO BUCAL/PARA CHUPAR,20,CIMA: «pastilla para chupar» → COMPRIMIDO BUCAL/PARA CHUPAR (41)
+pommade,cutanee,POMADA,20,CIMA: «pomada» → POMADA (70); toda la pomada sin receta de España es de uso cutáneo
+comprime orodispersible,orale,COMPRIMIDO BUCODISPERSABLE/LIOTAB,19,CIMA: «comprimido bucodispersable» → COMPRIMIDO BUCODISPERSABLE/LIOTAB (327)
+comprime a sucer,buccale,COMPRIMIDO BUCAL/PARA CHUPAR,16,CIMA: «comprimido para chupar» → COMPRIMIDO BUCAL/PARA CHUPAR (37)
+gomme a macher medicamenteux(se),buccale,CHICLE,16,CIMA: «chicle medicamentoso» → CHICLE (14)
+dispositif,transdermique,PARCHE TRANSDERMICO,15,CIMA: «parche transdérmico» → PARCHE TRANSDERMICO (173)
+comprime a sucer,orale,COMPRIMIDO BUCAL/PARA CHUPAR,14,CIMA: «comprimido para chupar» → COMPRIMIDO BUCAL/PARA CHUPAR (37)
+comprime a croquer,orale,COMPRIMIDO MASTICABLE,13,CIMA: «comprimido masticable» → COMPRIMIDO MASTICABLE (103)
+granules,orale,SOLUCION/SUSPENSION ORAL,12,CIMA: «granulado» (33) y «granulado para solución oral» (67) → SOLUCION/SUSPENSION ORAL
+collyre,ophtalmique,COLIRIO,11,CIMA: «colirio en solución» (155) y «colirio en suspensión» (20) → COLIRIO
+gelule gastro-resistant(e),orale,CAPSULA,11,CIMA: «cápsula dura» (1.236) y «cápsula blanda» (142) → CAPSULA
+granules pour solution buvable,orale,SOLUCION/SUSPENSION ORAL,10,CIMA: «granulado» (33) y «granulado para solución oral» (67) → SOLUCION/SUSPENSION ORAL
+poudre pour suspension buvable,orale,SOLUCION/SUSPENSION ORAL,10,CIMA: «polvo para solución oral» (81) y «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
+lyophilisat,orale,COMPRIMIDO BUCODISPERSABLE/LIOTAB,9,CIMA: «liofilizado oral» → COMPRIMIDO BUCODISPERSABLE/LIOTAB (23)
+poudre pour application,cutanee,SOLIDO USO TOPICO,9,CIMA: «polvo cutáneo» → SOLIDO USO TOPICO (4)
+solution pour pulverisation,buccale,PULVERIZACION BUCAL,9,CIMA: «solución para pulverización bucal» → PULVERIZACION BUCAL (13)
+comprime enrobe gastro-resistant(e),orale,COMPRIMIDO,8,CIMA: «comprimido gastrorresistente» → COMPRIMIDO (251)
+solution buvable en gouttes,orale,SOLUCION/SUSPENSION GOTAS ORALES,8,CIMA: «gotas orales en solución» (53) → SOLUCION/SUSPENSION GOTAS ORALES
+comprime effervescent(e) secable,orale,COMPRIMIDO EFERVESCENTE,7,CIMA: «comprimido efervescente» → COMPRIMIDO EFERVESCENTE (49)
+emplatre medicamenteux(se),cutanee,APOSITO,7,CIMA: «apósito adhesivo medicamentoso» → APOSITO (10); mismo tipo de producto que el emplasto medicamentoso francés
+emulsion pour application,cutanee,EMULSION,7,CIMA: «emulsión cutánea» → EMULSION (12)
+gel,ophtalmique,GEL OFTALMICO,7,CIMA: «gel oftálmico» → GEL OFTALMICO (9)
+ovule a liberation prolongee,vaginale,OVULO/CAPSULA/COMPRIMIDO VAGINAL,7,"CIMA: «óvulo» → OVULO/CAPSULA/COMPRIMIDO VAGINAL (9); es la clase que agrupa óvulos, cápsulas y comprimidos vaginales"
+ovule,vaginale,OVULO/CAPSULA/COMPRIMIDO VAGINAL,6,"CIMA: «óvulo» → OVULO/CAPSULA/COMPRIMIDO VAGINAL (9); es la clase que agrupa óvulos, cápsulas y comprimidos vaginales"
+solution pour pulverisation,nasale,PRODUCTO USO NASAL,6,CIMA: «solución para pulverización nasal» → PRODUCTO USO NASAL (36)
+gel pour application,cutanee,GEL,5,CIMA: «gel» → GEL (89); todo el gel sin receta de España es de uso cutáneo
+pastille a sucer,buccale,COMPRIMIDO BUCAL/PARA CHUPAR,5,CIMA: «pastilla para chupar» → COMPRIMIDO BUCAL/PARA CHUPAR (41)
+shampooing,cutanee,CHAMPU,5,CIMA: «champú» → CHAMPU (12)
+poudre effervescent(e) pour suspension buvable,orale,SOLUCION/SUSPENSION ORAL EFERVESCENTE,4,CIMA: «polvo efervescente» (6) y «granulado efervescente» (13) → SOLUCION/SUSPENSION ORAL EFERVESCENTE
+solution,rectale,LIQUIDO RECTAL,4,CIMA: «solución rectal» → LIQUIDO RECTAL (16)
+solution pour pulverisation,cutanee,LIQUIDO USO TOPICO,4,CIMA: «solución cutánea» (76) y «solución para pulverización cutánea» (23) → LIQUIDO USO TOPICO
+capsule molle,vaginale,OVULO/CAPSULA/COMPRIMIDO VAGINAL,3,"CIMA: «óvulo» → OVULO/CAPSULA/COMPRIMIDO VAGINAL (9); es la clase que agrupa óvulos, cápsulas y comprimidos vaginales"
+comprime a sucer secable,orale,COMPRIMIDO BUCAL/PARA CHUPAR,3,CIMA: «comprimido para chupar» → COMPRIMIDO BUCAL/PARA CHUPAR (37)
+poudre effervescent(e) pour solution buvable,orale,SOLUCION/SUSPENSION ORAL EFERVESCENTE,3,CIMA: «polvo efervescente» (6) y «granulado efervescente» (13) → SOLUCION/SUSPENSION ORAL EFERVESCENTE
+solution,cutanee,LIQUIDO USO TOPICO,3,CIMA: «solución cutánea» (76) y «solución para pulverización cutánea» (23) → LIQUIDO USO TOPICO
+solution pour instillation,auriculaire,LIQUIDO OTICO,3,CIMA: «gotas óticas en solución» → LIQUIDO OTICO (15)
+granules effervescent(e) pour solution buvable,orale,SOLUCION/SUSPENSION ORAL EFERVESCENTE,2,CIMA: «polvo efervescente» (6) y «granulado efervescente» (13) → SOLUCION/SUSPENSION ORAL EFERVESCENTE
+comprime dispersible,orale,COMPRIMIDO,1,CIMA: «comprimido dispersable» → COMPRIMIDO (36)
+granules pour suspension buvable,orale,SOLUCION/SUSPENSION ORAL,1,CIMA: «granulado» (33) y «granulado para solución oral» (67) → SOLUCION/SUSPENSION ORAL
+solution pour application sterile,cutanee,LIQUIDO USO TOPICO,1,CIMA: «solución cutánea» (76) y «solución para pulverización cutánea» (23) → LIQUIDO USO TOPICO

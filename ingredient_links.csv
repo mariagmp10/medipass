@@ -1,0 +1,85 @@
+nombre_fr,nombre_es,estado,evidencia,productos_fr,ejemplos
+paracétamol,paracetamol,confirmado,regla + Wikidata Q57055: un mismo elemento tiene los dos nombres (ATC N02BE01),124,paracétamol
+ibuprofène,ibuprofeno,confirmado,"regla + Wikidata Q186969: un mismo elemento tiene los dos nombres (ATC C01EB16, G02CC01, M01AE01, M02AA13, R02AX02)",57,ibuprofène | lysinate d'ibuprofène
+chlorhexidine,clorhexidina,confirmado,"regla + Wikidata Q15646788: un mismo elemento tiene los dos nombres (ATC A01AB03, B05CA02, D08AC02, D09AA12, R02AA05, S01AX09, S02AA09, S03AA04)",53,chlorhexidine (gluconate de) | chlorhexidine (digluconate de)
+diclofénac,diclofenaco,confirmado,"regla + Wikidata Q244408: un mismo elemento tiene los dos nombres (ATC D11AX18, M01AB05, M02AA15, S01BC03)",41,diclofénac sodique | diclofénac de diéthylamine
+nicotine,nicotina,confirmado,regla + Wikidata Q12144: un mismo elemento tiene los dos nombres (ATC N07BA01),41,résinate de nicotine | nicotine
+lidocaïne,lidocaína,confirmado,"regla + Wikidata Q216935: un mismo elemento tiene los dos nombres (ATC C01BB01, C05AD01, D04AB01, N01BB02, R02AD02, S01HA07, S02DA01)",26,chlorhydrate de lidocaïne | chlorhydrate de lidocaïne monohydraté
+acide ascorbique,ácido ascórbico,confirmado,regla + Wikidata Q193598: un mismo elemento tiene los dos nombres,24,acide ascorbique
+glycérol,glicerol,confirmado,"regla + Wikidata Q132501: un mismo elemento tiene los dos nombres (ATC A06AG04, A06AX01)",23,glycérol
+carbocistéine,carbocisteína,confirmado,regla + Wikidata (nombre sin tildes «carbocisteine» en inglés): mismo ATC que la AEMPS/CIMA (R05CB03),19,carbocistéine
+acétylcystéine,acetilcisteína,confirmado,"regla + Wikidata Q375613: un mismo elemento tiene los dos nombres (ATC R05CB01, S01XA08, V03AB23)",18,acétylcystéine
+lopéramide,loperamida,confirmado,regla + Wikidata Q423751: un mismo elemento tiene los dos nombres (ATC A07DA03),18,chlorhydrate de lopéramide | lopéramide (chlorhydrate de)
+acide acétylsalicylique,ácido acetilsalicílico,confirmado,"regla + Wikidata Q18216: un mismo elemento tiene los dos nombres (ATC A01AD05, B01AC06, N02BA01)",17,acide acétylsalicylique
+amorolfine,amorolfina,confirmado,regla + Wikidata Q123195: un mismo elemento tiene los dos nombres (ATC D01AE16),17,chlorhydrate d'amorolfine
+pyridoxine,piridoxina,confirmado,regla + Wikidata Q423746: un mismo elemento tiene los dos nombres (ATC A11HA02),17,chlorhydrate de pyridoxine | pyridoxine (chlorhydrate de)
+minoxidil,minoxidil,confirmado,"regla + Wikidata Q424165: un mismo elemento tiene los dos nombres (ATC C02DC01, D11AX01)",15,minoxidil
+povidone iodée,povidona iodada,confirmado,"regla + mismo código ATC en Wikidata y CIMA/Wikidata: D08AG02, D09AA09, D11AC06, G01AX11, R02AA15, S01AX18",15,povidone iodée
+acide salicylique,ácido salicílico,confirmado,"regla + Wikidata Q193572: un mismo elemento tiene los dos nombres (ATC D01AE12, S01BC08)",13,acide salicylique
+diosmine,diosmina,confirmado,regla + Wikidata Q2607865: un mismo elemento tiene los dos nombres (ATC C05CA03),13,diosmine
+cétirizine,cetirizina,confirmado,regla + Wikidata Q423075: un mismo elemento tiene los dos nombres (ATC R06AE07),12,dichlorhydrate de cétirizine | cétirizine (dichlorhydrate de)
+doxylamine,doxilamina,confirmado,regla + Wikidata Q423390: un mismo elemento tiene los dos nombres (ATC R06AA09),12,succinate de doxylamine | hydrogénosuccinate de doxylamine
+acide folique,ácido fólico,confirmado,regla + Wikidata Q127060: un mismo elemento tiene los dos nombres (ATC B03BB01),11,acide folique | acide folique hydraté
+ambroxol,ambroxol,confirmado,regla + Wikidata Q221637: un mismo elemento tiene los dos nombres (ATC R05CB06),11,chlorhydrate d'ambroxol | ambroxol (chlorhydrate d')
+bisacodyl,bisacodilo,confirmado,"regla + Wikidata Q417874: un mismo elemento tiene los dos nombres (ATC A06AB02, A06AG02)",11,bisacodyl
+dexpanthénol,dexpantenol,confirmado,"regla + Wikidata Q47495755: un mismo elemento tiene los dos nombres (ATC A11HA30, D03AX03, S01XA12)",11,dexpanthénol
+thiamine,tiamina,confirmado,"regla + Wikidata Q83187: un mismo elemento tiene los dos nombres (ATC A11DA, A11DA01)",11,chlorhydrate de thiamine | nitrate de thiamine
+aciclovir,aciclovir,confirmado,"regla + Wikidata Q147101: un mismo elemento tiene los dos nombres (ATC D06BB03, J05AB01, S01AD03)",10,aciclovir
+caféine,cafeína,confirmado,regla + Wikidata Q60235: un mismo elemento tiene los dos nombres (ATC N06BC01),10,caféine anhydre | caféine
+cyanocobalamine,cianocobalamina,confirmado,regla + Wikidata Q252251: un mismo elemento tiene los dos nombres (ATC B03BA01),8,cyanocobalamine
+lévonorgestrel,levonorgestrel,confirmado,"regla + Wikidata Q416950: un mismo elemento tiene los dos nombres (ATC G03AC03, G03AD01)",8,lévonorgestrel
+loratadine,loratadina,confirmado,regla + Wikidata Q424049: un mismo elemento tiene los dos nombres (ATC R06AX13),7,loratadine
+oméprazole,omeprazol,confirmado,regla + Wikidata Q422210: un mismo elemento tiene los dos nombres (ATC A02BC01),7,oméprazole
+pantoprazole,pantoprazol,confirmado,regla + Wikidata Q286846: un mismo elemento tiene los dos nombres (ATC A02BC02),7,pantoprazole sodique sesquihydraté
+siméticone,simeticona,confirmado,regla + Wikidata Q419415: un mismo elemento tiene los dos nombres,7,siméticone
+clotrimazole,clotrimazol,confirmado,"regla + Wikidata Q413546: un mismo elemento tiene los dos nombres (ATC A01AB18, D01AC01, G01AF02)",6,clotrimazole
+tétracaïne,tetracaína,confirmado,"regla + Wikidata Q419608: un mismo elemento tiene los dos nombres (ATC C05AD02, D04AB06, N01BA03, S01HA03)",6,chlorhydrate de tétracaïne
+alcool isopropylique,alcohol isopropílico,confirmado,sugerencia + Wikidata Q16392: un mismo elemento tiene los dos nombres (ATC D08AX05),5,alcool isopropylique
+hexétidine,hexetidina,confirmado,"regla + Wikidata Q419749: un mismo elemento tiene los dos nombres (ATC A01AB12, G01AX16)",5,hexétidine
+ésoméprazole,esomeprazol,confirmado,regla + Wikidata Q553223: un mismo elemento tiene los dos nombres (ATC A02BC05),5,ésoméprazole sodique | ésoméprazole magnésique dihydraté
+acide lactique,ácido láctico,confirmado,regla + Wikidata Q161249: un mismo elemento tiene los dos nombres (ATC G01AD01),4,acide lactique
+dimenhydrinate,dimenhidrinato,confirmado,regla + Wikidata Q420439: un mismo elemento tiene los dos nombres,4,dimenhydrinate
+fenticonazole,fenticonazol,confirmado,"regla + mismo código ATC en Wikidata y CIMA/Wikidata: D01AC12, G01AF12",4,nitrate de fenticonazole
+hespéridine,hesperidina,confirmado,regla + Wikipedia fr «Hespéridine» (Wikidata Q385937): su nombre en español incluye «hesperidina»,4,hespéridine
+lévocabastine,levocabastina,confirmado,"regla + mismo código ATC en Wikidata y CIMA/Wikidata: R01AC02, S01GX02",4,chlorhydrate de lévocabastine
+phényléphrine,fenilefrina,confirmado,"regla + Wikidata Q421910: un mismo elemento tiene los dos nombres (ATC C01CA06, R01AA04, R01AB01, R01BA03, S01FB01, S01GA05)",4,chlorhydrate de phényléphrine | phényléphrine (chlorhydrate de)
+pyrantel,pirantel,confirmado,regla + Wikidata Q426897: un mismo elemento tiene los dos nombres (ATC P02CC01),4,embonate de pyrantel
+énoxolone,enoxolona,confirmado,regla + mismo código ATC en Wikidata y CIMA/Wikidata: D03AX10,4,énoxolone
+biotine,biotina,confirmado,regla + Wikidata Q181354: un mismo elemento tiene los dos nombres (ATC A11HA05),3,biotine
+diméticone,dimeticona,confirmado,regla + mismo código ATC en Wikidata y CIMA/Wikidata: P03AX05,3,diméticone
+guaïfénésine,guaifenesina,confirmado,regla + Wikidata Q420682: un mismo elemento tiene los dos nombres (ATC R05CA03),3,guaïfénésine
+lactitol,lactitol,confirmado,regla + Wikidata Q415020: un mismo elemento tiene los dos nombres (ATC A06AD12),3,lactitol monohydraté
+racécadotril,racecadotrilo,confirmado,regla + mismo código ATC en Wikidata y CIMA/Wikidata: A07XA04,3,racécadotril
+trimébutine,trimebutina,confirmado,regla + Wikidata Q2569888: un mismo elemento tiene los dos nombres (ATC A03AA05),3,trimébutine (maléate de) | maléate de trimébutine
+troxérutine,troxerutina,confirmado,regla + mismo código ATC en Wikidata y CIMA/Wikidata: C05CA04,3,troxérutine
+alcool dichlorobenzylique,alcohol diclorobencílico,confirmado,sugerencia + mismo código ATC en Wikidata y CIMA/Wikidata: R02AA03,2,alcool dichlorobenzylique
+benzocaïne,benzocaína,confirmado,"regla + Wikidata Q422745: un mismo elemento tiene los dos nombres (ATC C05AD03, D04AB04, N01BA05, R02AD01)",2,benzocaïne
+chlorphénamine,clorfenamina,confirmado,regla + Wikidata (nombre sin tildes «chlorphenamine» en inglés): mismo ATC que la AEMPS/CIMA (R06AB04),2,maléate de chlorphénamine
+cystine,cistina,confirmado,regla + Wikidata Q408626: un mismo elemento tiene los dos nombres,2,cystine
+desloratadine,desloratadina,confirmado,regla + Wikidata Q418060: un mismo elemento tiene los dos nombres (ATC R06AX27),2,desloratadine
+lysine,lisina,confirmado,regla + Wikipedia fr «Lysine» (Wikidata Q178430): su nombre en español incluye «lisina»,2,lysine
+méclozine,meclozina,confirmado,regla + Wikipedia fr «Méclozine» (Wikidata Q386441): mismo ATC que CIMA (R06AE05),2,méclozine (dichlorhydrate de) | chlorhydrate de méclozine
+peroxyde de benzoyle,peróxido de benzoilo,confirmado,sugerencia + Wikidata Q411424: un mismo elemento tiene los dos nombres (ATC D10AE01),2,peroxyde de benzoyle hydraté | peroxyde de benzoyle
+résorcinol,resorcinol,confirmado,"regla + Wikidata Q408865: un mismo elemento tiene los dos nombres (ATC D10AX02, S01AX06)",2,résorcinol
+terbinafine,terbinafina,confirmado,"regla + Wikidata Q415259: un mismo elemento tiene los dos nombres (ATC D01AE15, D01BA02)",2,chlorhydrate de terbinafine | terbinafine (chlorhydrate de)
+aescine,escina,confirmado,sugerencia + Wikidata Q381866: un mismo elemento tiene los dos nombres,1,aescine
+dexchlorphéniramine,dexclorfeniramina,confirmado,regla + mismo código ATC en Wikidata y CIMA/Wikidata: R06AB02,1,maléate de dexchlorphéniramine
+fexofénadine,fexofenadina,confirmado,regla + Wikidata Q415122: un mismo elemento tiene los dos nombres (ATC R06AX26),1,chlorhydrate de fexofénadine
+hydrocortisone,hidrocortisona,confirmado,"regla + Wikidata Q190875: un mismo elemento tiene los dos nombres (ATC A01AC03, A07EA02, C05AA01, D07AA02, D07XA01, H02AB09, S01BA02, S01CB03, S02BA01)",1,hydrocortisone
+hypromellose,hipromelosa,confirmado,sugerencia + Wikidata Q423846: un mismo elemento tiene los dos nombres (ATC S01KA02),1,hypromellose
+héparine,heparina,confirmado,"regla + Wikidata Q190016: un mismo elemento tiene los dos nombres (ATC B01AB01, C05BA03, S01XA14)",1,héparine sodique
+polyvidone iodée,povidona iodada,confirmado,"sugerencia + Wikipedia fr «Povidone iodée» (Wikidata Q241516): mismo ATC que CIMA (D08AG02, D09AA09, D11AC06, G01AX11, R02AA15, S01AX18)",1,polyvidone iodée
+prométhazine,prometazina,confirmado,regla + Wikipedia fr «Prométhazine» (Wikidata Q422970): su nombre en español incluye «prometazina»,1,prométhazine
+salicylate de méthyle,salicilato de metilo,confirmado,sugerencia + Wikidata Q407669: un mismo elemento tiene los dos nombres,1,salicylate de méthyle
+éphédrine,efedrina,confirmado,regla + Wikipedia fr «Éphédrine» (Wikidata Q219626): su nombre en español incluye «efedrina»,1,chlorhydrate d'éphédrine
+paraffine liquide,parafina líquida,sin_confirmar,Wikidata no tiene datos suficientes para este par,20,paraffine liquide
+amylmétacrésol,amilmetacresol,sin_confirmar,Wikidata no tiene datos suficientes para este par,16,amylmétacrésol
+carbocysteine,carbocisteína,sin_confirmar,Wikidata no tiene datos suficientes para este par,2,carbocysteine
+myrtécaïne,mirtecaína,sin_confirmar,Wikidata no tiene datos suficientes para este par,1,myrtécaïne
+l-cystine,cistina,sugerido,Wikidata no tiene datos suficientes para este par,5,l-cystine
+carmellose,carmelosa,sugerido,Wikidata no tiene datos suficientes para este par,1,carmellose sodique
+salicylate de choline,salicilato de trolamina,contradice,ATC distintos: fr N02BA03 frente a es M02AC,1,salicylate de choline
+alanine,alantoína,rechazado,Revisión manual: la alanina (aminoácido) y la alantoína son sustancias distintas,7,alanine
+cystéine,cistina,rechazado,Revisión manual: la cisteína y la cistina (su dímero) son sustancias distintas,3,cystéine | cystéine (chlorhydrate de)
+alcool propylique,alcohol isopropílico,rechazado,Revisión manual: el alcohol propílico y el isopropílico son isómeros distintos,1,alcool propylique
+kétoprofène,piketoprofeno,rechazado,Revisión manual: el ketoprofeno y el piketoprofeno son fármacos distintos,1,kétoprofène
