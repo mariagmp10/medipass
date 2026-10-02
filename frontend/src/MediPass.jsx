@@ -90,6 +90,7 @@ function productFromRow(row) {
   return {
     marca: row.brand_name,
     receta: !!row.requires_prescription,
+    source: row.source,
     sourceRef: row.source_ref,
     dose: row.dose,
     form: row.form,
@@ -110,6 +111,7 @@ function groupEquivalences(rows) {
     if (!groups.has(id)) {
       groups.set(id, {
         id,
+        innName: row.inn_name,
         name: capitalize(row.inn_name),
         forma: formLabel(row.form),
         principio: capitalize(row.inn_name),
@@ -253,6 +255,21 @@ function FlapCard({ country, data, highlight }) {
             y {data.total - 1} más de esta forma en {countryName}
           </div>
         )}
+        {data.source === "manual_seed" && (
+          <div
+            style={{
+              marginTop: 10,
+              display: "inline-block",
+              fontSize: 11,
+              padding: "2px 8px",
+              borderRadius: 6,
+              border: `1px solid ${COLORS.amber}`,
+              color: COLORS.amber,
+            }}
+          >
+            Ejemplo sin verificar
+          </div>
+        )}
         <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 6 }}>
           {data.receta ? (
             <>
@@ -271,6 +288,60 @@ function FlapCard({ country, data, highlight }) {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+/* Qué decir cuando un país no tiene el grupo (principio activo + forma) que se
+   está mirando. Solo afirmamos lo que sabemos: de un país sin datos reales no
+   decimos que el producto no exista, y de uno con datos reales decimos "no
+   hemos encontrado", no "no existe", porque solo conocemos nuestros datos. */
+function CountryNotice({ country, group, rows, isReal }) {
+  const countryName = COUNTRIES.find((c) => c.code === country)?.name ?? country;
+  let text;
+  if (!isReal) {
+    text = `Todavía no tenemos datos verificados de ${countryName}.`;
+  } else {
+    const otherForms = [
+      ...new Set(
+        rows
+          .filter(
+            (r) =>
+              r.country_code === country &&
+              r.inn_name === group.innName &&
+              r.source !== "manual_seed" &&
+              r.form
+          )
+          .map((r) => formLabel(r.form))
+      ),
+    ];
+    const shown = otherForms.slice(0, 5).join(", ");
+    const more = otherForms.length > 5 ? ` y ${otherForms.length - 5} más` : "";
+    text = otherForms.length
+      ? `Hay productos con este principio activo en ${countryName}, pero en otra forma (${shown}${more}). No son equivalentes.`
+      : `No hemos encontrado en ${countryName} ningún producto de venta libre con este principio activo.`;
+  }
+  return (
+    <div
+      style={{
+        flex: 1,
+        minWidth: 220,
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 8,
+        padding: 16,
+        background: "#fff",
+        border: `1px dashed ${COLORS.cardBorder}`,
+        borderRadius: 10,
+        color: COLORS.slate,
+        fontSize: 13,
+        lineHeight: 1.4,
+      }}
+    >
+      <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} />
+      <span>
+        <strong style={{ fontWeight: 600 }}>{countryName}.</strong> {text}
+      </span>
     </div>
   );
 }
@@ -358,6 +429,13 @@ export default function MediPass() {
       rows
         .filter((r) => r.country_code === "ES")
         .sort((a, b) => a.brand_name.localeCompare(b.brand_name)),
+    [rows]
+  );
+
+  // Países con datos reales de una agencia oficial; el resto solo tiene ejemplos
+  // manuales sin verificar (hoy: España y Francia tienen datos reales).
+  const realCountries = useMemo(
+    () => new Set(rows.filter((r) => r.source !== "manual_seed").map((r) => r.country_code)),
     [rows]
   );
 
@@ -621,20 +699,26 @@ export default function MediPass() {
             </p>
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "stretch" }}>
-              {fromData ? <FlapCard country={from} data={fromData} /> : (
-                <div style={{ flex: 1, minWidth: 220, padding: 16, color: COLORS.slateLight, fontSize: 13 }}>
-                  Sin datos para este país.
-                </div>
+              {fromData ? (
+                <FlapCard country={from} data={fromData} />
+              ) : (
+                <CountryNotice country={from} group={selected} rows={rows} isReal={realCountries.has(from)} />
               )}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 2px" }}>
                 <Plane size={16} color={COLORS.slateLight} />
               </div>
-              {toData ? <FlapCard country={to} data={toData} highlight /> : (
-                <div style={{ flex: 1, minWidth: 220, padding: 16, color: COLORS.slateLight, fontSize: 13 }}>
-                  Sin datos para este país.
-                </div>
+              {toData ? (
+                <FlapCard country={to} data={toData} highlight />
+              ) : (
+                <CountryNotice country={to} group={selected} rows={rows} isReal={realCountries.has(to)} />
               )}
             </div>
+
+            {fromData && toData && fromData.source !== "manual_seed" && toData.source !== "manual_seed" && (
+              <p style={{ marginTop: 10, fontSize: 12, color: COLORS.slate }}>
+                Mismo principio activo y misma forma; la dosis puede variar.
+              </p>
+            )}
 
             {esSideData?.sourceRef ? (
               <div style={{ marginTop: 14, display: "flex", gap: 12, alignItems: "center" }}>
