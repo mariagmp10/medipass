@@ -23,7 +23,7 @@ combinaciones también son grupos aparte ("dimenhidrinato" no es lo mismo que
 | País | Filas | Fuente | Fiabilidad |
 |---|---|---|---|
 | 🇪🇸 España | 1.014 | **CIMA API (AEMPS)** — pública, JSON, sin login | Real, oficial |
-| 🇫🇷 Francia | 1.624 | **BDPM (ANSM/data.gouv.fr)** — descarga pública oficial | Real, oficial |
+| 🇫🇷 Francia | 1.493 | **BDPM (ANSM/data.gouv.fr)** — descarga pública oficial | Real, oficial |
 | 🇩🇪🇮🇹🇵🇹🇬🇧 DE/IT/PT/UK | 6 por país | `manual_seed` (escritos a mano, de memoria) | **Sin verificar** — ejemplos para poder probar la app, no para producción |
 
 **España** es el catálogo de CIMA de medicamentos **comercializados y sin
@@ -33,9 +33,11 @@ registro y, para el usuario, serían filas idénticas). Cada producto lleva
 forma, dosis, composición, código ATC y grupo terapéutico; 395 tienen foto.
 
 **Francia** es la BDPM filtrada a comercializados, sin ninguna condición de
-receta y sin homeopáticos (`fetch_bdpm.py`): 1.643 candidatos, de los que se
-guardan 1.624 (19 se omiten por el mismo motivo que en España). A diferencia
-de CIMA:
+receta y sin homeopáticos (`fetch_bdpm.py`): 1.512 candidatos, de los que se
+guardan 1.493 (19 se omiten por el mismo motivo que en España). Los
+homeopáticos se detectan con dos señales (la etiqueta de procedimiento
+"Enreg homéo" y que la sustancia diga "préparations homéopathiques"); con
+solo la primera se colaron 132 hasta que se comprobó. A diferencia de CIMA:
 - La BDPM **no tiene un campo booleano de receta**. Se infiere: un
   medicamento es sin receta si está comercializado y su código CIS **no**
   aparece en el archivo de condiciones de prescripción (`CIS_CPD_bdpm.txt`).
@@ -228,8 +230,8 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 - Solo ~39 % de los productos de España tienen foto en CIMA; Francia no
   tiene ninguna.
 - La tabla `active_ingredients` mezcla nombres en español (los que ya
-  existían) y en francés (los ~655 que trajo la BDPM y no tenían aún
-  equivalente en España, de un total de 933) — no hay todavía una capa de
+  existían) y en francés (los ~540 que trajo la BDPM y no tenían aún
+  equivalente en España, de un total de 820) — no hay todavía una capa de
   traducción entre idiomas, solo un mapeo a mano para los 4 principios
   activos compartidos (ver `INGREDIENT_MAP` en `fetch_bdpm.py`).
 

@@ -32,7 +32,11 @@ Diferencias importantes con CIMA (léelas antes de tocar este archivo):
    habría que buscarlos en otro archivo de la BDPM o en otra fuente).
 6. Se excluyen los medicamentos homeopáticos: sus datos vienen sucios (el
    campo de forma mezcla varias formas en un solo texto) y no son
-   clínicamente comparables con el resto del catálogo.
+   clínicamente comparables con el resto del catálogo. Hacen falta DOS
+   señales para detectarlos (con una sola se colaban 132 productos):
+   la etiqueta de procedimiento "Enreg homéo" (1.318 productos) y que el
+   nombre de la sustancia diga "pour préparations homéopathiques" (132 más
+   que están registrados como procedimiento nacional normal).
 
 Uso:
     pip install requests
@@ -55,7 +59,9 @@ DB_PATH = os.path.join(HERE, "medipass.db")
 BDPM_BASE = "https://base-donnees-publique.medicaments.gouv.fr/download/file"
 FILES = ("CIS_bdpm.txt", "CIS_COMPO_bdpm.txt", "CIS_CPD_bdpm.txt")
 
-HOMEOPATHIC_PROCEDURE = "enreg homeo (proc. nat.)"  # ya sin tildes: se compara con norm(), que las quita
+# Ambas constantes van ya sin tildes: se comparan con norm(), que las quita.
+HOMEOPATHIC_PROCEDURE = "enreg homeo (proc. nat.)"
+HOMEOPATHIC_MARKER = "homeopathique"  # dentro del nombre de la sustancia activa
 
 # Principios activos que ya existen en España (seed_base.sql). "needle" es el
 # texto que buscamos (sin tildes, en minúsculas) dentro del nombre de
@@ -159,10 +165,12 @@ def load_catalog():
         cis, name, form, routes, _amm_status, procedure, market_status = r[0:7]
         if market_status != "Commercialisée" or cis in restricted_cis:
             continue
-        if norm(procedure) == HOMEOPATHIC_PROCEDURE:
+        substances = substances_by_cis.get(cis)
+        if norm(procedure) == HOMEOPATHIC_PROCEDURE or (
+            substances and any(HOMEOPATHIC_MARKER in norm(s) for s in substances)
+        ):
             skipped_homeo += 1
             continue
-        substances = substances_by_cis.get(cis)
         if not substances:
             continue
         catalog.append(
@@ -275,6 +283,17 @@ def sync_products(conn, products):
             conn.execute("DELETE FROM products WHERE id = ?", (row_id,))
             placeholders_removed += 1
 
+    # Al borrar productos pueden quedar principios activos sin ningún producto.
+    # Solo se limpian los creados automáticamente por los importadores (sin
+    # descripción ni ATC); los de seed_base.sql llevan descripción y no se tocan.
+    stats["orphans_removed"] = conn.execute(
+        """
+        DELETE FROM active_ingredients
+        WHERE common_use IS NULL AND atc_code IS NULL
+          AND id NOT IN (SELECT DISTINCT active_ingredient_id FROM products)
+        """
+    ).rowcount
+
     conn.commit()
     stats["placeholders_removed"] = placeholders_removed
     return stats
@@ -302,7 +321,8 @@ def main():
     print(
         f"Sincronizado: {stats['inserted']} nuevos, {stats['updated']} actualizados, "
         f"{stats['deleted']} borrados, {stats['duplicates']} omitidos por nombre repetido, "
-        f"{stats['placeholders_removed']} ejemplos manuales sustituidos por datos reales"
+        f"{stats['placeholders_removed']} ejemplos manuales sustituidos por datos reales, "
+        f"{stats['orphans_removed']} principios activos sin productos eliminados"
     )
     total = conn.execute("SELECT COUNT(*) FROM products WHERE country_code = 'FR'").fetchone()[0]
     print(f"Listo. Productos de Francia en la base: {total}")
