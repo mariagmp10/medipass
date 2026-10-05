@@ -24,11 +24,18 @@ Estados:
 
 El importador solo usa "confirmado" y "aprobado".
 
+Reino Unido (--country uk): igual, pero con los nombres en inglés del dm+d y escribiendo
+ingredient_links_uk.csv. Los candidatos salen de reglas ortográficas o del nombre español
+que Wikidata da al nombre inglés, y NUNCA se confirman solo por eso: hace falta que el código
+ATC de Wikidata coincida con el que la AEMPS da al nombre español (ver uk_verify).
+
 Uso:
-    python curate_ingredient_links.py            # propone, comprueba en Wikidata y escribe ingredient_links.csv
+    python curate_ingredient_links.py            # Francia: propone, comprueba en Wikidata y escribe ingredient_links.csv
     python curate_ingredient_links.py --offline  # sin Wikidata (nada queda "confirmado")
+    python curate_ingredient_links.py --country uk --zip RUTA_AL_ZIP   # Reino Unido
 """
 
+import argparse
 import collections
 import csv
 import difflib
@@ -44,6 +51,8 @@ import urllib.parse
 import urllib.request
 
 import fetch_bdpm
+import fetch_dmd
+import importers
 import ingredients as ing
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -76,17 +85,8 @@ def variants(label):
 
 def load_spanish_vocabulary(conn):
     """Nombres españoles canónicos: los de ingredientes que tienen algún producto
-    que NO viene de la BDPM (CIMA y ejemplos de otros países)."""
-    names = [
-        r[0]
-        for r in conn.execute(
-            """
-            SELECT DISTINCT ai.inn_name FROM active_ingredients ai
-            JOIN products p ON p.active_ingredient_id = ai.id
-            WHERE p.source != 'BDPM'
-            """
-        )
-    ]
+    que NO viene de un importador extranjero (CIMA y ejemplos manuales)."""
+    names, _forms = importers.load_spanish_vocabulary(conn)
     components = {}
     for name in names:
         for component in name.split("+"):
@@ -350,14 +350,198 @@ def load_manual_decisions(path):
     decisions = {}
     if os.path.exists(path):
         with open(path, encoding="utf-8", newline="") as fh:
-            for row in csv.DictReader(fh):
+            reader = csv.DictReader(fh)
+            source_col = reader.fieldnames[0]  # nombre_fr o nombre_en
+            for row in reader:
                 if row["estado"] in ("aprobado", "rechazado"):
-                    decisions[ing.plain(row["nombre_fr"])] = row
+                    decisions[ing.plain(row[source_col])] = row
     return decisions
 
 
-def main():
-    offline = "--offline" in sys.argv
+def uk_moieties(catalog):
+    display, products, examples = {}, collections.defaultdict(set), collections.defaultdict(list)
+    unparsed = collections.Counter()
+    for item in catalog:
+        for raw in item["substances"]:
+            moiety = ing.parse_substance_en(raw)
+            if moiety is None:
+                unparsed[raw.lower()] += 1
+                continue
+            key = ing.plain(moiety)
+            display[key] = moiety
+            products[key].add(item["ref"])
+            if raw.lower() not in examples[key] and len(examples[key]) < 2:
+                examples[key].append(raw.lower())
+    return display, products, examples, unparsed
+
+
+UK_BATCH = 20  # nombres por consulta: con más, Wikidata da "504 Gateway Timeout"
+
+
+def sparql_retry(query, attempts=4):
+    """sparql() con reintentos: Wikidata a veces responde 429/50x si está saturado."""
+    for attempt in range(attempts):
+        try:
+            return sparql(query)
+        except urllib.error.HTTPError as exc:
+            if exc.code not in (429, 500, 502, 503, 504) or attempt == attempts - 1:
+                raise
+            time.sleep(min(int(exc.headers.get("Retry-After") or 0) or 10 * (attempt + 1), 60))
+        except (urllib.error.URLError, TimeoutError):
+            if attempt == attempts - 1:
+                raise
+            time.sleep(10 * (attempt + 1))
+
+
+def wikidata_by_english_label(moieties):
+    """Para cada nombre inglés: los elementos de Wikidata que lo tienen como etiqueta o
+    alias, con su nombre en español y sus códigos ATC. Son dos consultas sencillas por
+    lote (una compleja con UNION agota el tiempo de Wikidata).
+    Devuelve {nombre inglés en minúsculas: {"items": set, "es": set, "atc": set}}."""
+    found = collections.defaultdict(lambda: {"items": set(), "es": set(), "atc": set()})
+    moieties = sorted(moieties)
+    failed = 0
+    for i in range(0, len(moieties), UK_BATCH):
+        chunk = moieties[i : i + UK_BATCH]
+        values = " ".join(literal(v, "en") for m in chunk for v in variants(m))
+        head = "SELECT ?lab ?item ?value WHERE { VALUES ?lab { " + values + " } ?item (rdfs:label|skos:altLabel) ?lab . "
+        queries = {
+            "atc": head + "?item wdt:P267 ?value }",
+            "es": head + "?item rdfs:label ?value . FILTER(LANG(?value) = " + QUOTE + "es" + QUOTE + ") }",
+        }
+        for kind, query in queries.items():
+            try:
+                rows = sparql_retry(query)
+            except Exception as exc:  # red caída, límite de peticiones...
+                failed += 1
+                print(f"[aviso] Wikidata no respondió ({kind}, lote {i // UK_BATCH + 1}): {exc}")
+                continue
+            for b in rows:
+                entry = found[b["lab"]["value"].lower()]
+                entry["items"].add(b["item"]["value"].rsplit("/", 1)[-1])
+                entry[kind].add(b["value"]["value"])
+            time.sleep(1)
+    if failed:
+        print(f"[aviso] {failed} consultas fallaron: los nombres afectados quedan sin comprobar")
+    return found
+
+
+def uk_candidates(display, es_components, wikidata):
+    """{nombre inglés: {nombre español: método}}. Dos métodos:
+    "regla"    el nombre inglés pasado al español queda IGUAL que uno que ya tenemos.
+    "wikidata" Wikidata da ese nombre español para el elemento del nombre inglés. Solo
+               para nombres de una palabra o "X acid": con ésteres o sales ("zinc sulfate")
+               un elemento de Wikidata podría ser el compuesto y no la molécula."""
+    candidates = collections.defaultdict(dict)
+    for key, moiety in display.items():
+        guesses = list(dict.fromkeys((
+            ing.plain(moiety), ing.propose_spanish_en(moiety), ing.propose_spanish_en(moiety, k_to_c=False),
+        )))
+        exact = next((g for g in guesses if g in es_components), None)
+        if exact:
+            candidates[key][es_components[exact]] = "regla"
+        if " " not in moiety or moiety.endswith(" acid"):
+            for name in wikidata.get(moiety, {}).get("es", ()):
+                plain_name = ing.plain(without_disambiguation(name))
+                if plain_name in es_components:
+                    candidates[key].setdefault(es_components[plain_name], "wikidata")
+        if not candidates[key] and " " not in moiety:
+            # Nombres de una palabra casi iguales ("benzydamine" ~ "bencidamina"). Solo
+            # sugerencia: se usa únicamente si el ATC lo confirma (ver uk_verify).
+            close = difflib.get_close_matches(ing.propose_spanish_en(moiety), list(es_components), n=1, cutoff=0.86)
+            if close:
+                candidates[key][es_components[close[0]]] = "sugerencia"
+    return candidates
+
+
+def uk_verify(moiety, es, method, wikidata, cima_atc):
+    """(resultado, evidencia). Lo decisivo es el ATC: el nombre en español sale de una
+    fuente (regla o Wikidata) y el código ATC de otra (la AEMPS), así que si coinciden
+    no es casualidad de nombres. Para "regla" también vale que un mismo elemento de
+    Wikidata tenga el nombre inglés y el español; para "wikidata" eso no cuenta, porque
+    el nombre español salió justamente de ahí."""
+    data = wikidata.get(moiety)
+    if not data:
+        return "sin_datos", "Wikidata no tiene ningún elemento con ese nombre en inglés"
+    wd_atc, reference = data["atc"], cima_atc.get(ing.plain(es), set())
+    where = f"Wikidata ({', '.join(sorted(data['items'])[:2])}, nombre inglés «{moiety}»)"
+    if wd_atc and reference:
+        common = wd_atc & reference
+        if common:
+            return "confirmado", f"{where}: mismo ATC que la AEMPS/CIMA ({', '.join(sorted(common))})"
+        return "contradice", f"{where}: ATC {', '.join(sorted(wd_atc))} frente a AEMPS/CIMA {', '.join(sorted(reference))}"
+    # Mismo nombre aunque cambie el orden: "cloruro de benzalconio" = "benzalconio cloruro".
+    def words(name):
+        return frozenset(ing.plain(without_disambiguation(name)).split()) - {"de", "del", "la", "el"}
+
+    names = {words(n) for n in data["es"]}
+    if method == "regla" and words(es) in names:
+        return "confirmado", f"{where}: el mismo elemento tiene el nombre español «{es}»"
+    return "sin_datos", f"{where}: falta el código ATC para comprobar"
+
+
+def main_uk(zip_path, offline):
+    conn = sqlite3.connect(pathlib.Path(fetch_bdpm.DB_PATH).as_uri() + "?mode=ro", uri=True)
+    _names, es_components, cima_atc = load_spanish_vocabulary(conn)
+    conn.close()
+
+    catalog, _excluded = fetch_dmd.load_catalog(zip_path)
+    display, products, examples, unparsed = uk_moieties(catalog)
+    print(f"\nPrincipios activos británicos distintos: {len(display)} interpretables, "
+          f"{len(unparsed)} que no se interpretan (se quedan en inglés)")
+
+    wikidata = {} if offline else wikidata_by_english_label(list(display.values()))
+    candidates = uk_candidates(display, es_components, wikidata)
+    spanish = {es for options in candidates.values() for es in options}
+    print(f"Candidatos: {sum(1 for c in candidates.values() if 'regla' in c.values())} por regla, "
+          f"{sum(1 for c in candidates.values() if 'wikidata' in c.values())} por Wikidata")
+    if not offline:
+        enrich_with_aemps_atc(cima_atc, spanish)
+
+    manual = load_manual_decisions(ing.LINKS_PATH_UK)
+    rows = []
+    for key, options in candidates.items():
+        checked = {es: (method, *uk_verify(display[key], es, method, wikidata, cima_atc)) for es, method in options.items()}
+        confirmed = [es for es, (_m, outcome, _e) in checked.items() if outcome == "confirmado"]
+        for es, (method, outcome, evidence) in checked.items():
+            if outcome == "confirmado" and len(confirmed) > 1:
+                status, evidence = "sugerido", f"hay {len(confirmed)} candidatos confirmados distintos; hay que decidir a mano. " + evidence
+            elif outcome == "confirmado":
+                status = "confirmado"
+                evidence = {"regla": "regla + ", "wikidata": "Wikidata + ", "sugerencia": "sugerencia + "}[method] + evidence
+            elif outcome == "contradice":
+                status = "contradice"
+            else:
+                status = "sin_confirmar" if method == "regla" else "sugerido"
+            rows.append({
+                "nombre_en": display[key], "nombre_es": es, "estado": status, "evidencia": evidence,
+                "productos_uk": len(products[key]), "ejemplos": " | ".join(examples[key]),
+            })
+    done = {ing.plain(r["nombre_en"]) for r in rows}
+    rows = [manual.get(ing.plain(r["nombre_en"]), r) for r in rows]
+    rows += [row for key, row in manual.items() if key not in done]  # decisiones manuales de pares que ya no se proponen
+
+    rows.sort(key=lambda r: (STATUS_ORDER.index(r["estado"]), -int(r["productos_uk"]), r["nombre_en"]))
+    with open(ing.LINKS_PATH_UK, "w", encoding="utf-8", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=ing.LINK_FIELDS_UK)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    weight = collections.Counter()
+    for r in rows:
+        weight[r["estado"]] += int(r["productos_uk"])
+    by_status = collections.Counter(r["estado"] for r in rows)
+    print(f"\nEscrito {ing.LINKS_PATH_UK} ({len(rows)} pares):")
+    for status in STATUS_ORDER:
+        if by_status[status]:
+            print(f"  {status:14} {by_status[status]:3} pares, {weight[status]:4} productos británicos afectados")
+    linked = {ing.plain(r["nombre_en"]) for r in rows}
+    left = sorted(((len(products[k]), display[k]) for k in display if k not in linked), reverse=True)
+    print(f"\nSin ningún candidato ({len(left)}), los más frecuentes:")
+    print(", ".join(f"{name} ({n})" for n, name in left[:60]))
+
+
+def main_fr(offline):
     conn = sqlite3.connect(pathlib.Path(fetch_bdpm.DB_PATH).as_uri() + "?mode=ro", uri=True)
     _names, es_components, cima_atc = load_spanish_vocabulary(conn)
     conn.close()
@@ -411,6 +595,20 @@ def main():
     for status in STATUS_ORDER:
         if by_status[status]:
             print(f"  {status:14} {by_status[status]:3} pares, {weight[status]:4} productos franceses afectados")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--country", choices=("fr", "uk"), default="fr")
+    ap.add_argument("--zip", help="ZIP de NHS dm+d (solo con --country uk)")
+    ap.add_argument("--offline", action="store_true", help="sin Wikidata ni AEMPS (nada queda confirmado)")
+    args = ap.parse_args()
+    if args.country == "uk":
+        if not args.zip:
+            sys.exit("Con --country uk hace falta --zip RUTA_AL_ZIP_DE_DMD")
+        main_uk(args.zip, args.offline)
+    else:
+        main_fr(args.offline)
 
 
 if __name__ == "__main__":

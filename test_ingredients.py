@@ -90,5 +90,115 @@ class TablaDeEnlaces(unittest.TestCase):
                     self.assertIn(row["estado"], ing.USABLE_STATUSES, row["nombre_fr"])
 
 
+class ParseSubstanceEn(unittest.TestCase):
+    """Reino Unido (nombres ingleses del dm+d)."""
+
+    def test_quita_sales_de_bases_organicas(self):
+        cases = {
+            "Loperamide hydrochloride": "loperamide",
+            "Codeine phosphate": "codeine",
+            "Chlorhexidine gluconate": "chlorhexidine",
+            "Ibuprofen sodium dihydrate": "ibuprofen",
+            "Ibuprofen lysine": "ibuprofen",
+            "Diclofenac diethylammonium": "diclofenac",
+            "Docusate sodium": "docusate",
+            "Fosfomycin trometamol": "fosfomycin",
+            "Hyoscine hydrobromide": "hyoscine",
+            "Citric acid monohydrate": "citric acid",
+        }
+        for raw, expected in cases.items():
+            self.assertEqual(ing.parse_substance_en(raw), expected, raw)
+
+    def test_esteres_derivados_y_sales_inorganicas_se_dejan_enteros(self):
+        # No se les quita nada: "hyoscine butylbromide" NO es hioscina, un éster NO es su base
+        # y en una sal inorgánica importa cuál es la sal. Solo podrán enlazarse con su nombre completo.
+        for raw in (
+            "Hyoscine butylbromide",
+            "Beclometasone dipropionate",
+            "Hydrocortisone acetate",
+            "Calcium carbonate",
+            "Zinc sulfate monohydrate",
+            "Riboflavin sodium phosphate",   # éster fosfato: no es riboflavina
+            "Menadiol sodium phosphate",
+            "Ferric ammonium citrate",
+        ):
+            self.assertEqual(ing.parse_substance_en(raw), ing.plain(raw).replace(" monohydrate", ""), raw)
+
+    def test_se_niega_a_interpretar_lo_raro(self):
+        for raw in ("Macrogol '3350'", "Carbomer 980", "Ethanol 30%", "Oxygen", "Sodium", "Zinc"):
+            self.assertIsNone(ing.parse_substance_en(raw), raw)
+
+
+class ProponerEspanolEn(unittest.TestCase):
+    def test_terminaciones(self):
+        cases = {
+            "ibuprofen": "ibuprofeno",
+            "caffeine": "cafeina",
+            "hydrocortisone": "hidrocortisona",
+            "dextromethorphan": "dextrometorfano",
+            "cinnarizine": "cinarizina",
+            "folic acid": "acido folico",
+            "salicylic acid": "acido salicilico",
+            "sodium chloride": "sodio cloruro",
+            "zinc oxide": "zinc oxido",
+            "ferrous fumarate": "hierro fumarato",
+            "benzalkonium chloride": "benzalconio cloruro",
+        }
+        for en, es in cases.items():
+            self.assertEqual(ing.propose_spanish_en(en), es, en)
+
+    def test_la_k_se_puede_conservar(self):
+        self.assertEqual(ing.propose_spanish_en("ketoconazole", k_to_c=False), "ketoconazol")
+
+
+class ResolverEn(unittest.TestCase):
+    links = {"paracetamol": "paracetamol", "caffeine": "cafeína", "hyoscine": "escopolamina"}
+    index = ing.build_es_index(["paracetamol + cafeína", "paracetamol", "escopolamina"])
+
+    def resolve(self, substances):
+        return ing.resolve(substances, self.links, self.index, parse=ing.parse_substance_en)
+
+    def test_combinaciones_como_conjunto(self):
+        self.assertEqual(self.resolve(["Caffeine", "Paracetamol"]), ("paracetamol + cafeína", "enlazado"))
+
+    def test_la_sal_no_impide_el_enlace(self):
+        self.assertEqual(self.resolve(["Hyoscine hydrobromide"]), ("escopolamina", "enlazado"))
+
+    def test_hyoscine_butylbromide_no_se_enlaza_con_hioscina(self):
+        self.assertEqual(self.resolve(["Hyoscine butylbromide"]), (None, "sin_enlace"))
+
+
+class TablaDeEnlacesUK(unittest.TestCase):
+    # Pares que NUNCA deben estar en uso: parecen iguales y son sustancias distintas.
+    PROHIBIDOS = {
+        "hyoscine butylbromide": "escopolamina",
+        "beclometasone dipropionate": "beclometasona",
+        "hydrocortisone acetate": "hidrocortisona",
+        "cyclizine": "cetirizina",
+        "cinnarizine": "cetirizina",
+        "levomenthol": "mentol",
+    }
+
+    def test_ningun_par_prohibido_esta_en_uso(self):
+        links = ing.load_links(ing.LINKS_PATH_UK)
+        for en, es in self.PROHIBIDOS.items():
+            self.assertNotEqual(links.get(ing.plain(en)), es, f"{en} -> {es} no debe estar en uso")
+
+    def test_solo_se_usan_estados_revisados(self):
+        import csv
+        usable = ing.load_links(ing.LINKS_PATH_UK)
+        with open(ing.LINKS_PATH_UK, encoding="utf-8", newline="") as fh:
+            for row in csv.DictReader(fh):
+                if ing.plain(row["nombre_en"]) in usable:
+                    self.assertIn(row["estado"], ing.USABLE_STATUSES, row["nombre_en"])
+
+    def test_cada_par_en_uso_esta_confirmado_con_evidencia(self):
+        import csv
+        with open(ing.LINKS_PATH_UK, encoding="utf-8", newline="") as fh:
+            for row in csv.DictReader(fh):
+                if row["estado"] in ing.USABLE_STATUSES:
+                    self.assertTrue(row["evidencia"].strip(), f"{row['nombre_en']} sin evidencia")
+
+
 if __name__ == "__main__":
     unittest.main()

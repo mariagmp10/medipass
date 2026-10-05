@@ -9,6 +9,10 @@ env/
 node_modules/
 frontend/dist/
 
+# Secrets (API keys): never commit
+.env
+.env.*
+
 # Claude Code local settings
 .claude/settings.local.json
 

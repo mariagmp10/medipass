@@ -433,7 +433,7 @@ export default function MediPass() {
   );
 
   // Países con datos reales de una agencia oficial; el resto solo tiene ejemplos
-  // manuales sin verificar (hoy: España y Francia tienen datos reales).
+  // manuales sin verificar (hoy: España, Francia y Reino Unido tienen datos reales).
   const realCountries = useMemo(
     () => new Set(rows.filter((r) => r.source !== "manual_seed").map((r) => r.country_code)),
     [rows]
@@ -766,7 +766,7 @@ export default function MediPass() {
             <div style={{ marginTop: 12, display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: COLORS.slateLight }}>
               <Info size={13} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>
-                Datos servidos por el backend local desde medipass.db. España (CIMA) y Francia (BDPM): medicamentos comercializados sin receta, de fuentes oficiales. Alemania, Italia, Portugal y Reino Unido: ejemplos manuales sin verificar.
+                Datos servidos por el backend local desde medipass.db. España (CIMA), Francia (BDPM) y Reino Unido (NHS dm+d): medicamentos comercializados sin receta, de fuentes oficiales. En el Reino Unido se incluyen los de «solo en farmacia» (P), que no requieren receta pero los dispensa un farmacéutico. Alemania, Italia y Portugal: ejemplos manuales sin verificar. Contains public sector information licensed under the Open Government Licence v3.0.
               </span>
             </div>
           </section>

@@ -1,6 +1,6 @@
 """
 ingredients.py
-Enlace de principios activos entre idiomas (francés -> español).
+Enlace de principios activos entre idiomas (francés e inglés -> español).
 
 REGLA DE ORO: ningún enlace se crea solo. Un nombre francés se enlaza con uno
 español únicamente si el par está en ingredient_links.csv con estado
@@ -8,7 +8,8 @@ español únicamente si el par está en ingredient_links.csv con estado
 (reglas fijas + comprobación independiente en Wikidata) y se revisa a mano;
 al importar datos no se adivina nada.
 
-Este módulo solo hace tres cosas:
+Este módulo solo hace tres cosas (para Francia; el Reino Unido usa
+parse_substance_en() y ingredient_links_uk.csv con las mismas reglas):
   1. plain(): comparar nombres sin tildes ni mayúsculas.
   2. parse_substance(): dejar un nombre francés en su principio activo
      ("chlorhydrate de lopéramide" -> "lopéramide"), o None si el nombre es
@@ -30,7 +31,9 @@ import re
 import unicodedata
 
 LINKS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ingredient_links.csv")
+LINKS_PATH_UK = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ingredient_links_uk.csv")
 LINK_FIELDS = ["nombre_fr", "nombre_es", "estado", "evidencia", "productos_fr", "ejemplos"]
+LINK_FIELDS_UK = ["nombre_en", "nombre_es", "estado", "evidencia", "productos_uk", "ejemplos"]
 USABLE_STATUSES = {"confirmado", "aprobado"}
 
 
@@ -119,6 +122,84 @@ def parse_substance(raw):
     return s[start:end].strip()
 
 
+# --- Reino Unido (nombres en inglés del dm+d) -------------------------------------
+# Mismas reglas que en francés: solo se quita la sal de una BASE ORGÁNICA; nunca los
+# ésteres ("beclometasone dipropionate", "hydrocortisone acetate") ni derivados
+# distintos ("hyoscine butylbromide" no es hioscina), ni las sales inorgánicas enteras
+# ("calcium carbonate"). Lista CERRADA a propósito.
+COUNTERIONS_EN = (
+    "hydrochloride", "dihydrochloride", "hydrobromide", "maleate", "fumarate", "tartrate",
+    "bitartrate", "citrate", "succinate", "sulfate", "phosphate", "nitrate", "mesilate",
+    "besilate", "isetionate", "teoclate", "mucate", "gluconate",
+)
+CATIONS_EN = ("sodium", "potassium", "calcium", "diethylammonium", "diethylamine", "lysine", "trometamol", "olamine")
+HYDRATES_EN = ("hemihydrate", "monohydrate", "dihydrate", "trihydrate", "hexahydrate", "dodecahydrate", "anhydrous")
+INORGANIC_EN = (
+    "sodium", "disodium", "potassium", "calcium", "magnesium", "zinc", "aluminium", "lithium",
+    "silver", "iron", "ferrous", "ferric", "copper", "ammonium", "hydrogen", "dihydrogen", "water",
+    "barium", "bismuth", "manganese", "chromium", "selenium", "molybdenum", "iodine", "sulfur",
+    "carbon", "nitrogen", "oxygen", "helium", "phosphorus", "chloride", "bicarbonate", "air",
+)
+
+
+def parse_substance_en(raw):
+    """Principio activo 'limpio' en inglés (minúsculas) o None si no se puede interpretar
+    con seguridad. Si el nombre es una sal inorgánica o un éster, se devuelve ENTERO (no
+    se le quita nada): solo podrá enlazarse si ese nombre completo está confirmado."""
+    s = raw.lower().strip()
+    if not re.fullmatch(r"[a-z\- ]+", s):  # cifras, comillas, paréntesis, tildes: demasiado raro
+        return None
+    words = s.split()
+    while len(words) > 1 and words[-1] in HYDRATES_EN:
+        words.pop()
+    if len(words) > 1 and words[-1] in CATIONS_EN and words[-2] not in INORGANIC_EN:
+        words.pop()  # "diclofenac sodium", "ibuprofen lysine"
+    elif len(words) > 1 and words[-1] in COUNTERIONS_EN:
+        base = words[:-1]
+        if any(w in INORGANIC_EN for w in base):
+            pass  # "zinc sulfate", "riboflavin sodium phosphate": la sal (o el éster) importa
+        elif len(base) == 1:
+            words = base  # "loperamide hydrochloride", "codeine phosphate"
+        else:
+            return None
+    name = " ".join(words)
+    if len(name) < 3 or name in INORGANIC_EN:
+        return None  # "sodium", "zinc", "oxygen" solos: elementos, no medicamentos comparables
+    return name
+
+
+# Reglas para PROPONER cómo se escribiría un nombre inglés en español (solo candidatos).
+_EN_SUBSTITUTIONS = (("ph", "f"), ("th", "t"), ("y", "i"), ("ff", "f"), ("nn", "n"), ("ll", "l"), ("chl", "cl"))
+_EN_ENDINGS = (
+    (r"ine\b", "ina"), (r"ide\b", "ida"), (r"one\b", "ona"), (r"ole\b", "ol"), (r"ane\b", "ano"),
+    (r"ene\b", "eno"), (r"ate\b", "ato"), (r"ium\b", "io"), (r"ose\b", "osa"),
+    (r"(?<=[a-z]{4})en\b", "eno"), (r"(?<=[a-z]{4})an\b", "ano"), (r"il\b", "ilo"), (r"ac\b", "aco"),
+)
+
+
+# Palabras que CIMA escribe distinto (sodio cloruro, zinc óxido, hierro fumarato).
+_EN_WORDS = {
+    "chloride": "cloruro", "oxide": "oxido", "dioxide": "dioxido", "peroxide": "peroxido",
+    "hydroxide": "hidroxido", "ferrous": "hierro", "ferric": "hierro",
+}
+
+
+def propose_spanish_en(moiety, k_to_c=True):
+    """Cómo se escribiría un nombre inglés en español. k_to_c=False conserva la k
+    (ketoconazol), que en español se usa en unos nombres y se cambia por c en otros
+    (benzalconio): el curador prueba las dos formas."""
+    s = plain(moiety)
+    s = " ".join(_EN_WORDS.get(w, w) for w in s.split())
+    s = re.sub(r"^(.+?)ic acid$", r"acido \1ico", s)  # "folic acid" -> "acido folico"
+    if k_to_c:
+        s = s.replace("k", "c")
+    for a, b in _EN_SUBSTITUTIONS:
+        s = s.replace(a, b)
+    for pattern, replacement in _EN_ENDINGS:
+        s = re.sub(pattern, replacement, s)
+    return s
+
+
 # Reglas para PROPONER cómo se escribiría un nombre francés en español. Solo
 # sirven para generar candidatos: el candidato se usa únicamente si, además,
 # queda confirmado (ver curate_ingredient_links.py).
@@ -141,13 +222,16 @@ def propose_spanish(moiety):
 
 
 def load_links(path=LINKS_PATH):
-    """{nombre francés sin tildes: nombre español} solo con los enlaces usables."""
+    """{nombre de origen sin tildes: nombre español} solo con los enlaces usables.
+    La primera columna del CSV es el nombre de origen (nombre_fr o nombre_en)."""
     links = {}
     if os.path.exists(path):
         with open(path, encoding="utf-8", newline="") as fh:
-            for row in csv.DictReader(fh):
+            reader = csv.DictReader(fh)
+            source_col = reader.fieldnames[0]
+            for row in reader:
                 if row["estado"] in USABLE_STATUSES:
-                    links[plain(row["nombre_fr"])] = row["nombre_es"]
+                    links[plain(row[source_col])] = row["nombre_es"]
     return links
 
 
@@ -156,11 +240,12 @@ def build_es_index(names):
     return {frozenset(plain(c) for c in name.split(" + ")): name for name in names}
 
 
-def resolve(substances, links, es_index):
-    """(nombre español, motivo). El nombre es None si no se puede enlazar."""
+def resolve(substances, links, es_index, parse=parse_substance):
+    """(nombre español, motivo). El nombre es None si no se puede enlazar.
+    parse: parse_substance (francés) o parse_substance_en (inglés)."""
     components = []
     for raw in substances:
-        moiety = parse_substance(raw)
+        moiety = parse(raw)
         if moiety is None:
             return None, "no_interpretable"
         spanish = links.get(plain(moiety))

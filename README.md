@@ -24,7 +24,11 @@ combinaciones también son grupos aparte ("dimenhidrinato" no es lo mismo que
 |---|---|---|---|
 | 🇪🇸 España | 1.014 | **CIMA API (AEMPS)** — pública, JSON, sin login | Real, oficial |
 | 🇫🇷 Francia | 1.493 | **BDPM (ANSM/data.gouv.fr)** — descarga pública oficial | Real, oficial |
-| 🇩🇪🇮🇹🇵🇹🇬🇧 DE/IT/PT/UK | 6 por país | `manual_seed` (escritos a mano, de memoria) | **Sin verificar** — ejemplos para poder probar la app, no para producción |
+| 🇬🇧 Reino Unido | 1.239 | **NHS dm+d (NHSBSA)** — descarga con cuenta gratuita en NHS TRUD, licencia OGL v3.0 | Real, oficial |
+| 🇩🇪🇮🇹🇵🇹 DE/IT/PT | 6 por país | `manual_seed` (escritos a mano, de memoria) | **Sin verificar** — ejemplos para poder probar la app, no para producción |
+
+El Reino Unido conserva además 5 ejemplos manuales (los que todavía no tienen
+un producto real de la misma forma con el que sustituirlos).
 
 **España** es el catálogo de CIMA de medicamentos **comercializados y sin
 receta** (`comerc=1&receta=0`): 1.066 registros, de los que se guardan 1.014
@@ -54,6 +58,37 @@ solo la primera se colaron 132 hasta que se comprobó. A diferencia de CIMA:
   La fecha de la descarga queda en la columna `verified_at` de cada producto
   francés.
 
+**Reino Unido** es el NHS dm+d (versión 9.3.0, publicada el 28/09/2026)
+filtrado a medicamentos **sin receta** (`fetch_dmd.py`): 1.936 candidatos, de
+los que se guardan 1.239 (697 se omiten porque repiten principio activo y
+nombre comercial exacto, muy habitual en genéricos de varios laboratorios).
+Cómo se decide qué es "sin receta":
+- Cada **envase** lleva una categoría legal: `GSL` (venta libre), `P` (solo en
+  farmacia, sin receta; lo dispensa un farmacéutico) o `POM` (con receta).
+  Un producto entra si tiene **algún envase activo P o GSL**. P cuenta como
+  "sin receta", igual que en España; la app lo aclara en el pie. Hay 90
+  productos con envases P y POM a la vez (según el tamaño del envase): se
+  incluyen porque tienen un envase P.
+- Se excluyen envases descatalogados o inválidos, productos sin licencia
+  (MHRA/EMA o hierbas tradicionales), importados, "Special" (preparados a
+  medida), no disponibles y homeopáticos (63).
+- Los ingredientes vienen con la sal ("Benzydamine hydrochloride"). El campo
+  `BS_SUBID` (sustancia base) del dm+d **no se usa**: a veces reduce un éster a
+  su base (betamethasone valerate → betamethasone, que no son equivalentes) o
+  se equivoca (ioversol → iodine). Se usa nuestro parser conservador.
+- Forma y vía vienen normalizadas (una forma por producto). Se traducen con
+  `form_map_uk.csv` (54 filas, 89 % de los productos). Si un producto tiene
+  **varias vías** ("Oromucosal; Gingival; Nasal; …") se exige que la vía de la
+  tabla sea idéntica: si no, un spray de varias vías acabaría clasificado
+  como "pulverización bucal".
+- **Atribución obligatoria (OGL v3.0)**: *Contains public sector information
+  licensed under the Open Government Licence v3.0.* Fuente: NHS Business
+  Services Authority, dm+d. El pie de la app lo cita, y la fecha de la
+  descarga queda en `verified_at`. El ZIP se baja de
+  [NHS TRUD](https://isd.digital.nhs.uk) (elemento 24, "NHSBSA dm+d").
+- La clave de API de TRUD va en `.env` (`TRUD_API_KEY=...`), que **nunca se
+  sube a GitHub** (está en `.gitignore`).
+
 Esto es intencional: no existe un "CIMA europeo" único. Cada país tiene su
 propia agencia, con su propio formato. La ruta lógica es: dejar el esquema
 listo para todos, conectar cada país de verdad, y sustituir cada ejemplo
@@ -70,6 +105,17 @@ y combinaciones como paracetamol + cafeína. Además, dimenhidrinato ·
 comprimido compara España (real) con el ejemplo manual de Francia, porque
 Francia no tiene ningún comprimido suelto de dimenhidrinato sin receta (solo
 jarabe y cápsula, que son grupos distintos).
+
+Con el Reino Unido: **74 grupos** comparan España con el Reino Unido
+(386 productos españoles y 383 británicos), **51 grupos** Francia con el Reino
+Unido (393 y 302) y **43 grupos** existen en los tres países. Los mayores:
+ibuprofeno (comprimido, gel, solución oral, cápsula), paracetamol (comprimido,
+supositorio, solución oral, efervescente), ácido acetilsalicílico, nicotina
+(parche, chicle, comprimido para chupar), cetirizina, loratadina, clotrimazol
+y bencidamina. Cuando un nombre no tiene enlace con España pero es **idéntico
+en francés y en inglés** (p. ej. *lactulose*, *sennosides*), la comparación
+Francia-Reino Unido se hace por nombre idéntico: son nombres internacionales
+(DCI), pero no están comprobados con Wikidata.
 
 Lo que ninguna de las dos fuentes cubre:
 - **Docusato sódico**: no comercializado sin receta en España. Francia tiene
@@ -127,9 +173,49 @@ veces sin ellas). Son 59 filas y cubren el 81 % de los productos franceses;
 lo ambiguo o sin equivalente (colutorios, inyectables, "comprimido para chupar
 o masticar"...) se queda en francés y no se compara.
 
-**Pruebas**: `python -m unittest test_ingredients test_fetch_bdpm -v`. Incluyen
-pares que **nunca** deben enlazarse (alanina / alantoína, ketoprofeno /
-piketoprofeno...) y combinaciones de forma y vía que no deben traducirse.
+**Reino Unido** (`parse_substance_en()` en `ingredients.py`,
+`ingredient_links_uk.csv`, `form_map_uk.csv`): mismas reglas que en Francia.
+- Solo se quita la sal de una **base orgánica** (*loperamide hydrochloride* →
+  loperamide, *ibuprofen lysine* → ibuprofen). Se dejan enteros los ésteres
+  (*beclometasone dipropionate*), los derivados distintos (*hyoscine
+  butylbromide* **no** es hioscina) y las sales inorgánicas (*calcium
+  carbonate*); lo que lleva cifras o es un elemento suelto (*oxygen*) no se
+  interpreta.
+- Los candidatos salen de reglas ortográficas (*-ine → -ina*, *chloride →
+  cloruro*, *ferrous → hierro*), del nombre español que Wikidata da al nombre
+  inglés, o de un nombre de una palabra casi igual (*benzydamine* ≈
+  bencidamina). **Ninguno se usa sin comprobar**: el código ATC de Wikidata
+  debe coincidir con el que da la AEMPS al nombre español (o, para las
+  reglas, que un mismo elemento de Wikidata tenga los dos nombres, aunque
+  cambie el orden: "cloruro de benzalconio" = "benzalconio cloruro"). Si los
+  ATC son distintos queda como `contradice` (así se descartó, por ejemplo,
+  cyclizine ≈ cetirizina).
+- `python curate_ingredient_links.py --country uk --zip RUTA_AL_ZIP` regenera
+  la tabla (conserva las decisiones manuales). Hoy: **63 confirmados**, 2
+  aprobados a mano, 8 sin confirmar (98 productos) y 8 sugeridos (50
+  productos).
+- **Dos pares aprobados a mano, pendientes del visto bueno de una persona con
+  conocimiento farmacéutico**: *sodium bicarbonate* → sodio bicarbonato y
+  *sodium chloride* → sodio cloruro. Wikidata y la AEMPS los marcaban como
+  contradictorios solo porque listan ATC de usos distintos (intravenoso frente
+  a antiácido o nasal); es la misma sustancia química. Si no estás de acuerdo,
+  cambia `aprobado` por `rechazado` en `ingredient_links_uk.csv`.
+- Sin confirmar (no se usan): alginato sódico, prometazina, citrato sódico,
+  cloruro de benzalconio, fumarato de hierro, amilmetacresol, dimeticona y
+  carmelosa. El nombre coincide al traducirlo, pero Wikidata no tiene datos
+  para comprobarlo. Esperan revisión farmacéutica (cambiar `sin_confirmar` por
+  `aprobado`).
+- Tampoco se enlazan, por falta de confirmación: **levomenthol con mentol**
+  (Wikidata no da ATC para comprobarlo; el levomentol es solo uno de los
+  isómeros del mentol), las enzimas (amilasa, lipasa, proteasa), y la
+  equinácea y el tomillo (extractos de planta, con varias especies posibles).
+
+**Pruebas**: `python -m unittest test_ingredients test_fetch_bdpm test_fetch_dmd -v`.
+Incluyen pares que **nunca** deben enlazarse (alanina / alantoína, ketoprofeno /
+piketoprofeno, *hyoscine butylbromide* / hioscina, ésteres y sus bases...),
+combinaciones de forma y vía que no deben traducirse, y un ZIP de dm+d en
+miniatura para comprobar la regla de "sin receta" (solo POM fuera; P y GSL
+dentro; descatalogados, sin licencia, importados y homeopáticos fuera).
 
 **Avisos en la app** cuando un país no tiene el grupo que se mira: "hay
 productos con este principio activo, pero en otra forma (…); no son
@@ -152,13 +238,16 @@ MediPass, para uso con usuarios reales, debería limitarse a tres categorías:
 y excluir cualquier medicamento con receta del catálogo público.
 
 **Estado actual de la implementación, tal como es hoy:**
-- Para **España y Francia** ya se cumple por construcción: `fetch_cima.py` y
-  `fetch_bdpm.py` solo importan medicamentos sin receta, así que la base no
-  contiene ningún medicamento real de esos dos países con receta.
+- Para **España, Francia y el Reino Unido** ya se cumple por construcción:
+  `fetch_cima.py`, `fetch_bdpm.py` y `fetch_dmd.py` solo importan
+  medicamentos sin receta, así que la base no contiene ningún medicamento real
+  de esos países con receta. En el Reino Unido, el estatus P (solo en
+  farmacia) cuenta como "sin receta" pero la app hoy lo muestra como "Venta
+  libre" igual que el GSL: distinguirlos requiere el `legal_category` de abajo.
 - **Todavía no hay campo `legal_category`** en el esquema ni filtro en la app.
 - **Productos sanitarios y parafarmacia** no tienen ninguna fuente real
   todavía (ver "Próximos pasos"); solo hay ejemplos manuales.
-- Los ejemplos manuales de los países restantes (DE/IT/PT/UK) no están
+- Los ejemplos manuales de los países restantes (DE/IT/PT) no están
   verificados y uno de ellos (Voltaren Schmerzgel Forte, Alemania) está
   marcado como "con receta", lo que es un dato de ejemplo, no una fuente.
 
@@ -194,15 +283,22 @@ medipass.db  ←── backend/app.py (Flask, puerto 5000)  ←── frontend/ 
   ejecutar, recrea la vista
 - `seed_base.sql` — países + principios activos base
 - `seed_manual_non_es.sql` — productos de ejemplo para DE/IT/PT/UK (y los que
-  Francia todavía no tiene con qué reemplazar, como los apósitos)
+  Francia y el Reino Unido todavía no tienen con qué reemplazar, como los
+  apósitos)
 - `fetch_cima.py` — sincroniza España desde CIMA (ver abajo)
 - `fetch_bdpm.py` — sincroniza Francia desde la BDPM (ver abajo)
+- `fetch_dmd.py` — sincroniza el Reino Unido desde NHS dm+d (ver abajo)
+- `importers.py` — piezas comunes de los importadores extranjeros (tabla de
+  formas, vocabulario español, sincronización de `products`)
 - `ingredients.py` — enlace de principios activos entre idiomas (ver "Enlace
   entre idiomas")
-- `ingredient_links.csv` — tabla de enlaces revisada (la usa el importador)
+- `ingredient_links.csv`, `ingredient_links_uk.csv` — tablas de enlaces
+  revisadas (las usan los importadores)
 - `curate_ingredient_links.py` — propone y comprueba enlaces nuevos
-- `form_map_fr.csv` — traducción de formas francesas a las de CIMA
-- `test_ingredients.py`, `test_fetch_bdpm.py` — pruebas
+- `form_map_fr.csv`, `form_map_uk.csv` — traducción de formas francesas e
+  inglesas a las de CIMA
+- `.env` — clave de API de NHS TRUD (no se sube a GitHub)
+- `test_ingredients.py`, `test_fetch_bdpm.py`, `test_fetch_dmd.py` — pruebas
 - `medipass.db` — la base ya construida
 - `backend/app.py` — servidor Flask
 - `frontend/` — app Vite + React
@@ -229,9 +325,9 @@ Queda escuchando en `http://localhost:5173`.
 
 Con ambos corriendo, abre **`http://localhost:5173`** en el navegador.
 
-## Actualizar los datos de España y Francia
+## Actualizar los datos de España, Francia y el Reino Unido
 
-Ambos scripts son sincronizaciones: se pueden ejecutar cuando quieras sin
+Los tres scripts son sincronizaciones: se pueden ejecutar cuando quieras sin
 duplicar nada. Actualizan lo que existe, añaden lo nuevo, borran lo que ya
 no cumpla el filtro, y quitan los ejemplos manuales de un país en cuanto
 llega un dato real de la misma forma que los sustituye.
@@ -246,12 +342,23 @@ python fetch_cima.py --debug            # imprime el JSON crudo de 1 medicamento
 
 python fetch_bdpm.py                    # sincroniza Francia (descarga ~10 MB cada vez)
 python fetch_bdpm.py --debug            # descarga y analiza, sin tocar medipass.db
+
+python fetch_dmd.py --zip RUTA_AL_ZIP   # Reino Unido, con el ZIP ya descargado de NHS TRUD
+python fetch_dmd.py                     # igual, descargando la última versión (necesita TRUD_API_KEY en .env)
+python fetch_dmd.py --zip RUTA --debug  # analiza y muestra el informe, sin tocar medipass.db
+python fetch_dmd.py --zip RUTA --inspect  # solo cuenta formas y vías del ZIP
 ```
 
-Ejecuta **primero `fetch_cima.py`**: el importador de Francia enlaza con los
-principios activos españoles que ya estén en la base. `fetch_bdpm.py --debug`
-enseña cuántos productos se enlazan, cuántas formas se traducen, las formas
-que se quedan sin traducir y cuántas comparaciones con España salen.
+Ejecuta **primero `fetch_cima.py`**: los importadores de Francia y del Reino
+Unido enlazan con los principios activos españoles que ya estén en la base.
+`--debug` enseña cuántos productos se enlazan, cuántas formas se traducen,
+las formas que se quedan sin traducir y cuántas comparaciones con España salen.
+
+Para el Reino Unido hace falta una cuenta gratuita en
+[NHS TRUD](https://isd.digital.nhs.uk), suscribirse al elemento 24 «NHSBSA
+dm+d» (hay que explicar para qué se quieren los datos) y descargar el ZIP o
+copiar la clave de API en `.env`. Con la clave, `fetch_dmd.py` comprueba la
+suma SHA-256 del ZIP descargado contra la que publica TRUD.
 
 El detalle de CIMA se pide con 4 peticiones en paralelo, por cortesía con la
 API pública (unos 5 minutos para ~1.000 productos).
@@ -267,6 +374,7 @@ for f in ('schema.sql', 'seed_base.sql', 'seed_manual_non_es.sql'):
 "
 python fetch_cima.py
 python fetch_bdpm.py
+python fetch_dmd.py --zip RUTA_AL_ZIP
 ```
 
 ## Consultar la base directamente
@@ -282,13 +390,13 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 
 ## Límites conocidos
 
-- Los datos de Alemania, Italia, Portugal y Reino Unido son ejemplos sin
-  verificar.
+- Los datos de Alemania, Italia y Portugal son ejemplos sin verificar.
 - Cada grupo enseña **un** producto por país (el primero por nombre) y cuenta
   los demás; puedes elegir uno concreto buscando su marca. **La dosis no se
   compara**: "equivalente" significa mismo principio activo y misma forma, y
   los dos productos que se enseñan pueden tener concentraciones distintas
-  (por ejemplo, Dalsydol 400 mg en España frente a Advil 200 mg en Francia).
+  (por ejemplo, Dalsydol 400 mg en España frente a Advil 200 mg en Francia o
+  Anadin Joint Pain 200 mg en el Reino Unido).
 - La forma de España es la "simplificada" de CIMA (36 valores en venta
   libre, bastante gruesa: "solución/suspensión oral" agrupa jarabes, polvos y
   granulados). La de Francia se traduce con `form_map_fr.csv` (81 % de los
@@ -310,10 +418,19 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
   ATC ni foto en los archivos que usamos.
 - Solo ~39 % de los productos de España tienen foto en CIMA; Francia no
   tiene ninguna.
-- La tabla `active_ingredients` mezcla nombres en español (los 278 de España
-  y los ejemplos) y en francés (467 que trajo la BDPM sin equivalente
-  enlazado, de un total de 745): un principio activo francés sin enlace
-  conserva su nombre en francés.
+- La tabla `active_ingredients` mezcla nombres en español (los de España y
+  los ejemplos), en francés (467 que trajo la BDPM sin equivalente enlazado)
+  y en inglés (331 que trajo el dm+d, de un total de 1.076): un principio
+  activo sin enlace conserva su nombre en el idioma de su fuente.
+- Reino Unido: de los 1.239 productos guardados, **493 quedan enlazados con
+  un principio activo español** (los demás no tienen equivalente de venta
+  libre en España o su nombre no se pudo comprobar). Los 697 omitidos por
+  nombre repetido son, en su mayoría, el mismo genérico de varios
+  laboratorios: no se pierde ninguna combinación principio activo + forma.
+  El dm+d cubre lo que circula por el NHS; si falta algún medicamento de
+  venta libre habitual, será por eso (no se ha auditado exhaustivamente).
+- Reino Unido: `GSL` y `P` se guardan igual (sin receta) y la app no los
+  distingue; el estatus legal exacto no se almacena todavía.
 - El estado "solo se vende con receta en ese país" **no se guarda** (haría
   falta conservar un estado sin marcas, y antes hay que consultarlo con un
   abogado): hoy un principio activo que en Francia solo existe con receta
@@ -322,21 +439,30 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 ## Próximos pasos
 
 - Que alguien con conocimiento farmacéutico revise los 6 pares sin comprobar
-  de `ingredient_links.csv` (45 productos) y, si procede, los apruebe
+  de `ingredient_links.csv` (45 productos), los 8 de `ingredient_links_uk.csv`
+  (98 productos) y los 2 aprobados a mano (bicarbonato y cloruro sódicos), y
+  apruebe o rechace lo que proceda
 - Comparar la **dosis** (hoy no se compara): requiere normalizar unidades y
   sales, y elegir en cada país el producto de la misma concentración
 
 - Conseguir acceso a **BotPlus/BADIS** o **Medipim** para datos reales de
   parafarmacia y productos sanitarios (hoy no hay ninguna fuente real);
   antes, preguntarles si su licencia permite una app para el público
-- Conectar **Reino Unido (MHRA/dm+d)** con una fuente real, sustituyendo su
-  ejemplo manual; después Alemania (AMIce/PharmNet.Bund), Italia (AIFA) y
-  Portugal (INFARMED), verificando antes cómo acceder a cada una
+- **Alemania, Italia y Portugal siguen sin fuente abierta utilizable** (lo que
+  se encontró en octubre de 2026):
+  - *Alemania*: el BfArM solo publica un ZIP con nombres de sustancias
+    (`pnbez-*.zip`), no el catálogo de productos con forma y estatus.
+  - *Italia*: AIFA publica CSV de medicamentos reembolsables (clases A/H),
+    genéricos y faltas de suministro; no el catálogo completo de venta libre.
+  - *Portugal*: los datos abiertos de INFARMED son solo ensayos clínicos; el
+    catálogo de medicamentos es de pago.
+  Hay que volver a mirarlo (o pedir acceso a las agencias) antes de conectarlos.
 - Cada país nuevo repite el proceso: su propia tabla de formas y volver a
   ejecutar `curate_ingredient_links.py` para enlazar sus principios activos
 - Implementar de verdad el `legal_category` y el filtrado descrito en
-  "Alcance legal" — hoy solo se cumple para España y Francia por cómo se
-  importan, no por un filtro explícito en el esquema
+  "Alcance legal" — hoy solo se cumple para España, Francia y el Reino Unido
+  por cómo se importan, no por un filtro explícito en el esquema (ahí
+  entraría también distinguir `GSL` de `P` en el Reino Unido)
 - Desplegar a **Vercel** cuando esté lista para compartir con otras personas
 
 ### Para después de cerrar la integración de las bases de datos

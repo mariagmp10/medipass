@@ -1,0 +1,82 @@
+nombre_en,nombre_es,estado,evidencia,productos_uk,ejemplos
+paracetamol,paracetamol,confirmado,"regla + Wikidata (Q54982056, Q57055, nombre inglés «paracetamol»): mismo ATC que la AEMPS/CIMA (N02BE01)",243,paracetamol
+ibuprofen,ibuprofeno,confirmado,"regla + Wikidata (Q186969, nombre inglés «ibuprofen»): mismo ATC que la AEMPS/CIMA (C01EB16, G02CC01, M01AE01, M02AA13)",145,ibuprofen | ibuprofen lysine
+nicotine,nicotina,confirmado,"regla + Wikidata (Q12144, Q18477744, nombre inglés «nicotine»): mismo ATC que la AEMPS/CIMA (N07BA01)",66,nicotine | nicotine bitartrate
+calcium carbonate,calcio carbonato,confirmado,"regla + Wikidata (Q23767, nombre inglés «calcium carbonate»): mismo ATC que la AEMPS/CIMA (A12AA04)",51,calcium carbonate
+glycerol,glicerol,confirmado,"regla + Wikidata (Q132501, nombre inglés «glycerol»): mismo ATC que la AEMPS/CIMA (A06AG04, A06AX01)",49,glycerol
+aspirin,ácido acetilsalicílico,confirmado,"Wikidata + Wikidata (Q18216, Q66281596, nombre inglés «aspirin»): mismo ATC que la AEMPS/CIMA (A01AD05, B01AC06, N02BA01)",46,aspirin
+ascorbic acid,ácido ascórbico,confirmado,"regla + Wikidata (Q193598, Q199678, nombre inglés «ascorbic acid»): mismo ATC que la AEMPS/CIMA (G01AD03, S01XA15)",44,ascorbic acid
+phenylephrine,fenilefrina,confirmado,"regla + Wikidata (Q421910, nombre inglés «phenylephrine»): mismo ATC que la AEMPS/CIMA (C01CA06, R01AA04, R01AB01, R01BA03, S01FB01, S01GA05)",43,phenylephrine hydrochloride
+thiamine,tiamina,confirmado,"regla + Wikidata (Q83187, nombre inglés «thiamine»): mismo ATC que la AEMPS/CIMA (A11DA01)",42,thiamine | thiamine hydrochloride
+chlorhexidine,clorhexidina,confirmado,"regla + Wikidata (Q15646788, nombre inglés «chlorhexidine»): mismo ATC que la AEMPS/CIMA (A01AB03, B05CA02, D08AC02, D09AA12, R02AA05, S01AX09, S02AA09, S03AA04)",40,chlorhexidine hydrochloride | chlorhexidine gluconate
+clotrimazole,clotrimazol,confirmado,"regla + Wikidata (Q413546, nombre inglés «clotrimazole»): mismo ATC que la AEMPS/CIMA (A01AB18, D01AC01, G01AF02)",35,clotrimazole
+caffeine,cafeína,confirmado,"regla + Wikidata (Q12478159, Q18809243, nombre inglés «caffeine»): mismo ATC que la AEMPS/CIMA (N06BC01)",34,caffeine
+cetirizine,cetirizina,confirmado,"regla + Wikidata (Q423075, nombre inglés «cetirizine»): mismo ATC que la AEMPS/CIMA (R06AE07)",33,cetirizine hydrochloride
+diphenhydramine,difenhidramina,confirmado,"regla + Wikidata (Q413486, Q4886804, nombre inglés «diphenhydramine»): mismo ATC que la AEMPS/CIMA (D04AA32, R06AA02)",32,diphenhydramine hydrochloride
+lidocaine,lidocaína,confirmado,"regla + Wikidata (Q216935, nombre inglés «lidocaine»): mismo ATC que la AEMPS/CIMA (C01BB01, C05AD01, D04AB01, N01BB02, R02AD02, S01HA07, S02DA01)",31,lidocaine | lidocaine hydrochloride
+loratadine,loratadina,confirmado,"regla + Wikidata (Q424049, nombre inglés «loratadine»): mismo ATC que la AEMPS/CIMA (R06AX13)",30,loratadine
+guaifenesin,guaifenesina,confirmado,"Wikidata + Wikidata (Q420682, nombre inglés «guaifenesin»): mismo ATC que la AEMPS/CIMA (R05CA03)",27,guaifenesin
+loperamide,loperamida,confirmado,"regla + Wikidata (Q423751, nombre inglés «loperamide»): mismo ATC que la AEMPS/CIMA (A07DA03)",25,loperamide hydrochloride
+salicylic acid,ácido salicílico,confirmado,"regla + Wikidata (Q193572, nombre inglés «salicylic acid»): mismo ATC que la AEMPS/CIMA (D01AE12, S01BC08)",24,salicylic acid
+chlorphenamine,clorfenamina,confirmado,"regla + Wikidata (Q420133, nombre inglés «chlorphenamine»): mismo ATC que la AEMPS/CIMA (R06AB04)",22,chlorphenamine maleate
+pyridoxine,piridoxina,confirmado,"regla + Wikidata (Q423746, nombre inglés «pyridoxine»): mismo ATC que la AEMPS/CIMA (A11HA02)",22,pyridoxine | pyridoxine hydrochloride
+benzydamine,bencidamina,confirmado,"sugerencia + Wikidata (Q793143, nombre inglés «benzydamine»): mismo ATC que la AEMPS/CIMA (A01AD02, G02CC03, M01AX07, M02AA05, R02AX03)",19,benzydamine hydrochloride
+zinc oxide,zinc óxido,confirmado,"regla + Wikidata (Q190077, Q3639461, nombre inglés «zinc oxide»): el mismo elemento tiene el nombre español «zinc óxido»",19,zinc oxide
+menthol,mentol,confirmado,"regla + Wikidata (Q2225141, Q407418, nombre inglés «menthol»): el mismo elemento tiene el nombre español «mentol»",18,menthol
+diclofenac,diclofenaco,confirmado,"regla + Wikidata (Q244408, nombre inglés «diclofenac»): mismo ATC que la AEMPS/CIMA (D11AX18, M01AB05, M02AA15, S01BC03)",15,diclofenac diethylammonium | diclofenac sodium
+bisacodyl,bisacodilo,confirmado,"regla + Wikidata (Q417874, nombre inglés «bisacodyl»): mismo ATC que la AEMPS/CIMA (A06AB02, A06AG02)",14,bisacodyl
+levonorgestrel,levonorgestrel,confirmado,"regla + Wikidata (Q416950, nombre inglés «levonorgestrel»): mismo ATC que la AEMPS/CIMA (G03AC03, G03AD01)",14,levonorgestrel
+pseudoephedrine,pseudoefedrina,confirmado,"regla + Wikidata (Q263958, nombre inglés «pseudoephedrine»): mismo ATC que la AEMPS/CIMA (R01BA02)",14,pseudoephedrine hydrochloride
+dextromethorphan,dextrometorfano,confirmado,"regla + Wikidata (Q407781, nombre inglés «dextromethorphan»): mismo ATC que la AEMPS/CIMA (R05DA09)",11,dextromethorphan hydrobromide
+hydrocortisone,hidrocortisona,confirmado,"regla + Wikidata (Q190875, Q26981430, nombre inglés «hydrocortisone»): mismo ATC que la AEMPS/CIMA (A01AC03, A07EA02, C05AA01, D07AA02, D07XA01, H02AB09, S01BA02, S01CB03, S02BA01)",11,hydrocortisone
+xylometazoline,xilometazolina,confirmado,"regla + Wikidata (Q31030, nombre inglés «xylometazoline»): mismo ATC que la AEMPS/CIMA (R01AA07, R01AB06, S01GA03)",11,xylometazoline hydrochloride
+cetylpyridinium chloride,cetilpiridinio cloruro,confirmado,"regla + Wikidata (Q418318, nombre inglés «cetylpyridinium chloride»): el mismo elemento tiene el nombre español «cetilpiridinio cloruro»",10,cetylpyridinium chloride
+benzocaine,benzocaína,confirmado,"regla + Wikidata (Q422745, nombre inglés «benzocaine»): mismo ATC que la AEMPS/CIMA (C05AD03, D04AB04, N01BA05, R02AD01)",8,benzocaine
+fexofenadine,fexofenadina,confirmado,"regla + Wikidata (Q415122, nombre inglés «fexofenadine»): mismo ATC que la AEMPS/CIMA (R06AX26)",8,fexofenadine hydrochloride
+simeticone,simeticona,confirmado,"regla + Wikidata (Q419415, nombre inglés «simeticone»): el mismo elemento tiene el nombre español «simeticona»",8,simeticone
+aciclovir,aciclovir,confirmado,"regla + Wikidata (Q147101, nombre inglés «aciclovir»): mismo ATC que la AEMPS/CIMA (D06BB03, J05AB01, S01AD03)",7,aciclovir
+cyanocobalamin,cianocobalamina,confirmado,"Wikidata + Wikidata (Q252251, nombre inglés «cyanocobalamin»): mismo ATC que la AEMPS/CIMA (B03BA01)",6,cyanocobalamin
+esomeprazole,esomeprazol,confirmado,"regla + Wikidata (Q553223, nombre inglés «esomeprazole»): mismo ATC que la AEMPS/CIMA (A02BC05)",6,esomeprazole
+glucose,glucosa,confirmado,"regla + Wikidata (Q21036645, Q37525, nombre inglés «glucose»): mismo ATC que la AEMPS/CIMA (B05CX01, V04CA02, V06DC01)",6,glucose | glucose monohydrate
+amorolfine,amorolfina,confirmado,"regla + Wikidata (Q123195, nombre inglés «amorolfine»): mismo ATC que la AEMPS/CIMA (D01AE16)",5,amorolfine hydrochloride
+lactic acid,ácido láctico,confirmado,"regla + Wikidata (Q161249, nombre inglés «lactic acid»): mismo ATC que la AEMPS/CIMA (G01AD01)",5,lactic acid
+minoxidil,minoxidil,confirmado,"regla + Wikidata (Q424165, nombre inglés «minoxidil»): mismo ATC que la AEMPS/CIMA (C02DC01, D11AX01)",5,minoxidil
+terbinafine,terbinafina,confirmado,"regla + Wikidata (Q415259, nombre inglés «terbinafine»): mismo ATC que la AEMPS/CIMA (D01AE15, D01BA02)",5,terbinafine hydrochloride | terbinafine
+dexpanthenol,dexpantenol,confirmado,"regla + Wikidata (Q47495755, nombre inglés «dexpanthenol»): mismo ATC que la AEMPS/CIMA (A11HA30, D03AX03, S01XA12)",4,dexpanthenol
+flurbiprofen,flurbiprofeno,confirmado,"regla + Wikidata (Q419890, nombre inglés «flurbiprofen»): mismo ATC que la AEMPS/CIMA (M01AE09, M02AA19, R02AX01, S01BC04)",4,flurbiprofen
+folic acid,ácido fólico,confirmado,"regla + Wikidata (Q127060, Q92079055, nombre inglés «folic acid»): mismo ATC que la AEMPS/CIMA (B03BB01)",4,folic acid
+hypromellose,hipromelosa,confirmado,"regla + Wikidata (Q423846, nombre inglés «hypromellose»): mismo ATC que la AEMPS/CIMA (S01KA02)",4,hypromellose
+magnesium carbonate,magnesio carbonato,confirmado,"regla + Wikidata (Q407931, Q425450, nombre inglés «magnesium carbonate»): mismo ATC que la AEMPS/CIMA (A06AD01)",3,magnesium carbonate
+magnesium hydroxide,magnesio hidróxido,confirmado,"regla + Wikidata (Q407548, nombre inglés «magnesium hydroxide»): mismo ATC que la AEMPS/CIMA (A02AA04)",3,magnesium hydroxide
+orlistat,orlistat,confirmado,"regla + Wikidata (Q424163, nombre inglés «orlistat»): mismo ATC que la AEMPS/CIMA (A08AB01)",3,orlistat
+oxymetazoline,oximetazolina,confirmado,"regla + Wikidata (Q417813, nombre inglés «oxymetazoline»): mismo ATC que la AEMPS/CIMA (R01AA05, R01AB07, S01GA04)",3,oxymetazoline hydrochloride
+naphazoline,nafazolina,confirmado,"regla + Wikidata (Q415433, nombre inglés «naphazoline»): mismo ATC que la AEMPS/CIMA (R01AA08, R01AB02, S01GA01)",2,naphazoline hydrochloride
+triprolidine,triprolidina,confirmado,"regla + Wikidata (Q417654, nombre inglés «triprolidine»): mismo ATC que la AEMPS/CIMA (R06AX07)",2,triprolidine hydrochloride
+bifonazole,bifonazol,confirmado,"regla + Wikidata (Q421162, nombre inglés «bifonazole»): mismo ATC que la AEMPS/CIMA (D01AC10)",1,bifonazole
+biotin,biotina,confirmado,"Wikidata + Wikidata (Q181354, nombre inglés «biotin»): mismo ATC que la AEMPS/CIMA (A11HA05)",1,biotin
+budesonide,budesonida,confirmado,"regla + Wikidata (Q422212, nombre inglés «budesonide»): mismo ATC que la AEMPS/CIMA (A07EA06, D07AC09, R01AD05, R03BA02)",1,budesonide
+camphor,alcanfor,confirmado,"Wikidata + Wikidata (Q124695191, Q181559, nombre inglés «camphor»): mismo ATC que la AEMPS/CIMA (C01EB02)",1,camphor
+cyproheptadine,ciproheptadina,confirmado,"regla + Wikidata (Q417884, nombre inglés «cyproheptadine»): mismo ATC que la AEMPS/CIMA (R06AX02)",1,cyproheptadine hydrochloride
+doxylamine,doxilamina,confirmado,"regla + Wikidata (Q423390, nombre inglés «doxylamine»): mismo ATC que la AEMPS/CIMA (R06AA09)",1,doxylamine succinate
+hexetidine,hexetidina,confirmado,"regla + Wikidata (Q419749, nombre inglés «hexetidine»): mismo ATC que la AEMPS/CIMA (A01AB12)",1,hexetidine
+omeprazole,omeprazol,confirmado,"regla + Wikidata (Q422210, nombre inglés «omeprazole»): mismo ATC que la AEMPS/CIMA (A02BC01)",1,omeprazole
+sodium sulfate,sodio sulfato,confirmado,"regla + Wikidata (Q211737, nombre inglés «sodium sulfate»): el mismo elemento tiene el nombre español «sodio sulfato»",1,sodium sulfate anhydrous
+tetracaine,tetracaína,confirmado,"regla + Wikidata (Q419608, nombre inglés «tetracaine»): mismo ATC que la AEMPS/CIMA (C05AD02, D04AB06, N01BA03, S01HA03)",1,tetracaine
+sodium bicarbonate,sodio bicarbonato,aprobado,Revisión manual: es la misma sustancia (bicarbonato sódico). Los ATC difieren solo por el uso: Wikidata lista el intravenoso (B05CB04) y la AEMPS el antiácido (A02AH). Pendiente de visto bueno de María.,34,sodium bicarbonate
+sodium chloride,sodio cloruro,aprobado,"Revisión manual: es la misma sustancia (cloruro sódico). Los ATC difieren solo por el uso: Wikidata lista los intravenosos (B05CB01, A12CA01) y la AEMPS los nasales (R01AX10). Pendiente de visto bueno de María.",11,sodium chloride
+sodium alginate,sodio alginato,sin_confirmar,"Wikidata (Q1187513, nombre inglés «sodium alginate»): falta el código ATC para comprobar",25,sodium alginate
+promethazine,prometazina,sin_confirmar,Wikidata no tiene ningún elemento con ese nombre en inglés,19,promethazine hydrochloride | promethazine teoclate
+sodium citrate,sodio citrato,sin_confirmar,"Wikidata (Q409728, nombre inglés «sodium citrate»): falta el código ATC para comprobar",16,sodium citrate | sodium citrate dihydrate
+benzalkonium chloride,benzalconio cloruro,sin_confirmar,"Wikidata (Q72445001, nombre inglés «benzalkonium chloride»): falta el código ATC para comprobar",12,benzalkonium chloride
+ferrous fumarate,hierro fumarato,sin_confirmar,"Wikidata (Q416370, nombre inglés «ferrous fumarate»): falta el código ATC para comprobar",12,ferrous fumarate
+amylmetacresol,amilmetacresol,sin_confirmar,Wikidata no tiene ningún elemento con ese nombre en inglés,8,amylmetacresol
+dimeticone,dimeticona,sin_confirmar,Wikidata no tiene ningún elemento con ese nombre en inglés,4,dimeticone
+carmellose,carmelosa,sin_confirmar,Wikidata no tiene ningún elemento con ese nombre en inglés,2,carmellose sodium
+levomenthol,mentol,sugerido,"Wikidata (Q407418, nombre inglés «levomenthol»): falta el código ATC para comprobar",14,levomenthol
+amylase,amilasa,sugerido,"Wikidata (Q17153, nombre inglés «amylase»): falta el código ATC para comprobar",8,amylase
+lipase,lipasa,sugerido,"Wikidata (Q105978116, Q123171475, nombre inglés «lipase»): falta el código ATC para comprobar",8,lipase
+protease,proteasa,sugerido,"Wikidata (Q18058885, Q18059326, nombre inglés «protease»): falta el código ATC para comprobar",8,protease
+echinacea,echinacea purpurea,sugerido,"Wikidata (Q1062627, Q1642983, nombre inglés «echinacea»): falta el código ATC para comprobar",4,echinacea
+echinacea,echinacea angustifolia,sugerido,"Wikidata (Q1062627, Q1642983, nombre inglés «echinacea»): falta el código ATC para comprobar",4,echinacea
+allantoin,alantoína,sugerido,"Wikidata (Q409804, nombre inglés «allantoin»): falta el código ATC para comprobar",2,allantoin
+thyme,thymus vulgaris,sugerido,"Wikidata (Q148668, Q3215980, nombre inglés «thyme»): falta el código ATC para comprobar",2,thyme
