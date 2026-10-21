@@ -22,26 +22,36 @@ combinaciones también son grupos aparte ("dimenhidrinato" no es lo mismo que
 
 | País | Filas | Fuente | Fiabilidad |
 |---|---|---|---|
-| 🇪🇸 España | 1.014 | **CIMA API (AEMPS)** — pública, JSON, sin login | Real, oficial |
-| 🇫🇷 Francia | 1.493 | **BDPM (ANSM/data.gouv.fr)** — descarga pública oficial | Real, oficial |
-| 🇬🇧 Reino Unido | 1.239 | **NHS dm+d (NHSBSA)** — descarga con cuenta gratuita en NHS TRUD, licencia OGL v3.0 | Real, oficial |
+| 🇪🇸 España | 11.556 (1.016 sin receta + 10.540 con receta) | **CIMA API (AEMPS)** — pública, JSON, sin login | Real, oficial |
+| 🇫🇷 Francia | 9.208 (1.493 sin receta + 7.715 con receta) | **BDPM (ANSM/data.gouv.fr)** — descarga pública oficial | Real, oficial |
+| 🇬🇧 Reino Unido | 5.661 (1.231 sin receta, 641 de ellos «solo en farmacia», + 4.430 con receta) | **NHS dm+d (NHSBSA)** — descarga con cuenta gratuita en NHS TRUD, licencia OGL v3.0 | Real, oficial |
 | 🇩🇪🇮🇹🇵🇹 DE/IT/PT | 6 por país | `manual_seed` (escritos a mano, de memoria) | **Sin verificar** — ejemplos para poder probar la app, no para producción |
 
 El Reino Unido conserva además 5 ejemplos manuales (los que todavía no tienen
 un producto real de la misma forma con el que sustituirlos).
 
-**España** es el catálogo de CIMA de medicamentos **comercializados y sin
-receta** (`comerc=1&receta=0`): 1.066 registros, de los que se guardan 1.014
-(52 se omiten porque repiten principio activo y nombre con otro nº de
-registro y, para el usuario, serían filas idénticas). Cada producto lleva
-forma, dosis, composición, código ATC y grupo terapéutico; 395 tienen foto.
+**Desde octubre de 2026 la base incluye también los medicamentos CON receta** (decisión de
+María), marcados con un aviso rojo grande en la app y con un interruptor para ocultarlos
+(`INCLUDE_PRESCRIPTION`; ver "Alcance legal"). No se incluyen inyectables ni productos de uso
+hospitalario, en ninguno de los tres países. Todo lo que sigue sobre cada fuente describe cómo
+se decide qué entra.
 
-**Francia** es la BDPM filtrada a comercializados, sin ninguna condición de
-receta y sin homeopáticos (`fetch_bdpm.py`): 1.512 candidatos, de los que se
-guardan 1.493 (19 se omiten por el mismo motivo que en España). Los
-homeopáticos se detectan con dos señales (la etiqueta de procedimiento
-"Enreg homéo" y que la sustancia diga "préparations homéopathiques"); con
-solo la primera se colaron 132 hasta que se comprobó. A diferencia de CIMA:
+**España** es el catálogo de CIMA de medicamentos **comercializados**, sin receta
+(`comerc=1&receta=0`, 1.067 registros) y con receta (`receta=1`, 15.043 registros, de los que
+se importan 11.490: se excluyen 2.534 de "uso hospitalario" y 1.019 inyectables). Se guardan
+11.556 en total (los demás se omiten porque repiten principio activo y nombre con otro nº de
+registro y, para el usuario, serían filas idénticas). Cada producto lleva forma, dosis, estatus
+legal (`legal_category` y la condición de prescripción original en `legal_note`) y foto si la
+hay. **El detalle (código ATC, composición) solo se pide para los sin receta**: pedirlo para
+los de receta son ~10.000 peticiones más (`python fetch_cima.py --details-rx`, más de una hora).
+Los de receta no tienen ATC ni composición en la base.
+
+**Francia** es la BDPM filtrada a comercializados y sin homeopáticos (`fetch_bdpm.py`):
+9.334 candidatos (1.512 sin receta y 7.822 con receta; se excluyen 1.995 inyectables, 868 de uso
+hospitalario y 1.451 homeopáticos), de los que se guardan 9.208 (los demás repiten principio
+activo y nombre). Los homeopáticos se detectan con dos señales (la etiqueta de procedimiento
+"Enreg homéo" y que la sustancia diga "préparations homéopathiques"); con solo la primera se
+colaron 132 hasta que se comprobó. A diferencia de CIMA:
 - La BDPM **no tiene un campo booleano de receta**. Se infiere: un
   medicamento es sin receta si está comercializado y su código CIS **no**
   aparece en el archivo de condiciones de prescripción (`CIS_CPD_bdpm.txt`).
@@ -58,11 +68,12 @@ solo la primera se colaron 132 hasta que se comprobó. A diferencia de CIMA:
   La fecha de la descarga queda en la columna `verified_at` de cada producto
   francés.
 
-**Reino Unido** es el NHS dm+d (versión 9.3.0, publicada el 28/09/2026)
-filtrado a medicamentos **sin receta** (`fetch_dmd.py`): 1.936 candidatos, de
-los que se guardan 1.239 (697 se omiten porque repiten principio activo y
-nombre comercial exacto, muy habitual en genéricos de varios laboratorios).
-Cómo se decide qué es "sin receta":
+**Reino Unido** es el NHS dm+d (versión 9.3.0, publicada el 28/09/2026) (`fetch_dmd.py`):
+17.731 candidatos (1.936 sin receta y 15.795 con receta), de los que se guardan 5.661 (12.070 se
+omiten porque repiten principio activo y nombre comercial exacto, muy habitual en genéricos de
+varios laboratorios; no se pierde ninguna combinación principio activo + forma). De los de receta
+se excluyen los productos sin licencia (unos 7.900 "unlicensed specials"), los de hospital (3.630)
+y los inyectables (1.736). Cómo se decide qué es "sin receta":
 - Cada **envase** lleva una categoría legal: `GSL` (venta libre), `P` (solo en
   farmacia, sin receta; lo dispensa un farmacéutico) o `POM` (con receta).
   Un producto entra si tiene **algún envase activo P o GSL**. P cuenta como
@@ -77,7 +88,7 @@ Cómo se decide qué es "sin receta":
   su base (betamethasone valerate → betamethasone, que no son equivalentes) o
   se equivoca (ioversol → iodine). Se usa nuestro parser conservador.
 - Forma y vía vienen normalizadas (una forma por producto). Se traducen con
-  `form_map_uk.csv` (54 filas, 89 % de los productos). Si un producto tiene
+  `form_map_uk.csv` (83 filas, 98 % de los productos). Si un producto tiene
   **varias vías** ("Oromucosal; Gingival; Nasal; …") se exige que la vía de la
   tabla sea idéntica: si no, un spray de varias vías acabaría clasificado
   como "pulverización bucal".
@@ -94,28 +105,28 @@ propia agencia, con su propio formato. La ruta lógica es: dejar el esquema
 listo para todos, conectar cada país de verdad, y sustituir cada ejemplo
 manual por una fuente real cuando la investiguemos.
 
-**Comparaciones que hoy funcionan con datos reales de dos países**: **80
-grupos** (principio activo + forma) tienen productos en España y en Francia,
-con 409 productos españoles y 520 franceses dentro de ellos. Los mayores:
-paracetamol · comprimido, ibuprofeno (comprimido, solución oral, gel,
-cápsula), diclofenaco · gel, nicotina (parche, chicle, comprimido para
-chupar), clorhexidina · líquido de uso tópico (antisépticos de piel; los
-enjuagues bucales franceses quedan aparte, ver abajo), loperamida, omeprazol
-y combinaciones como paracetamol + cafeína. Además, dimenhidrinato ·
-comprimido compara España (real) con el ejemplo manual de Francia, porque
-Francia no tiene ningún comprimido suelto de dimenhidrinato sin receta (solo
-jarabe y cápsula, que son grupos distintos).
+**Comparaciones con datos reales** (mismo principio activo y misma forma, nivel exacto): **809
+grupos** comparan España con Francia, **781** España con el Reino Unido, **646** Francia con el
+Reino Unido, y **574** existen en los tres países. Contando también el nivel "misma base" (ver
+"Dos niveles"), el porcentaje de productos españoles con equivalente es:
 
-Con el Reino Unido: **74 grupos** comparan España con el Reino Unido
-(386 productos españoles y 383 británicos), **51 grupos** Francia con el Reino
-Unido (393 y 302) y **43 grupos** existen en los tres países. Los mayores:
-ibuprofeno (comprimido, gel, solución oral, cápsula), paracetamol (comprimido,
-supositorio, solución oral, efervescente), ácido acetilsalicílico, nicotina
-(parche, chicle, comprimido para chupar), cetirizina, loratadina, clotrimazol
-y bencidamina. Cuando un nombre no tiene enlace con España pero es **idéntico
-en francés y en inglés** (p. ej. *lactulose*, *sennosides*), la comparación
-Francia-Reino Unido se hace por nombre idéntico: son nombres internacionales
-(DCI), pero no están comprobados con Wikidata.
+| | exacto | misma base | sin equivalente |
+|---|---|---|---|
+| España → Francia | 71 % | 5 % | **24 %** |
+| España → Reino Unido | 71 % | 6 % | **24 %** |
+| España → ni Francia ni Reino Unido | | | **15 %** |
+| Francia → Reino Unido | 59 % | 3 % | **38 %** |
+| Reino Unido → Francia | 52 % | 3 % | **46 %** |
+
+Antes de añadir las recetas y de ampliar los enlaces y las tablas de formas, España → Francia
+estaba en 59 % sin equivalente y España → Reino Unido en 61 %. Lo que queda sin equivalente es,
+sobre todo: (1) productos que de verdad no existen en el otro país (p. ej. el almagato, el
+principio activo del Almax, no se vende en Francia ni en el Reino Unido: allí hay otros antiácidos
+de aluminio y magnesio como Maalox, que son otra sustancia); (2) el mismo principio activo en otra
+forma; (3) combinaciones que solo existen en un país; y (4) un pequeño resto de pares sin confirmar.
+Cuando un nombre no tiene enlace con España pero es **idéntico en francés y en inglés** (p. ej.
+*lactulose*), la comparación Francia-Reino Unido se hace por nombre idéntico: son nombres
+internacionales (DCI), pero no están comprobados con Wikidata.
 
 Lo que ninguna de las dos fuentes cubre:
 - **Docusato sódico**: no comercializado sin receta en España. Francia tiene
@@ -140,9 +151,10 @@ clonidina y clonazepam).
 `ingredient_links.csv`):
 - *Qué cuenta como "el mismo"*: la misma molécula aunque cambie la sal
   (diclofenaco sódico o dietilamina, lopéramide o su clorhidrato), que es lo
-  que hace el `vtm` de CIMA. No cuentan los ésteres (el dipropionato de
-  betametasona no es betametasona) ni las sales inorgánicas enteras
-  (*carbonate de calcium* no es "calcium").
+  que hace el `vtm` de CIMA. En el nivel **exacto** no cuentan los ésteres ni
+  profármacos (el dipropionato de betametasona no es betametasona) ni las sales inorgánicas
+  enteras (*carbonate de calcium* no es "calcium"); los ésteres se tratan en el nivel **base**
+  (ver "Dos niveles").
 - *Cómo se propone un par*: se limpia el nombre francés (se quita la sal) y,
   con reglas fijas de terminaciones (-ène → -eno, -ine → -ina, -ide → -ida...),
   debe quedar **idéntico** a un nombre español que ya tengamos.
@@ -155,11 +167,16 @@ clonidina y clonazepam).
 - *Combinaciones*: se comparan como conjunto, así que "caféine + paracétamol"
   es lo mismo que "paracetamol + cafeína".
 - *Estados* de `ingredient_links.csv`: `confirmado` y `aprobado` se usan;
-  `sin_confirmar`, `sugerido`, `contradice` y `rechazado` no. Hoy hay **73
-  confirmados**. Seis pares siguen sin comprobación independiente (parafina
-  líquida, amilmetacresol, l-cistina, carbocysteine, mirtecaína y carmelosa;
-  45 productos): esperan que alguien con conocimiento farmacéutico los
-  apruebe, cambiando `sin_confirmar` por `aprobado` en el archivo.
+  `sin_confirmar`, `sugerido`, `contradice` y `rechazado` no. Hoy hay **619 exactos
+  confirmados** (eran 73 antes de añadir los de receta: el vocabulario español pasó de ~270 a más de
+  1.500 nombres). Siguen sin comprobación independiente 33 pares exactos (parafina líquida,
+  amilmetacresol, micofenolato mofetilo, proguanilo, polimixina B...): esperan que alguien con
+  conocimiento farmacéutico los apruebe, cambiando `sin_confirmar` por `aprobado` en el archivo.
+  La comprobación sigue descartando parecidos peligrosos (désonide ≠ budesonida, estazolam ≠
+  ketazolam, procaïne ≠ prilocaïne, isoconazole ≠ tioconazol, amifampridine ≠ fampridina).
+- Una curación completa tarda ~35 minutos (Wikidata y la AEMPS limitan las peticiones). Todas las
+  consultas a Wikidata reintentan solas si responde 429/50x o agota el tiempo; antes, un lote
+  perdido dejaba decenas de pares válidos "sin comprobar".
 - `python curate_ingredient_links.py` vuelve a proponer y comprobar los
   pares (conserva las decisiones manuales). El importador **nunca** crea
   enlaces por su cuenta: solo lee el archivo.
@@ -169,7 +186,7 @@ vía de administración que debe cumplir (un gel *cutanée* no es un gel
 *ophtalmique*), la forma de CIMA y la evidencia de cómo clasifica CIMA esa
 forma. La forma de destino se escribe siempre con el valor exacto que ya hay
 en España (CIMA a veces la escribe con tildes, `SOLUCIÓN/SUSPENSIÓN ORAL`, y a
-veces sin ellas). Son 59 filas y cubren el 81 % de los productos franceses;
+veces sin ellas). Son 88 filas y cubren el 94 % de los productos franceses (se añadieron las de liberación prolongada, inhaladores, sublinguales y pomadas oftálmicas, cada una con su evidencia de CIMA);
 lo ambiguo o sin equivalente (colutorios, inyectables, "comprimido para chupar
 o masticar"...) se queda en francés y no se compara.
 
@@ -191,9 +208,17 @@ o masticar"...) se queda en francés y no se compara.
   ATC son distintos queda como `contradice` (así se descartó, por ejemplo,
   cyclizine ≈ cetirizina).
 - `python curate_ingredient_links.py --country uk --zip RUTA_AL_ZIP` regenera
-  la tabla (conserva las decisiones manuales). Hoy: **63 confirmados**, 2
-  aprobados a mano, 8 sin confirmar (98 productos) y 8 sugeridos (50
-  productos).
+  la tabla (conserva las decisiones manuales). Hoy: **562 exactos confirmados**, 2 aprobados a
+  mano, 41 sin confirmar y 23 sugeridos. Rechazados por la comprobación, entre otros: eszopiclone ≠
+  zopiclona (es solo uno de los dos isómeros), promazine ≠ prometazina, cycloserine ≠ ciclosporina,
+  potassium citrate ≠ ácido cítrico.
+- Sales que antes faltaban en la lista cerrada (oxalato, hidrogenotartrato, xinafoato, hemifumarato,
+  hidratos, arginina, tert-butilamina...) ya se reconocen. Los contraiones AMBIGUOS (acetato,
+  benzoato, malato: a veces sal y a veces éster) solo se quitan para bases concretas (p. ej.
+  *desmopressin acetate*, *flecainide acetate*, *rizatriptan benzoate*, *sunitinib malate*), nunca
+  en general: *benzyl benzoate* y *hydrocortisone acetate* se quedan enteros.
+- Un nombre que se queda reducido a un anión suelto no se interpreta (*acétate de sodium* se
+  quedaba en "acétate" y compartía clave con *acétate de lysine*).
 - **Dos pares aprobados a mano, pendientes del visto bueno de una persona con
   conocimiento farmacéutico**: *sodium bicarbonate* → sodio bicarbonato y
   *sodium chloride* → sodio cloruro. Wikidata y la AEMPS los marcaban como
@@ -210,12 +235,57 @@ o masticar"...) se queda en francés y no se compara.
   isómeros del mentol), las enzimas (amilasa, lipasa, proteasa), y la
   equinácea y el tomillo (extractos de planta, con varias especies posibles).
 
-**Pruebas**: `python -m unittest test_ingredients test_fetch_bdpm test_fetch_dmd -v`.
-Incluyen pares que **nunca** deben enlazarse (alanina / alantoína, ketoprofeno /
-piketoprofeno, *hyoscine butylbromide* / hioscina, ésteres y sus bases...),
-combinaciones de forma y vía que no deben traducirse, y un ZIP de dm+d en
-miniatura para comprobar la regla de "sin receta" (solo POM fuera; P y GSL
-dentro; descatalogados, sin licencia, importados y homeopáticos fuera).
+### Dos niveles de equivalencia
+
+CIMA nombra los medicamentos por la molécula **sin el éster o profármaco**: "fluticasona",
+"candesartán", "olmesartán", "beclometasona". Francia y el Reino Unido los nombran **con** él:
+*fluticasone propionate*, *candesartan cilexetil*, *olmesartan medoxomil*, *beclometasone
+dipropionate*. Con nuestra regla estricta (un éster no es "el mismo") todos esos fármacos de
+uso masivo quedaban sin equivalente, y mezclarlos sin más sería falso: un éster es otra molécula,
+con potencia y dosis a veces distintas (el furoato de fluticasona, el de Relvar, no es el
+propionato). Por eso hay **dos niveles**:
+
+- **Exacto** (verde): misma molécula, aunque cambie la sal. Como siempre.
+- **Misma base** (franja ámbar en la app): el mismo principio activo base con un nombre distinto
+  que puede ser otro éster o sal. La app enseña el nombre exacto de cada país y avisa: "no está
+  confirmado que sea exactamente la misma sustancia... consulta a un farmacéutico".
+
+Cómo funciona:
+- La base de datos guarda `active_ingredients.base_inn` (la vista `equivalences` lo expone como
+  `base_inn`; sin base propia, es el propio nombre). Un producto con enlace de nivel base
+  **conserva su propio nombre** (así no se mezcla con los exactos); el nivel ámbar se busca solo
+  cuando no hay equivalente exacto.
+- Los archivos de enlaces tienen una columna `nivel` (`exacto` o `base`). Los candidatos de nivel
+  base salen de quitar palabras de éster/profármaco (`ESTER_WORDS`: propionate, dipropionate,
+  furoate, valerate, butyrate, acetate, cilexetil, medoxomil, mofetil, etexilate, disoproxil...) y
+  que la base sea un nombre español que ya tenemos. Pasan por la **misma comprobación ATC**, y esa
+  comprobación distingue ésteres distintos de la misma base: `furoate de fluticasone` →
+  fluticasona quedó rechazado (ATC R01AD12/R03BA09 frente a R03BA05).
+- **Un enlace de nivel base nunca se usa como exacto** (`load_links(level=...)`,
+  `resolve_levels()`); hay una prueba que lo garantiza.
+- Hoy hay 307 productos franceses y 544 británicos con enlace de nivel base.
+
+**Enlaces de nivel base aprobados a mano, pendientes del visto bueno de un farmacéutico.**
+Wikidata tiene el elemento de muchos ésteres pero sin código ATC, así que no pueden confirmarse
+con el método automático. Se aprobaron a mano los de manual o los que ya estaban confirmados por
+ATC en la tabla del otro país:
+- Francia (11): propionate de fluticasone; dipropionate de béclométasone (4 grafías);
+  dabigatran étexilate; dipropionate y valérate de bétaméthasone; propionate de clobétasol.
+- Reino Unido (10): fluticasone propionate; candesartan cilexetil; olmesartan medoxomil;
+  abiraterone acetate; tenofovir disoproxil; cyproterone acetate; betamethasone valerate y
+  dipropionate; dabigatran etexilate mesilate; clobetasol propionate.
+Cada fila lleva la razón en `evidencia`. Si no estás de acuerdo con alguna, cambia `aprobado` por
+`rechazado` en el CSV. Siguen sin confirmar (no se usan) otros 17 pares franceses y 8 británicos
+(fludrocortisone acetate, hydrocortisone acetate, medroxyprogesterone acetate, estradiol
+valerate, eslicarbazepine acetate, norethisterone acetate...).
+
+**Pruebas**: `python -m unittest test_ingredients test_fetch_bdpm test_fetch_dmd test_prescription test_levels -v`
+(93). Incluyen pares que **nunca** deben enlazarse (alanina / alantoína, ketoprofeno /
+piketoprofeno, *hyoscine butylbromide* / hioscina, *benzyl benzoate*, ésteres y sus bases...),
+combinaciones de forma y vía que no deben traducirse, un ZIP de dm+d en miniatura para comprobar
+las reglas de qué entra (P/GSL/POM, inyectables, hospital, sin licencia, homeopáticos), las reglas
+de exclusión de España y Francia, la sincronización con estatus legal, el interruptor de recetas y
+los dos niveles.
 
 **Avisos en la app** cuando un país no tiene el grupo que se mira: "hay
 productos con este principio activo, pero en otra forma (…); no son
@@ -237,19 +307,45 @@ MediPass, para uso con usuarios reales, debería limitarse a tres categorías:
 
 y excluir cualquier medicamento con receta del catálogo público.
 
-**Estado actual de la implementación, tal como es hoy:**
-- Para **España, Francia y el Reino Unido** ya se cumple por construcción:
-  `fetch_cima.py`, `fetch_bdpm.py` y `fetch_dmd.py` solo importan
-  medicamentos sin receta, así que la base no contiene ningún medicamento real
-  de esos países con receta. En el Reino Unido, el estatus P (solo en
-  farmacia) cuenta como "sin receta" pero la app hoy lo muestra como "Venta
-  libre" igual que el GSL: distinguirlos requiere el `legal_category` de abajo.
-- **Todavía no hay campo `legal_category`** en el esquema ni filtro en la app.
-- **Productos sanitarios y parafarmacia** no tienen ninguna fuente real
-  todavía (ver "Próximos pasos"); solo hay ejemplos manuales.
-- Los ejemplos manuales de los países restantes (DE/IT/PT) no están
-  verificados y uno de ellos (Voltaren Schmerzgel Forte, Alemania) está
-  marcado como "con receta", lo que es un dato de ejemplo, no una fuente.
+**Decisión de María (octubre de 2026): la app muestra también los medicamentos con
+receta**, con un aviso grande y llamativo, porque para quien viaja es más útil saber
+que un producto existe pero necesita receta que no encontrarlo. Esto va en contra de la
+conclusión de arriba, así que está pensado para poder deshacerse sin rehacer nada:
+
+- **Interruptor `INCLUDE_PRESCRIPTION`** (variable de entorno del backend, `1` por
+  defecto). Con `INCLUDE_PRESCRIPTION=0` la API no sirve ningún medicamento con receta ni
+  como producto ni como grupo, y la app adapta sus textos (`GET /api/config`). Los datos
+  siguen en `medipass.db`. Es lo que habría que apagar antes de publicar la app si un
+  abogado lo recomienda. Hay una prueba que comprueba que, apagado, no sale ninguna.
+- Cada producto guarda su **estatus legal** en `legal_category` (`libre`,
+  `solo_farmacia` o `receta`) y la etiqueta original del país en `legal_note` (`GSL`, `P`,
+  `POM`, `liste I`, "Medicamento sujeto a prescripción médica"...). Esto sustituye al
+  `legal_category` pendiente de antes y distingue `GSL` de `P` en el Reino Unido.
+- **Cómo se ve**: la tarjeta del producto con receta lleva borde rojo y una franja roja
+  "SOLO CON RECETA MÉDICA EN [PAÍS]"; si un país es libre y el otro con receta aparece un
+  banner rojo entre las dos tarjetas; el buscador y el listado marcan "CON RECETA".
+  Si en un país un grupo tiene productos libres y con receta, se muestra el del mismo
+  estatus que el de origen y se avisa de que existe el otro.
+- **Qué NO se incluye (decisión de María, igual en los tres países)**: los **inyectables
+  y parenterales** y los **productos de uso hospitalario**. Así las comparaciones son
+  justas: si un país los incluyera y otro no, saldrían "sin equivalente" falsos.
+  - *España*: se excluye "Uso hospitalario" (se administra en el hospital) y todo producto
+    con forma inyectable/perfusión o con alguna vía parenteral. **No** se excluye
+    "Diagnóstico hospitalario": lo receta un especialista pero el paciente lo compra en la
+    farmacia (`fetch_cima.py`, `exclusion_reason`).
+  - *Francia*: se excluyen "réservé à l'usage hospitalier", farmacias hospitalarias,
+    uso profesional, urgencias y administración en un centro de salud, además de las vías
+    parenterales y de diálisis. **No** se excluye "prescription hospitalière" (se dispensa en
+    farmacia). Ver `HOSPITAL_CONDITIONS` y `PARENTERAL_ROUTES` en `fetch_bdpm.py`.
+  - *Reino Unido*: se excluyen los productos cuyos envases activos llevan todos la marca
+    `HOSP` ("hospital use only") del dm+d, y los inyectables por forma o vía. Ver
+    `load_catalog` en `fetch_dmd.py`. Además, como antes, solo entran productos con
+    licencia (los "unlicensed specials" de receta, unos 7.900, quedan fuera).
+  Para volver a incluirlos hay que quitar esas comprobaciones en cada importador.
+- Los **productos sanitarios y la parafarmacia** siguen sin fuente real (solo hay ejemplos
+  manuales), y los ejemplos manuales de DE/IT/PT no están verificados; uno de ellos
+  (Voltaren Schmerzgel Forte, Alemania) está marcado como "con receta", lo que es un dato
+  de ejemplo, no una fuente.
 
 **Esto no es asesoría legal.** Es una interpretación de no-abogados de un
 texto normativo. Antes de lanzar esto a usuarios reales hay que consultarlo
@@ -298,7 +394,7 @@ medipass.db  ←── backend/app.py (Flask, puerto 5000)  ←── frontend/ 
 - `form_map_fr.csv`, `form_map_uk.csv` — traducción de formas francesas e
   inglesas a las de CIMA
 - `.env` — clave de API de NHS TRUD (no se sube a GitHub)
-- `test_ingredients.py`, `test_fetch_bdpm.py`, `test_fetch_dmd.py` — pruebas
+- `test_ingredients.py`, `test_fetch_bdpm.py`, `test_fetch_dmd.py`, `test_prescription.py`, `test_levels.py` — pruebas
 - `medipass.db` — la base ya construida
 - `backend/app.py` — servidor Flask
 - `frontend/` — app Vite + React
@@ -310,10 +406,12 @@ Hacen falta dos terminales, una para el backend y otra para el frontend.
 **Terminal 1 — backend:**
 ```bash
 cd backend
-pip install flask flask-cors
+pip install flask flask-cors waitress
 python app.py
 ```
-Queda escuchando en `http://127.0.0.1:5000`.
+Queda escuchando en `http://127.0.0.1:5000`. **Instala `waitress`**: el servidor de desarrollo de Flask
+en Windows tarda ~19 s en responder el catálogo con recetas (~6 MB); con waitress, menos de un segundo.
+Para ocultar los medicamentos con receta: `set INCLUDE_PRESCRIPTION=0` antes de `python app.py`.
 
 **Terminal 2 — frontend:**
 ```bash
@@ -339,6 +437,9 @@ python fetch_cima.py                    # sincroniza y completa el detalle que f
 python fetch_cima.py --no-details       # solo el listado (rápido, sin ATC/composición)
 python fetch_cima.py --refresh-details  # vuelve a pedir el detalle de todos (~5 min)
 python fetch_cima.py --debug            # imprime el JSON crudo de 1 medicamento
+python fetch_cima.py --only-otc         # solo sin receta (sin los 10.000 de receta)
+python fetch_cima.py --details-rx       # pide también ATC/composición de los de receta (más de una hora)
+python fetch_cima.py --dry-run          # cuenta qué se importaría, sin tocar medipass.db
 
 python fetch_bdpm.py                    # sincroniza Francia (descarga ~10 MB cada vez)
 python fetch_bdpm.py --debug            # descarga y analiza, sin tocar medipass.db
@@ -397,16 +498,14 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
   los dos productos que se enseñan pueden tener concentraciones distintas
   (por ejemplo, Dalsydol 400 mg en España frente a Advil 200 mg en Francia o
   Anadin Joint Pain 200 mg en el Reino Unido).
-- La forma de España es la "simplificada" de CIMA (36 valores en venta
-  libre, bastante gruesa: "solución/suspensión oral" agrupa jarabes, polvos y
-  granulados). La de Francia se traduce con `form_map_fr.csv` (81 % de los
+- La forma de España es la "simplificada" de CIMA (unos 50 valores,
+  bastante gruesa: "solución/suspensión oral" agrupa jarabes, polvos y
+  granulados). La de Francia se traduce con `form_map_fr.csv` (94 % de los
   productos); el resto conserva su forma en francés y no se compara.
-- Solo se enlazan 585 de los 1.512 productos franceses con un principio
-  activo español; otros 632 tienen un principio activo que no está en la tabla
-  (muchos no tienen equivalente de venta libre en España), 251 tienen un
-  nombre que no se interpreta con seguridad y 44 son combinaciones sin
-  equivalente español. Las combinaciones francesas con todos los componentes
-  enlazados pero sin equivalente en España conservan su nombre francés.
+- De los 9.334 candidatos franceses, 6.927 (74 %) quedan enlazados con un principio activo español
+  (6.620 de nivel exacto y 307 de nivel base); el resto tiene un principio activo que no existe en
+  España, un nombre que no se interpreta con seguridad o es una combinación sin equivalente.
+  En el Reino Unido, 14.359 de los 17.731 candidatos (13.815 exactos y 544 de nivel base).
 - Que un medicamento francés sea "sin receta" es una regla **inferida**
   (no aparece en el archivo de condiciones de prescripción), no un campo
   explícito como en CIMA. Se verificó con un caso real, pero no se auditó
@@ -418,33 +517,38 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
   ATC ni foto en los archivos que usamos.
 - Solo ~39 % de los productos de España tienen foto en CIMA; Francia no
   tiene ninguna.
-- La tabla `active_ingredients` mezcla nombres en español (los de España y
-  los ejemplos), en francés (467 que trajo la BDPM sin equivalente enlazado)
-  y en inglés (331 que trajo el dm+d, de un total de 1.076): un principio
-  activo sin enlace conserva su nombre en el idioma de su fuente.
-- Reino Unido: de los 1.239 productos guardados, **493 quedan enlazados con
-  un principio activo español** (los demás no tienen equivalente de venta
-  libre en España o su nombre no se pudo comprobar). Los 697 omitidos por
-  nombre repetido son, en su mayoría, el mismo genérico de varios
-  laboratorios: no se pierde ninguna combinación principio activo + forma.
-  El dm+d cubre lo que circula por el NHS; si falta algún medicamento de
-  venta libre habitual, será por eso (no se ha auditado exhaustivamente).
-- Reino Unido: `GSL` y `P` se guardan igual (sin receta) y la app no los
-  distingue; el estatus legal exacto no se almacena todavía.
-- El estado "solo se vende con receta en ese país" **no se guarda** (haría
-  falta conservar un estado sin marcas, y antes hay que consultarlo con un
-  abogado): hoy un principio activo que en Francia solo existe con receta
-  sale como "no hemos encontrado en Francia ningún producto de venta libre".
+- La tabla `active_ingredients` (2.956 filas) mezcla nombres en español, en francés y en inglés:
+  un principio activo sin enlace exacto conserva su nombre en el idioma de su fuente.
+- Reino Unido: `GSL` y `P` se guardan por separado (`legal_category` = `libre` o `solo_farmacia`,
+  con la etiqueta original en `legal_note`) y la app muestra "Sin receta, solo en farmacia" para P.
+  Un producto con envases P y POM a la vez cuenta como sin receta y su `legal_note` dice "P + POM".
+  El dm+d cubre lo que circula por el NHS; si falta algún medicamento habitual, será por eso (no se
+  ha auditado exhaustivamente).
+- El estatus de receta de Francia sigue siendo una regla **inferida** (aparecer en el archivo de
+  condiciones de prescripción): no hay campo explícito. La condición original se guarda en
+  `legal_note` ("liste I", "liste II"...); no se ha auditado exhaustivamente.
+- **La dosis no se compara** y el producto que se enseña de cada país es el primero por nombre
+  entre los del mismo estatus que el de origen. Esto produce comparaciones engañosas (un sobre
+  adulto de 400 mg frente a una suspensión infantil de 100 mg/5 ml): es el siguiente paso.
 
 ## Próximos pasos
 
-- Que alguien con conocimiento farmacéutico revise los 6 pares sin comprobar
-  de `ingredient_links.csv` (45 productos), los 8 de `ingredient_links_uk.csv`
-  (98 productos) y los 2 aprobados a mano (bicarbonato y cloruro sódicos), y
-  apruebe o rechace lo que proceda
-- Comparar la **dosis** (hoy no se compara): requiere normalizar unidades y
-  sales, y elegir en cada país el producto de la misma concentración
-
+- Que alguien con conocimiento farmacéutico revise: los 33 pares exactos y 17 de nivel base sin
+  comprobar en `ingredient_links.csv`, los 41 y 8 de `ingredient_links_uk.csv`, y todo lo aprobado
+  a mano (bicarbonato y cloruro sódicos; los 21 ésteres de la sección "Dos niveles")
+- **Elegir el producto por dosis y público** (la "Fase B"): guardar la dosis estructurada de los tres
+  países (Francia la trae en la composición, el dm+d como concentración con unidades en un código
+  aparte, España desordenada), detectar adultos/niños por palabras del nombre (heurística), y
+  elegir en cada país el producto del mismo estatus, público y dosis más cercana, avisando si no
+  hay la misma. Cuidado: ibuprofeno arginina 684 mg y ibuprofeno 400 mg son la misma dosis
+  expresada con y sin sal; si no son comparables, decirlo en vez de inventar.
+- **Alternativas "mismo uso, otra sustancia"** por código ATC (p. ej. Maalox para el Almax): es una
+  recomendación, así que antes hay que revisarlo con un farmacéutico y con el asunto legal
+- **Sinónimos botánicos** (hydrocotyle = centella asiática) y familias de formas (pomada ≈ crema):
+  Madécassol (Francia) no se enlaza con la Blastoestimulina porque la planta tiene otro nombre y
+  la forma es crema frente a pomada
+- Priorizar los pares pendientes que más productos afectan: micofenolato mofetilo, bromacepam,
+  ketotifeno, carmelosa, solifenacina y rabeprazol
 - Conseguir acceso a **BotPlus/BADIS** o **Medipim** para datos reales de
   parafarmacia y productos sanitarios (hoy no hay ninguna fuente real);
   antes, preguntarles si su licencia permite una app para el público
@@ -459,10 +563,8 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
   Hay que volver a mirarlo (o pedir acceso a las agencias) antes de conectarlos.
 - Cada país nuevo repite el proceso: su propia tabla de formas y volver a
   ejecutar `curate_ingredient_links.py` para enlazar sus principios activos
-- Implementar de verdad el `legal_category` y el filtrado descrito en
-  "Alcance legal" — hoy solo se cumple para España, Francia y el Reino Unido
-  por cómo se importan, no por un filtro explícito en el esquema (ahí
-  entraría también distinguir `GSL` de `P` en el Reino Unido)
+- Antes de publicar la app: decidir con un abogado si se muestran los medicamentos con receta; si
+  no, arrancar el backend con `INCLUDE_PRESCRIPTION=0` (los datos siguen en la base)
 - Desplegar a **Vercel** cuando esté lista para compartir con otras personas
 
 ### Para después de cerrar la integración de las bases de datos

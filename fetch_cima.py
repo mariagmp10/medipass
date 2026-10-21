@@ -6,7 +6,13 @@ gratuita de CIMA (AEMPS): https://cima.aemps.es/
 No requiere API key ni login. Documentación oficial (PDF):
 https://www.aemps.gob.es/apps/cima/docs/CIMA_REST_API.pdf
 
-Alcance: solo medicamentos COMERCIALIZADOS y SIN RECETA (comerc=1, receta=0).
+Alcance: medicamentos COMERCIALIZADOS, sin receta (receta=0) y con receta (receta=1).
+Los de receta se guardan con requires_prescription = 1 y la app los muestra con un aviso
+grande (y se pueden ocultar con el interruptor INCLUDE_PRESCRIPTION del backend). De los de
+receta se EXCLUYEN los inyectables/parenterales y los de uso hospitalario, igual que en
+Francia y el Reino Unido, para que las comparaciones entre países sean justas: si un país
+los incluyera y otro no, saldrían "sin equivalente" falsos. Para cambiarlo, ver
+exclusion_reason().
 Cada medicamento se guarda con su principio activo (el 'vtm' de CIMA, que ya
 distingue combinaciones: "dimenhidrinato" vs "dimenhidrinato + cafeína"), su
 forma farmacéutica simplificada y su dosis. Después se pide el detalle de cada
@@ -14,13 +20,16 @@ uno para completar composición, código ATC y foto.
 
 Es una sincronización: puedes volver a ejecutarlo cuando quieras. Actualiza lo
 que ya existe, añade lo nuevo y borra los productos de España de CIMA que ya
-no cumplan el filtro (retirados, o que pasaron a requerir receta).
+no cumplan el filtro (retirados, excluidos...).
 
 Uso:
     pip install requests
     python fetch_cima.py                    # sincroniza y completa el detalle que falte
     python fetch_cima.py --no-details       # solo el listado (rápido, sin ATC/composición)
     python fetch_cima.py --refresh-details  # vuelve a pedir el detalle de todos (~5 min)
+    python fetch_cima.py --only-otc         # solo sin receta (como antes de añadir las recetas)
+    python fetch_cima.py --details-rx       # pide también el detalle de los de receta (más de una hora)
+    python fetch_cima.py --dry-run          # cuenta qué se importaría, sin tocar medipass.db
     python fetch_cima.py --debug            # imprime el JSON crudo de 1 medicamento y sale
 """
 
@@ -34,24 +43,23 @@ from datetime import date
 
 import requests
 
+import importers
+import ingredients as ing
+
 sys.stdout.reconfigure(encoding="utf-8")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(HERE, "medipass.db")
-SCHEMA_PATH = os.path.join(HERE, "schema.sql")
 CIMA_BASE = "https://cima.aemps.es/cima/rest"
 PAGE_SIZE = 200
 DETAIL_WORKERS = 4  # peticiones de detalle en paralelo; pocas, por cortesía con la API pública
 
-# Columnas añadidas a products después de la primera versión del esquema.
-NEW_PRODUCT_COLUMNS = {
-    "form": "TEXT",
-    "dose": "TEXT",
-    "composition": "TEXT",
-    "atc_code": "TEXT",
-    "atc_group": "TEXT",
-    "photo_url": "TEXT",
-}
+# Vías de administración parenterales: un producto con alguna de ellas es inyectable.
+PARENTERAL_ROUTES = (
+    "intravenosa", "intramuscular", "subcutanea", "intratecal", "epidural", "intravitrea", "intradermica",
+    "intraarticular", "intraarterial", "intracardiaca", "intraosea", "intracavernosa", "intraperitoneal",
+    "intraventricular", "intralesional", "infiltracion", "intracameral", "perineural", "intravesical",
+)
 
 
 def cima_get(path, params):
@@ -76,13 +84,13 @@ def pick_photo(fotos):
     return fotos[0].get("url") if fotos else None
 
 
-def fetch_catalog():
-    """GET /medicamentos?comerc=1&receta=0, paginando hasta traer todo."""
+def fetch_catalog(receta):
+    """GET /medicamentos?comerc=1&receta=0|1, paginando hasta traer todo."""
     items, page = [], 1
     while True:
         data = cima_get(
             "medicamentos",
-            {"comerc": 1, "receta": 0, "pagina": page, "tamanioPagina": PAGE_SIZE},
+            {"comerc": 1, "receta": receta, "pagina": page, "tamanioPagina": PAGE_SIZE},
         )
         total = data["totalFilas"]
         if not data["resultados"]:
@@ -97,12 +105,34 @@ def fetch_catalog():
     return items
 
 
+def exclusion_reason(med):
+    """'hospital', 'inyectable' o None. Solo se aplica a los de receta: los de uso hospitalario
+    y los inyectables/parenterales (por la forma o por alguna vía de administración) no entran
+    en MediPass.
+    OJO: "Diagnóstico hospitalario" NO es de hospital: lo receta un especialista tras un
+    diagnóstico, pero el paciente lo compra en la farmacia (p. ej. comprimidos de abacavir).
+    Solo se excluye "Uso hospitalario" (se administra en el hospital)."""
+    if (med.get("cpresc") or "").lower().startswith("uso hospitalario"):
+        return "hospital"
+    forms = [(med.get(k) or {}).get("nombre") or "" for k in ("formaFarmaceutica", "formaFarmaceuticaSimplificada")]
+    if any(w in ing.plain(f) for f in forms for w in ("inyect", "perfusi", "infusi")):
+        return "inyectable"
+    routes = [ing.plain(v.get("nombre") or "") for v in med.get("viasAdministracion") or []]
+    if any(p in r for r in routes for p in PARENTERAL_ROUTES):
+        return "inyectable"
+    return None
+
+
 def to_product(med):
     """Convierte un medicamento del listado de CIMA en los campos que guardamos."""
     vtm = ((med.get("vtm") or {}).get("nombre") or "").strip().lower()
     if not med.get("nregistro") or not med.get("nombre") or not vtm:
         return None
+    rx = bool(med.get("receta"))
     return {
+        "requires_prescription": int(rx),
+        "legal_category": importers.LEGAL_RX if rx else importers.LEGAL_FREE,
+        "legal_note": (med.get("cpresc") or "").strip() or None,
         "nregistro": med["nregistro"],
         "brand_name": med["nombre"],
         "vtm": vtm,
@@ -133,18 +163,6 @@ def parse_detail(detail):
         "composition": " + ".join(parts) or None,
         "photo_url": pick_photo(detail.get("fotos")),
     }
-
-
-def ensure_schema(conn):
-    """Añade las columnas nuevas a una base antigua y recrea la vista (schema.sql)."""
-    existing = {row[1] for row in conn.execute("PRAGMA table_info(products)")}
-    if existing:
-        for column, column_type in NEW_PRODUCT_COLUMNS.items():
-            if column not in existing:
-                conn.execute(f"ALTER TABLE products ADD COLUMN {column} {column_type}")
-        conn.commit()
-    with open(SCHEMA_PATH, encoding="utf-8") as fh:
-        conn.executescript(fh.read())
 
 
 def get_or_create_ingredient(conn, name):
@@ -189,11 +207,13 @@ def sync_products(conn, products):
                 conn.execute(
                     """
                     UPDATE products
-                    SET active_ingredient_id = ?, brand_name = ?, requires_prescription = 0,
+                    SET active_ingredient_id = ?, brand_name = ?, requires_prescription = ?,
+                        legal_category = ?, legal_note = ?,
                         form = ?, dose = ?, photo_url = COALESCE(?, photo_url), verified_at = ?
                     WHERE id = ?
                     """,
-                    (ingredient_id, p["brand_name"], p["form"], p["dose"], p["photo_url"], today, existing[0]),
+                    (ingredient_id, p["brand_name"], p["requires_prescription"], p["legal_category"], p["legal_note"],
+                     p["form"], p["dose"], p["photo_url"], today, existing[0]),
                 )
                 stats["updated"] += 1
             else:
@@ -201,10 +221,11 @@ def sync_products(conn, products):
                     """
                     INSERT INTO products
                         (active_ingredient_id, country_code, brand_name, requires_prescription,
-                         source, source_ref, verified_at, form, dose, photo_url)
-                    VALUES (?, 'ES', ?, 0, 'CIMA_API', ?, ?, ?, ?, ?)
+                         legal_category, legal_note, source, source_ref, verified_at, form, dose, photo_url)
+                    VALUES (?, 'ES', ?, ?, ?, ?, 'CIMA_API', ?, ?, ?, ?, ?)
                     """,
-                    (ingredient_id, p["brand_name"], p["nregistro"], today, p["form"], p["dose"], p["photo_url"]),
+                    (ingredient_id, p["brand_name"], p["requires_prescription"], p["legal_category"], p["legal_note"],
+                     p["nregistro"], today, p["form"], p["dose"], p["photo_url"]),
                 )
                 stats["inserted"] += 1
         except sqlite3.IntegrityError:
@@ -216,15 +237,17 @@ def sync_products(conn, products):
     return stats
 
 
-def enrich_details(conn, refresh=False):
+def enrich_details(conn, refresh=False, include_rx=False):
     """Completa ATC, composición y foto pidiendo el detalle de cada producto.
 
-    Por defecto solo los que aún no tienen ATC; con refresh=True, todos."""
+    Por defecto solo los sin receta que aún no tienen ATC; con refresh=True, todos los sin
+    receta; con include_rx=True también los de receta (son ~9.000 peticiones: más de una hora)."""
     only_missing = "" if refresh else "AND atc_code IS NULL"
+    only_otc = "" if include_rx else "AND requires_prescription = 0"
     todo = conn.execute(
         f"""
         SELECT id, source_ref FROM products
-        WHERE country_code = 'ES' AND source = 'CIMA_API' {only_missing}
+        WHERE country_code = 'ES' AND source = 'CIMA_API' {only_missing} {only_otc}
         """
     ).fetchall()
     print(f"Detalle pendiente: {len(todo)} productos ({DETAIL_WORKERS} peticiones en paralelo)")
@@ -260,6 +283,25 @@ def enrich_details(conn, refresh=False):
     print(f"Detalle completado: {done} ok, {failed} fallidos (se reintentan en la próxima ejecución)")
 
 
+def load_products(include_rx):
+    """(productos a guardar, resumen de lo excluido). Sin receta entra todo; de los de receta
+    se descartan hospital e inyectables (ver exclusion_reason)."""
+    summary = {"sin receta": 0, "con receta": 0, "hospital": 0, "inyectable": 0, "sin datos": 0}
+    products = []
+    for receta in (0, 1) if include_rx else (0,):
+        for med in fetch_catalog(receta):
+            reason = exclusion_reason(med) if receta else None
+            product = None if reason else to_product(med)
+            if reason:
+                summary[reason] += 1
+            elif product is None:
+                summary["sin datos"] += 1
+            else:
+                summary["con receta" if receta else "sin receta"] += 1
+                products.append(product)
+    return products, summary
+
+
 def main():
     if "--debug" in sys.argv:
         data = cima_get("medicamentos", {"comerc": 1, "receta": 0, "pagina": 1, "tamanioPagina": 1})
@@ -269,17 +311,19 @@ def main():
         print(json.dumps(detail, indent=2, ensure_ascii=False)[:4000])
         return
 
+    include_rx = "--only-otc" not in sys.argv
+    print("Consultando CIMA (comercializados, " + ("sin receta y con receta" if include_rx else "solo sin receta") + ")...")
+    products, summary = load_products(include_rx)
+    print(f"CIMA: {summary}")
+    if "--dry-run" in sys.argv:
+        return
+
     conn = sqlite3.connect(DB_PATH)
     conn.execute("PRAGMA foreign_keys = ON")
-    ensure_schema(conn)
+    importers.ensure_schema(conn)
 
     if not conn.execute("SELECT 1 FROM countries WHERE code = 'ES'").fetchone():
         sys.exit("Falta el país 'ES' en countries: ejecuta primero seed_base.sql")
-
-    print("Consultando CIMA (comercializados y sin receta)...")
-    items = fetch_catalog()
-    products = [p for p in (to_product(m) for m in items) if p]
-    print(f"CIMA devolvió {len(items)} medicamentos ({len(items) - len(products)} descartados por datos incompletos)")
 
     stats = sync_products(conn, products)
     print(
@@ -288,7 +332,7 @@ def main():
     )
 
     if "--no-details" not in sys.argv:
-        enrich_details(conn, refresh="--refresh-details" in sys.argv)
+        enrich_details(conn, refresh="--refresh-details" in sys.argv, include_rx="--details-rx" in sys.argv)
 
     total = conn.execute("SELECT COUNT(*) FROM products WHERE country_code = 'ES'").fetchone()[0]
     print(f"Listo. Productos de España en la base: {total}")

@@ -26,42 +26,46 @@ def _record(tag, **fields):
 
 
 def build_zip(path):
-    """dm+d en miniatura. Productos (APID): 1 Nurofen (GSL+P, ibuprofeno), 2 solo POM, 3 P descatalogado,
-    4 homeopático GSL, 5 P sin licencia, 6 P con envases P y POM, 7 P importado, 8 P inválido."""
+    """dm+d en miniatura. Productos (APID): 1 Nurofen (GSL+P, ibuprofeno), 2 solo POM (comprimido),
+    3 P descatalogado, 4 homeopático GSL, 5 P sin licencia, 6 P con envases P y POM, 7 P importado,
+    8 P inválido, 9 POM inyectable, 10 POM de hospital (marca HOSP en su único envase)."""
     lookup = (
         "<LOOKUP>"
         + _lookup("LEGAL_CATEGORY", {"0001": "GSL", "0002": "P", "0003": "POM", "0004": "Not Applicable"})
         + _lookup("LICENSING_AUTHORITY", {"0001": "Medicines - MHRA/EMA", "0002": "None"})
         + _lookup("AVAILABILITY_RESTRICTION", {"0000": "None", "0001": "Imported"})
-        + _lookup("FORM", {"1": "Oral tablet", "2": "Homeopathic tablet"})
-        + _lookup("ROUTE", {"1": "Oral"})
+        + _lookup("FORM", {"1": "Oral tablet", "2": "Homeopathic tablet", "3": "Solution for injection"})
+        + _lookup("ROUTE", {"1": "Oral", "2": "Intravenous"})
         + "</LOOKUP>"
     )
     ampp = [  # APPID, APID, LEGAL_CATCD, DISCCD
         (1, 1, "0001", None), (2, 1, "0002", None), (3, 2, "0003", None), (4, 3, "0002", "0001"),
         (5, 4, "0001", None), (6, 5, "0002", None), (7, 6, "0002", None), (8, 6, "0003", None),
-        (9, 7, "0002", None), (10, 8, "0002", None),
+        (9, 7, "0002", None), (10, 8, "0002", None), (11, 9, "0003", None), (12, 10, "0003", None),
     ]
     ampp_xml = "<ACTUAL_MEDICINAL_PROD_PACKS><AMPPS>" + "".join(
         _record("AMPP", APPID=a, VPPID=a, APID=apid, NM="pack", LEGAL_CATCD=cat, **({"DISCCD": d} if d else {}))
         for a, apid, cat, d in ampp
-    ) + "</AMPPS></ACTUAL_MEDICINAL_PROD_PACKS>"
+    ) + (
+        "</AMPPS><DRUG_PRODUCT_PRESCRIB_INFO>" + _record("PRESCRIB_INFO", APPID=12, HOSP="0001") + "</DRUG_PRODUCT_PRESCRIB_INFO>"
+        "</ACTUAL_MEDICINAL_PROD_PACKS>"
+    )
     amp_rows = [  # APID, VPID, licencia, disponibilidad, invalid
         (1, 1, "0001", "0000", 0), (2, 1, "0001", "0000", 0), (3, 1, "0001", "0000", 0),
         (4, 2, "0001", "0000", 0), (5, 1, "0002", "0000", 0), (6, 1, "0001", "0000", 0),
-        (7, 1, "0001", "0001", 0), (8, 1, "0001", "0000", 1),
+        (7, 1, "0001", "0001", 0), (8, 1, "0001", "0000", 1), (9, 3, "0001", "0000", 0), (10, 1, "0001", "0000", 0),
     ]
     names = {1: "Nurofen 200mg tablets", 2: "Pharmacy only POM", 3: "Discontinued", 4: "Homeopathic remedy",
-             5: "Unlicensed", 6: "Mixed pack", 7: "Imported", 8: "Invalid"}
+             5: "Unlicensed", 6: "Mixed pack", 7: "Imported", 8: "Invalid", 9: "Injectable POM", 10: "Hospital POM"}
     amp_xml = "<ACTUAL_MEDICINAL_PRODUCTS><AMPS>" + "".join(
         _record("AMP", APID=a, VPID=v, NM=names[a], DESC=names[a], LIC_AUTHCD=lic, AVAIL_RESTRICTCD=av, **({"INVALID": 1} if inv else {}))
         for a, v, lic, av, inv in amp_rows
     ) + "</AMPS></ACTUAL_MEDICINAL_PRODUCTS>"
     vmp_xml = (
-        "<VIRTUAL_MED_PRODUCTS><VMPS>" + _record("VMP", VPID=1, NM="Ibuprofen 200mg tablets") + _record("VMP", VPID=2, NM="Hom") + "</VMPS>"
-        "<VIRTUAL_PRODUCT_INGREDIENT>" + _record("VPI", VPID=1, ISID=10) + _record("VPI", VPID=2, ISID=11) + "</VIRTUAL_PRODUCT_INGREDIENT>"
-        "<DRUG_FORM>" + _record("DFORM", VPID=1, FORMCD=1) + _record("DFORM", VPID=2, FORMCD=2) + "</DRUG_FORM>"
-        "<DRUG_ROUTE>" + _record("DROUTE", VPID=1, ROUTECD=1) + _record("DROUTE", VPID=2, ROUTECD=1) + "</DRUG_ROUTE>"
+        "<VIRTUAL_MED_PRODUCTS><VMPS>" + _record("VMP", VPID=1, NM="Ibuprofen 200mg tablets") + _record("VMP", VPID=2, NM="Hom") + _record("VMP", VPID=3, NM="Ibuprofen injection") + "</VMPS>"
+        "<VIRTUAL_PRODUCT_INGREDIENT>" + _record("VPI", VPID=1, ISID=10) + _record("VPI", VPID=2, ISID=11) + _record("VPI", VPID=3, ISID=10) + "</VIRTUAL_PRODUCT_INGREDIENT>"
+        "<DRUG_FORM>" + _record("DFORM", VPID=1, FORMCD=1) + _record("DFORM", VPID=2, FORMCD=2) + _record("DFORM", VPID=3, FORMCD=3) + "</DRUG_FORM>"
+        "<DRUG_ROUTE>" + _record("DROUTE", VPID=1, ROUTECD=1) + _record("DROUTE", VPID=2, ROUTECD=1) + _record("DROUTE", VPID=3, ROUTECD=2) + "</DRUG_ROUTE>"
         "</VIRTUAL_MED_PRODUCTS>"
     )
     ing_xml = "<INGREDIENT_SUBSTANCES>" + _record("ING", ISID=10, NM="Ibuprofen") + _record("ING", ISID=11, NM="Arnica") + "</INGREDIENT_SUBSTANCES>"
@@ -81,6 +85,7 @@ class SinReceta(unittest.TestCase):
         build_zip(cls.path)
         cls.catalog, cls.excluded = dmd.load_catalog(cls.path)
         cls.by_ref = {p["ref"]: p for p in cls.catalog}
+        cls.otc_only, _ = dmd.load_catalog(cls.path, include_prescription=False)
 
     def test_entran_los_productos_con_algun_envase_p_o_gsl(self):
         self.assertIn("1", self.by_ref)   # Nurofen: GSL y P
@@ -88,8 +93,24 @@ class SinReceta(unittest.TestCase):
         self.assertTrue(self.by_ref["6"]["mixed_legal"])
         self.assertFalse(self.by_ref["1"]["mixed_legal"])
 
-    def test_no_entran_los_que_solo_tienen_receta(self):
-        self.assertNotIn("2", self.by_ref)
+    def test_los_de_solo_receta_entran_marcados_como_receta(self):
+        p = self.by_ref["2"]
+        self.assertEqual((p["requires_prescription"], p["legal_category"], p["legal_note"]), (1, "receta", "POM"))
+
+    def test_los_sin_receta_no_se_marcan_como_receta(self):
+        self.assertEqual(self.by_ref["1"]["requires_prescription"], 0)
+        self.assertEqual(self.by_ref["1"]["legal_category"], "solo_farmacia")  # envases GSL y P
+        self.assertEqual(self.by_ref["6"]["legal_note"], "P + POM")           # envases P y POM
+
+    def test_con_only_otc_no_entra_ninguno_de_receta(self):
+        self.assertEqual([p for p in self.otc_only if p["requires_prescription"]], [])
+        self.assertNotIn("2", {p["ref"] for p in self.otc_only})
+
+    def test_no_entran_inyectables_ni_productos_de_hospital(self):
+        self.assertNotIn("9", self.by_ref)    # inyectable (forma y vía intravenosa)
+        self.assertNotIn("10", self.by_ref)   # solo hospital
+        self.assertEqual(self.excluded["inyectable"], 1)
+        self.assertEqual(self.excluded["hospital"], 1)
 
     def test_no_entran_descatalogados_sin_licencia_importados_ni_invalidos(self):
         for ref in ("3", "5", "7", "8"):
@@ -124,6 +145,11 @@ class MapFormUK(unittest.TestCase):
             ("Transdermal patch", "Transdermal", "PARCHE TRANSDERMICO"),
             ("Rectal ointment", "Cutaneous; Rectal", "SEMISOLIDO RECTAL"),
             ("Pessary", "Vaginal", "OVULO/CAPSULA/COMPRIMIDO VAGINAL"),
+            ("Modified-release tablet", "Oral", "COMPRIMIDO LIBERACION MODIFICADA"),
+            ("Pressurised inhalation", "Inhalation", "INHALACION PULMONAR"),
+            ("Sublingual tablet", "Sublingual", "COMPRIMIDO SUBLINGUAL"),
+            ("Eye ointment", "Ocular", "POMADA OFTALMICA"),
+            ("Oral tablet", "Gastroenteral; Oral", "COMPRIMIDO"),   # también por sonda: sigue siendo oral
         ]
         for form, route, expected in cases:
             self.assertEqual(self.m(form, route), expected, f"{form} / {route}")
@@ -145,10 +171,9 @@ class MapFormUK(unittest.TestCase):
     def test_no_traduce_lo_ambiguo_o_sin_equivalente(self):
         for form, route in [
             ("Mouthwash", "Oromucosal"),
-            ("Eye ointment", "Ocular"),
-            ("Inhalation gas", "Inhalation"),
-            ("Sublingual tablet", "Sublingual"),
             ("Buccal tablet", "Buccal"),
+            ("Dental gel", "Dental"),
+            ("Lozenge", "Buccal"),
         ]:
             self.assertIsNone(self.m(form, route), f"{form} / {route}")
 

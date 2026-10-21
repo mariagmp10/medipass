@@ -33,6 +33,9 @@ const COLORS = {
   warnIcon: "#E4A13B",
   slate: "#5C6470",
   slateLight: "#94A0AE",
+  rx: "#C62828",
+  rxDark: "#8E1B1B",
+  rxBg: "#FDECEA",
 };
 
 const COUNTRIES = [
@@ -90,6 +93,10 @@ function productFromRow(row) {
   return {
     marca: row.brand_name,
     receta: !!row.requires_prescription,
+    innName: row.inn_name,
+    baseInn: row.base_inn,
+    legalCategory: row.legal_category,
+    legalNote: row.legal_note,
     source: row.source,
     sourceRef: row.source_ref,
     dose: row.dose,
@@ -112,6 +119,8 @@ function groupEquivalences(rows) {
       groups.set(id, {
         id,
         innName: row.inn_name,
+        baseInn: row.base_inn ?? row.inn_name,
+        rawForm: row.form ?? "",
         name: capitalize(row.inn_name),
         forma: formLabel(row.form),
         principio: capitalize(row.inn_name),
@@ -124,11 +133,13 @@ function groupEquivalences(rows) {
     }
 
     const med = groups.get(id);
-    const entry = med.equivalencias[row.country_code];
-    if (entry) {
-      entry.total += 1;
+    const product = productFromRow(row);
+    const slot = (med.equivalencias[row.country_code] ??= { otc: null, rx: null });
+    const kind = product.receta ? "rx" : "otc";
+    if (slot[kind]) {
+      slot[kind].total += 1;
     } else {
-      med.equivalencias[row.country_code] = { ...productFromRow(row), total: 1 };
+      slot[kind] = { ...product, total: 1 };
     }
     if (row.country_code === "ES" && row.atc_group && !med.atcGroup) {
       med.atcGroup = row.atc_group;
@@ -141,6 +152,19 @@ function groupEquivalences(rows) {
     ...med,
     uso: med.atcGroup ?? med.commonUse,
   }));
+}
+
+/* En un país, un mismo grupo puede tener productos sin receta y con receta
+   (ibuprofeno 400 mg libre, 600 mg con receta). Elegimos el del mismo estatus
+   que el producto de origen (wantRx) y, si no hay, el otro: el aviso de receta
+   se ve igualmente. `otherStatus` avisa de que también existe el otro tipo. */
+function pickVariant(entry, wantRx) {
+  if (!entry) return null;
+  const preferred = wantRx ? entry.rx : entry.otc;
+  const other = wantRx ? entry.otc : entry.rx;
+  const chosen = preferred ?? other;
+  if (!chosen) return null;
+  return { ...chosen, otherStatus: preferred && other ? { receta: !!other.receta, total: other.total } : null };
 }
 
 /* --------------------------------------------------------- */
@@ -199,7 +223,7 @@ function CountryPicker({ label, value, onChange }) {
   );
 }
 
-function FlapCard({ country, data, highlight }) {
+function FlapCard({ country, data, highlight, approx }) {
   const countryName = COUNTRIES.find((c) => c.code === country)?.name ?? country;
   return (
     <div
@@ -208,7 +232,11 @@ function FlapCard({ country, data, highlight }) {
         minWidth: 220,
         background: COLORS.inkDark,
         borderRadius: 10,
-        border: `1px solid ${COLORS.inkBorder}`,
+        border: data.receta
+          ? `2px solid ${COLORS.rx}`
+          : approx
+          ? `2px solid ${COLORS.amber}`
+          : `1px solid ${COLORS.inkBorder}`,
         overflow: "hidden",
       }}
     >
@@ -270,23 +298,63 @@ function FlapCard({ country, data, highlight }) {
             Ejemplo sin verificar
           </div>
         )}
-        <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 6 }}>
-          {data.receta ? (
-            <>
-              <AlertTriangle size={14} color={COLORS.warnIcon} />
-              <span style={{ fontSize: 12, fontWeight: 500, color: COLORS.warnIcon }}>
-                Con receta en este país
-              </span>
-            </>
-          ) : (
-            <>
-              <CheckCircle2 size={14} color={COLORS.green} />
-              <span style={{ fontSize: 12, fontWeight: 500, color: COLORS.green }}>
-                Venta libre
-              </span>
-            </>
-          )}
-        </div>
+        {approx && (
+          <div
+            style={{
+              marginTop: 12,
+              padding: "8px 12px",
+              borderRadius: 8,
+              background: COLORS.amber,
+              color: COLORS.inkDark,
+            }}
+          >
+            <div style={{ fontWeight: 700, fontSize: 12, letterSpacing: "0.03em" }}>
+              MISMO PRINCIPIO ACTIVO BASE · POSIBLE OTRO ÉSTER O SAL
+            </div>
+            <div style={{ marginTop: 3, fontSize: 12 }}>
+              En {countryName}: {approx.names.join(", ")}
+            </div>
+          </div>
+        )}
+        {data.receta ? (
+          <div
+            role="alert"
+            style={{
+              marginTop: 14,
+              padding: "10px 12px",
+              borderRadius: 8,
+              background: COLORS.rx,
+              color: "#fff",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 700, fontSize: 14, letterSpacing: "0.02em" }}>
+              <AlertTriangle size={20} />
+              <span>SOLO CON RECETA MÉDICA EN {countryName.toUpperCase()}</span>
+            </div>
+            {data.legalNote && (
+              <div style={{ marginTop: 4, fontSize: 11, opacity: 0.9 }}>{data.legalNote}</div>
+            )}
+          </div>
+        ) : (
+          <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 6 }}>
+            <CheckCircle2 size={14} color={data.legalCategory === "solo_farmacia" ? COLORS.amber : COLORS.green} />
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 500,
+                color: data.legalCategory === "solo_farmacia" ? COLORS.amber : COLORS.green,
+              }}
+            >
+              {data.legalCategory === "solo_farmacia" ? "Sin receta, solo en farmacia" : "Venta libre"}
+            </span>
+          </div>
+        )}
+        {data.otherStatus && (
+          <div style={{ marginTop: 8, fontSize: 11, color: COLORS.slateLight }}>
+            En {countryName} también hay {data.otherStatus.total}{" "}
+            {data.otherStatus.receta ? "con receta" : "sin receta"} de esta forma.
+          </div>
+        )}
       </div>
     </div>
   );
@@ -296,7 +364,7 @@ function FlapCard({ country, data, highlight }) {
    está mirando. Solo afirmamos lo que sabemos: de un país sin datos reales no
    decimos que el producto no exista, y de uno con datos reales decimos "no
    hemos encontrado", no "no existe", porque solo conocemos nuestros datos. */
-function CountryNotice({ country, group, rows, isReal }) {
+function CountryNotice({ country, group, rows, isReal, includeRx }) {
   const countryName = COUNTRIES.find((c) => c.code === country)?.name ?? country;
   let text;
   if (!isReal) {
@@ -319,7 +387,9 @@ function CountryNotice({ country, group, rows, isReal }) {
     const more = otherForms.length > 5 ? ` y ${otherForms.length - 5} más` : "";
     text = otherForms.length
       ? `Hay productos con este principio activo en ${countryName}, pero en otra forma (${shown}${more}). No son equivalentes.`
-      : `No hemos encontrado en ${countryName} ningún producto de venta libre con este principio activo.`;
+      : includeRx
+        ? `No hemos encontrado en ${countryName} ningún producto con este principio activo (no incluimos inyectables ni productos de uso hospitalario).`
+        : `No hemos encontrado en ${countryName} ningún producto de venta libre con este principio activo.`;
   }
   return (
     <div
@@ -355,12 +425,19 @@ export default function MediPass() {
   const [from, setFrom] = useState("ES");
   const [to, setTo] = useState("DE");
   const [showESList, setShowESList] = useState(false);
+  const [includeRx, setIncludeRx] = useState(true); // lo confirma el backend (INCLUDE_PRESCRIPTION)
+  const [listFilter, setListFilter] = useState("all"); // all | otc | rx
+  const [listLimit, setListLimit] = useState(200);
   // Cuando el usuario encuentra un principio activo buscando por una marca
   // concreta (ej. "Cristalmina"), recordamos esa marca para mostrarla en
   // vez del producto representativo por defecto de ese país.
   const [preferredBrand, setPreferredBrand] = useState(null);
 
   useEffect(() => {
+    fetch(`${API_BASE_URL}/api/config`)
+      .then((res) => res.json())
+      .then((cfg) => setIncludeRx(!!cfg.include_prescription))
+      .catch(() => {});
     fetch(`${API_BASE_URL}/api/equivalences`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -415,7 +492,9 @@ export default function MediPass() {
           key: `product-${gid}-${r.brand_name}-${r.country_code}`,
           groupId: gid,
           title: r.brand_name,
-          subtitle: [capitalize(r.inn_name), formLabel(r.form), countryName].filter(Boolean).join(" · "),
+          subtitle: [capitalize(r.inn_name), formLabel(r.form), countryName, r.requires_prescription ? "CON RECETA" : null]
+            .filter(Boolean)
+            .join(" · "),
           icon: med?.icon ?? Pill,
           brandMatch: { countryCode: r.country_code, data: productFromRow(r) },
         });
@@ -431,6 +510,13 @@ export default function MediPass() {
         .sort((a, b) => a.brand_name.localeCompare(b.brand_name)),
     [rows]
   );
+  const esFiltered = useMemo(
+    () =>
+      esProducts.filter((p) =>
+        listFilter === "all" ? true : listFilter === "rx" ? !!p.requires_prescription : !p.requires_prescription
+      ),
+    [esProducts, listFilter]
+  );
 
   // Países con datos reales de una agencia oficial; el resto solo tiene ejemplos
   // manuales sin verificar (hoy: España, Francia y Reino Unido tienen datos reales).
@@ -439,26 +525,61 @@ export default function MediPass() {
     [rows]
   );
 
+  // Índice por principio activo BASE + forma, por país: sirve para el nivel "misma base, otro éster
+  // o sal" (fluticasone propionate ~ fluticasona) cuando no hay equivalente exacto.
+  const baseIndex = useMemo(() => {
+    const index = {};
+    for (const row of rows) {
+      if (row.source === "manual_seed" || !row.base_inn) continue;
+      const key = `${row.base_inn}||${row.form ?? ""}`;
+      const slotMap = (index[row.country_code] ??= new Map());
+      const slot = slotMap.get(key) ?? { otc: null, rx: null, names: new Set() };
+      slotMap.set(key, slot);
+      slot.names.add(row.inn_name);
+      const product = productFromRow(row);
+      const kind = product.receta ? "rx" : "otc";
+      if (slot[kind]) slot[kind].total += 1;
+      else slot[kind] = { ...product, total: 1 };
+    }
+    return index;
+  }, [rows]);
+
   const selected = meds.find((m) => m.id === selectedId);
 
-  function equivalenceFor(countryCode) {
-    const representative = selected?.equivalencias[countryCode];
+  function approxVariant(countryCode, wantRx) {
+    if (!selected) return null;
+    const slot = baseIndex[countryCode]?.get(`${selected.baseInn}||${selected.rawForm}`);
+    const data = pickVariant(slot, wantRx);
+    if (!data) return null;
+    // Solo cuenta si el nombre difiere del del grupo (si no, sería un equivalente exacto).
+    const names = [...slot.names].filter((n) => n !== selected.innName).sort();
+    return names.length ? { data, names } : null;
+  }
+
+  function equivalenceFor(countryCode, wantRx) {
+    const entry = selected?.equivalencias[countryCode];
     if (
       preferredBrand &&
       preferredBrand.groupId === selectedId &&
       preferredBrand.countryCode === countryCode
     ) {
-      return { ...preferredBrand.data, total: representative?.total ?? 1 };
+      const own = pickVariant(entry, preferredBrand.data.receta);
+      return { ...preferredBrand.data, total: own?.total ?? 1, otherStatus: own?.otherStatus ?? null };
     }
-    return representative;
+    return pickVariant(entry, wantRx);
   }
 
-  const fromData = selected && equivalenceFor(from);
-  const toData = selected && equivalenceFor(to);
-  const receWarning = selected && fromData && toData && fromData.receta !== toData.receta;
+  const fromData = selected && equivalenceFor(from, false);
+  const toData = selected && equivalenceFor(to, !!fromData?.receta);
+  // Nivel "misma base": solo si ese país no tiene el grupo exacto.
+  const approxFrom = selected && !fromData ? approxVariant(from, !!toData?.receta) : null;
+  const approxTo = selected && !toData ? approxVariant(to, !!fromData?.receta) : null;
+  const shownFrom = fromData ?? approxFrom?.data ?? null;
+  const shownTo = toData ?? approxTo?.data ?? null;
+  const receWarning = selected && shownFrom && shownTo && shownFrom.receta !== shownTo.receta;
 
   // Foto y composición solo existen para los productos de España (vienen de CIMA).
-  const esSideData = from === "ES" ? fromData : to === "ES" ? toData : null;
+  const esSideData = from === "ES" ? shownFrom : to === "ES" ? shownTo : null;
 
   if (status === "loading") {
     return (
@@ -636,8 +757,39 @@ export default function MediPass() {
         {/* LISTADO ESPAÑA */}
         {showESList && (
           <section style={{ marginTop: 20 }}>
+            {includeRx && (
+              <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
+                {[
+                  ["all", "Todos"],
+                  ["otc", "Sin receta"],
+                  ["rx", "Con receta"],
+                ].map(([value, label]) => (
+                  <button
+                    key={value}
+                    onClick={() => {
+                      setListFilter(value);
+                      setListLimit(200);
+                    }}
+                    style={{
+                      fontSize: 12,
+                      padding: "5px 12px",
+                      borderRadius: 999,
+                      border: `1px solid rgba(20,33,61,0.2)`,
+                      background: listFilter === value ? COLORS.ink : "transparent",
+                      color: listFilter === value ? "#fff" : COLORS.ink,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+                <span style={{ fontSize: 12, color: COLORS.slate, alignSelf: "center" }}>
+                  {esFiltered.length} productos
+                </span>
+              </div>
+            )}
             <div style={{ border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, overflow: "hidden", background: "#fff" }}>
-              {esProducts.map((p, i) => (
+              {esFiltered.slice(0, listLimit).map((p, i) => (
                 <div
                   key={`${p.inn_name}-${p.brand_name}-${i}`}
                   style={{
@@ -656,8 +808,18 @@ export default function MediPass() {
                     </div>
                   </div>
                   {p.requires_prescription ? (
-                    <span style={{ fontSize: 11, fontWeight: 500, color: COLORS.warnIcon, whiteSpace: "nowrap" }}>
-                      Con receta
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#fff",
+                        background: COLORS.rx,
+                        padding: "3px 8px",
+                        borderRadius: 6,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      CON RECETA
                     </span>
                   ) : (
                     <span style={{ fontSize: 11, fontWeight: 500, color: COLORS.green, whiteSpace: "nowrap" }}>
@@ -667,6 +829,23 @@ export default function MediPass() {
                 </div>
               ))}
             </div>
+            {esFiltered.length > listLimit && (
+              <button
+                onClick={() => setListLimit((n) => n + 200)}
+                style={{
+                  marginTop: 12,
+                  fontSize: 13,
+                  padding: "8px 16px",
+                  borderRadius: 999,
+                  border: `1px solid rgba(20,33,61,0.2)`,
+                  background: "transparent",
+                  color: COLORS.ink,
+                  cursor: "pointer",
+                }}
+              >
+                Mostrar 200 más ({esFiltered.length - listLimit} restantes)
+              </button>
+            )}
           </section>
         )}
 
@@ -701,22 +880,33 @@ export default function MediPass() {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "stretch" }}>
               {fromData ? (
                 <FlapCard country={from} data={fromData} />
+              ) : approxFrom ? (
+                <FlapCard country={from} data={approxFrom.data} approx={{ names: approxFrom.names }} />
               ) : (
-                <CountryNotice country={from} group={selected} rows={rows} isReal={realCountries.has(from)} />
+                <CountryNotice country={from} group={selected} rows={rows} isReal={realCountries.has(from)} includeRx={includeRx} />
               )}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 2px" }}>
                 <Plane size={16} color={COLORS.slateLight} />
               </div>
               {toData ? (
                 <FlapCard country={to} data={toData} highlight />
+              ) : approxTo ? (
+                <FlapCard country={to} data={approxTo.data} highlight approx={{ names: approxTo.names }} />
               ) : (
-                <CountryNotice country={to} group={selected} rows={rows} isReal={realCountries.has(to)} />
+                <CountryNotice country={to} group={selected} rows={rows} isReal={realCountries.has(to)} includeRx={includeRx} />
               )}
             </div>
 
             {fromData && toData && fromData.source !== "manual_seed" && toData.source !== "manual_seed" && (
               <p style={{ marginTop: 10, fontSize: 12, color: COLORS.slate }}>
                 Mismo principio activo y misma forma; la dosis puede variar.
+              </p>
+            )}
+            {(approxFrom || approxTo) && shownFrom && shownTo && (
+              <p style={{ marginTop: 10, fontSize: 13, color: COLORS.warnText, background: COLORS.warnBg, border: `1px solid ${COLORS.warnBorder}`, borderRadius: 8, padding: "8px 12px" }}>
+                <strong>No está confirmado que sea exactamente la misma sustancia.</strong> Comparten el principio activo base
+                ({selected.baseInn}), pero figuran con nombres distintos ({selected.innName} y {(approxTo ?? approxFrom).names.join(", ")}):
+                puede tratarse de otro éster o sal y diferir en potencia y dosis. Consulta a un farmacéutico.
               </p>
             )}
 
@@ -743,22 +933,26 @@ export default function MediPass() {
 
             {receWarning && (
               <div
+                role="alert"
                 style={{
                   marginTop: 14,
                   display: "flex",
                   alignItems: "flex-start",
-                  gap: 8,
-                  background: COLORS.warnBg,
-                  border: `1px solid ${COLORS.warnBorder}`,
+                  gap: 10,
+                  background: COLORS.rxBg,
+                  border: `2px solid ${COLORS.rx}`,
                   borderRadius: 10,
-                  padding: 12,
-                  fontSize: 14,
-                  color: COLORS.warnText,
+                  padding: 14,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: COLORS.rxDark,
                 }}
               >
-                <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: 2 }} />
+                <AlertTriangle size={22} style={{ flexShrink: 0 }} />
                 <span>
-                  El estatus de venta cambia entre países: revisa si necesitas receta antes de acudir a la farmacia en destino.
+                  ATENCIÓN: en {COUNTRIES.find((c) => c.code === (fromData.receta ? from : to))?.name} este medicamento solo se
+                  vende con receta médica, y en {COUNTRIES.find((c) => c.code === (fromData.receta ? to : from))?.name} se vende
+                  sin receta. Consulta a un médico o farmacéutico antes de comprarlo.
                 </span>
               </div>
             )}
@@ -766,7 +960,11 @@ export default function MediPass() {
             <div style={{ marginTop: 12, display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: COLORS.slateLight }}>
               <Info size={13} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>
-                Datos servidos por el backend local desde medipass.db. España (CIMA), Francia (BDPM) y Reino Unido (NHS dm+d): medicamentos comercializados sin receta, de fuentes oficiales. En el Reino Unido se incluyen los de «solo en farmacia» (P), que no requieren receta pero los dispensa un farmacéutico. Alemania, Italia y Portugal: ejemplos manuales sin verificar. Contains public sector information licensed under the Open Government Licence v3.0.
+                Datos servidos por el backend local desde medipass.db. España (CIMA), Francia (BDPM) y Reino Unido (NHS dm+d): medicamentos comercializados, de fuentes oficiales
+                {includeRx
+                  ? ", sin receta y con receta (los con receta se marcan en rojo). No se incluyen inyectables ni productos de uso hospitalario. Una franja ámbar indica el mismo principio activo base con un nombre distinto, que puede ser otro éster o sal."
+                  : ", solo sin receta."}{" "}
+                En el Reino Unido, «solo en farmacia» (P) no requiere receta pero lo dispensa un farmacéutico. Alemania, Italia y Portugal: ejemplos manuales sin verificar. Contains public sector information licensed under the Open Government Licence v3.0.
               </span>
             </div>
           </section>

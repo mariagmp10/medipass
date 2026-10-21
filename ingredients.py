@@ -18,7 +18,14 @@ parse_substance_en() y ingredient_links_uk.csv con las mismas reglas):
      activo español corresponde un producto. Se compara como CONJUNTO, así que
      "caféine + paracétamol" y "paracetamol + cafeína" son lo mismo.
 
-Qué cuenta como "el mismo principio activo": la misma molécula activa aunque
+DOS NIVELES de equivalencia (ver README, "Dos niveles"):
+  exacto   misma molécula activa aunque cambie la sal (lo que enlaza todo lo de abajo)
+  base     misma molécula BASE pero distinto ÉSTER o profármaco: "fluticasone propionate" y
+           "fluticasona". CIMA los nombra igual; MediPass los enseña aparte, en amarillo, con el
+           nombre exacto de cada país. Los enlaces de nivel base salen de ingredient_links*.csv
+           (columna `nivel` = base) y pasan por la misma comprobación ATC que los exactos.
+
+Qué cuenta como "el mismo principio activo" (nivel exacto): la misma molécula activa aunque
 cambie la SAL (diclofenaco sódico o dietilamina, lopéramide o su clorhidrato),
 que es también lo que hace el 'vtm' de CIMA. NO se consideran iguales los
 ésteres ("dipropionate de bétaméthasone" no es bétaméthasone) ni las sales
@@ -32,8 +39,9 @@ import unicodedata
 
 LINKS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ingredient_links.csv")
 LINKS_PATH_UK = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ingredient_links_uk.csv")
-LINK_FIELDS = ["nombre_fr", "nombre_es", "estado", "evidencia", "productos_fr", "ejemplos"]
-LINK_FIELDS_UK = ["nombre_en", "nombre_es", "estado", "evidencia", "productos_uk", "ejemplos"]
+LINK_FIELDS = ["nombre_fr", "nombre_es", "estado", "nivel", "evidencia", "productos_fr", "ejemplos"]
+LINK_FIELDS_UK = ["nombre_en", "nombre_es", "estado", "nivel", "evidencia", "productos_uk", "ejemplos"]
+LEVEL_EXACT, LEVEL_BASE = "exacto", "base"
 USABLE_STATUSES = {"confirmado", "aprobado"}
 
 
@@ -59,8 +67,19 @@ COUNTERIONS = (
     "dichlorhydrate", "chlorhydrate", "bromhydrate", "nitrate", "sulfate", "maleate",
     "fumarate", "tartrate", "bitartrate", "citrate", "succinate", "hydrogenosuccinate",
     "phosphate", "mesilate", "besilate", "tosilate", "lysinate", "resinate", "embonate",
-    "gluconate", "digluconate", "diisethionate", "epolamine",
+    "gluconate", "digluconate", "diisethionate", "epolamine", "oxalate", "xinafoate", "hemifumarate",
+    "hydrogenotartrate",
 )
+# Contraiones que a veces son una SAL y a veces un ÉSTER ("benzoate de rizatriptan" es una sal;
+# "benzoate de benzyle" es otra sustancia; "acétate de désmopressine" es una sal de péptido;
+# "acétate d'hydrocortisone" es un éster). Solo se quitan para estas bases concretas.
+AMBIGUOUS_COUNTERIONS = {
+    "benzoate": {"rizatriptan"},
+    "malate": {"sunitinib", "almotriptan"},
+    "acetate": {"desmopressine", "octreotide", "lanreotide", "glatiramere", "leuproreline", "triptoreline",
+                "goserelin", "terlipressine", "ganirelix", "cetrorelix", "icatibant", "degarelix",
+                "flecainide", "chlorhexidine", "lysine", "indacaterol"},
+}
 # Si tras quitar el contraión queda una de estas palabras, era una sal
 # inorgánica entera ("nitrate d'argent") y no se interpreta.
 INORGANIC = (
@@ -71,7 +90,8 @@ INORGANIC = (
 TRAILING = (
     "hemihydrate", "monohydrate", "dihydrate", "trihydrate", "sesquihydrate", "hydrate",
     "anhydre", "sodique", "disodique", "potassique", "calcique", "magnesique",
-    "trometamol", "olamine",
+    "trometamol", "olamine", "trihydratee", "dihydratee", "monohydratee", "hemihydratee", "sesquihydratee",
+    "hydratee", "arginine", "tert-butylamine", "erbumine",
 )
 CATIONS = (
     "sodium", "potassium", "calcium", "magnesium", "zinc", "aluminium", "diethylamine",
@@ -79,8 +99,23 @@ CATIONS = (
 )
 
 _COUNTERIONS_RE = _alt(COUNTERIONS)
+_AMBIGUOUS_RE = _alt(AMBIGUOUS_COUNTERIONS)
+_ANY_ION_RE = _alt(tuple(COUNTERIONS) + tuple(AMBIGUOUS_COUNTERIONS))
+
+
+def _ion_allowed(ion, base_text):
+    """Un contraión ambiguo solo se quita para las bases de la lista (ver AMBIGUOUS_COUNTERIONS)."""
+    allowed = AMBIGUOUS_COUNTERIONS.get(ion)
+    return allowed is None or (base_text.split() or [""])[0] in allowed
 _TRAILING_RE = _alt(TRAILING)
 _CATIONS_RE = _alt(CATIONS)
+
+
+def _bare_anions():
+    """Palabras que son solo un anión o una palabra de éster: si un nombre se queda en una de ellas, es que
+    se ha perdido la molécula."""
+    return (set(COUNTERIONS) | set(AMBIGUOUS_COUNTERIONS) | set(ESTER_WORDS)
+            | {"chlorure", "carbonate", "oxyde", "hydroxyde", "lactate", "bicarbonate"})
 
 
 def parse_substance(raw):
@@ -94,12 +129,15 @@ def parse_substance(raw):
     # "lopéramide (chlorhydrate de)" -> "lopéramide"
     paren = re.fullmatch(r"(?P<base>[^()]+?)\s*\((?P<inner>[^()]*)\)", p)
     if paren:
-        if not re.fullmatch(rf"(?:{_COUNTERIONS_RE})\s+(?:de|d')\s*", paren.group("inner")):
+        inner = re.fullmatch(rf"(?P<ion>{_ANY_ION_RE})\s+(?:de|d')\s*", paren.group("inner"))
+        if not inner or not _ion_allowed(inner.group("ion"), paren.group("base")):
             return None  # entre paréntesis hay algo que no sabemos interpretar
         start, end = paren.span("base")
     else:
         # "chlorhydrate de lopéramide" -> "lopéramide"
-        pre = re.fullmatch(rf"(?:solution de )?(?:{_COUNTERIONS_RE})\s+(?:de |d')\s*(?P<base>.+)", p)
+        pre = re.fullmatch(rf"(?:solution de )?(?P<ion>{_ANY_ION_RE})\s+(?:de |d')\s*(?P<base>.+)", p)
+        if pre and not _ion_allowed(pre.group("ion"), pre.group("base")):
+            pre = None  # "benzoate de benzyle", "acétate d'hydrocortisone": no es una sal
         if pre:
             start, end = pre.span("base")
             if re.fullmatch(rf"(?:{_alt(INORGANIC)})", p[start:end].strip()):
@@ -119,6 +157,10 @@ def parse_substance(raw):
         # "magnésium (gluconate de)" es gluconato de magnesio, no "magnesio": con
         # los minerales importa qué sal es, así que no se interpreta.
         return None
+    if moiety_plain in _bare_anions():
+        # "acétate de lysine" se quedaría en "acétate": un anión suelto no identifica nada y
+        # "acétate de sodium" acabaría con la misma clave.
+        return None
     return s[start:end].strip()
 
 
@@ -130,10 +172,20 @@ def parse_substance(raw):
 COUNTERIONS_EN = (
     "hydrochloride", "dihydrochloride", "hydrobromide", "maleate", "fumarate", "tartrate",
     "bitartrate", "citrate", "succinate", "sulfate", "phosphate", "nitrate", "mesilate",
-    "besilate", "isetionate", "teoclate", "mucate", "gluconate",
+    "besilate", "isetionate", "teoclate", "mucate", "gluconate", "oxalate", "xinafoate", "hemifumarate",
 )
-CATIONS_EN = ("sodium", "potassium", "calcium", "diethylammonium", "diethylamine", "lysine", "trometamol", "olamine")
-HYDRATES_EN = ("hemihydrate", "monohydrate", "dihydrate", "trihydrate", "hexahydrate", "dodecahydrate", "anhydrous")
+# Contraiones que a veces son una sal y a veces un éster: solo para estas bases (ver el francés).
+AMBIGUOUS_COUNTERIONS_EN = {
+    "benzoate": {"rizatriptan"},
+    "malate": {"sunitinib", "almotriptan"},
+    "acetate": {"desmopressin", "octreotide", "lanreotide", "glatiramer", "leuprorelin", "triptorelin",
+                "goserelin", "terlipressin", "ganirelix", "cetrorelix", "icatibant", "degarelix",
+                "flecainide", "chlorhexidine", "lysine", "indacaterol"},
+}
+CATIONS_EN = ("sodium", "potassium", "calcium", "diethylammonium", "diethylamine", "lysine", "trometamol", "olamine",
+              "arginine", "erbumine", "tert-butylamine", "tromethamine")
+HYDRATES_EN = ("hemihydrate", "monohydrate", "dihydrate", "trihydrate", "hexahydrate", "dodecahydrate", "anhydrous",
+               "sesquihydrate", "hydrate", "micronised", "micronized")
 INORGANIC_EN = (
     "sodium", "disodium", "potassium", "calcium", "magnesium", "zinc", "aluminium", "lithium",
     "silver", "iron", "ferrous", "ferric", "copper", "ammonium", "hydrogen", "dihydrogen", "water",
@@ -149,12 +201,14 @@ def parse_substance_en(raw):
     s = raw.lower().strip()
     if not re.fullmatch(r"[a-z\- ]+", s):  # cifras, comillas, paréntesis, tildes: demasiado raro
         return None
+    s = re.sub(r"\bhydrogen (tartrate|maleate|fumarate|malate)$", r"\1", s)  # sal ácida: sigue siendo la sal
     words = s.split()
     while len(words) > 1 and words[-1] in HYDRATES_EN:
         words.pop()
+    ambiguous_ok = len(words) == 2 and words[0] in AMBIGUOUS_COUNTERIONS_EN.get(words[-1], ())
     if len(words) > 1 and words[-1] in CATIONS_EN and words[-2] not in INORGANIC_EN:
         words.pop()  # "diclofenac sodium", "ibuprofen lysine"
-    elif len(words) > 1 and words[-1] in COUNTERIONS_EN:
+    elif len(words) > 1 and (words[-1] in COUNTERIONS_EN or ambiguous_ok):
         base = words[:-1]
         if any(w in INORGANIC_EN for w in base):
             pass  # "zinc sulfate", "riboflavin sodium phosphate": la sal (o el éster) importa
@@ -184,11 +238,22 @@ _EN_WORDS = {
 }
 
 
+def propose_acid_en(moiety):
+    """Para la sal de un ácido orgánico ("sodium valproate"), el nombre español del ÁCIDO
+    ("ácido valproico"): CIMA nombra así al valproato sódico. Solo es un candidato: hay que
+    confirmarlo con el ATC (así se descartaría "sodium citrate" -> "ácido cítrico")."""
+    m = re.fullmatch(r"(?:sodium|potassium|calcium|magnesium) ([a-z]+)ate", plain(moiety))
+    return f"acido {m.group(1)}ico" if m else None
+
+
 def propose_spanish_en(moiety, k_to_c=True):
     """Cómo se escribiría un nombre inglés en español. k_to_c=False conserva la k
     (ketoconazol), que en español se usa en unos nombres y se cambia por c en otros
     (benzalconio): el curador prueba las dos formas."""
     s = plain(moiety)
+    nitrate = re.fullmatch(r"([a-z]+) ((?:mono|di)nitrate)", s)
+    if nitrate:  # "isosorbide mononitrate" -> "mononitrato de isosorbida" (así lo escribe CIMA)
+        return f"{nitrate.group(2)[:-1]}o de {propose_spanish_en(nitrate.group(1), k_to_c)}"
     s = " ".join(_EN_WORDS.get(w, w) for w in s.split())
     s = re.sub(r"^(.+?)ic acid$", r"acido \1ico", s)  # "folic acid" -> "acido folico"
     if k_to_c:
@@ -221,18 +286,70 @@ def propose_spanish(moiety):
     return s
 
 
-def load_links(path=LINKS_PATH):
-    """{nombre de origen sin tildes: nombre español} solo con los enlaces usables.
-    La primera columna del CSV es el nombre de origen (nombre_fr o nombre_en)."""
+def load_links(path=LINKS_PATH, level=LEVEL_EXACT):
+    """{nombre de origen sin tildes: nombre español} solo con los enlaces usables del `level`
+    ("exacto" por defecto, o "base"). La primera columna del CSV es el nombre de origen
+    (nombre_fr o nombre_en); si el archivo no tiene columna `nivel`, todo es exacto."""
     links = {}
     if os.path.exists(path):
         with open(path, encoding="utf-8", newline="") as fh:
             reader = csv.DictReader(fh)
             source_col = reader.fieldnames[0]
             for row in reader:
-                if row["estado"] in USABLE_STATUSES:
+                if row["estado"] in USABLE_STATUSES and (row.get("nivel") or LEVEL_EXACT) == level:
                     links[plain(row[source_col])] = row["nombre_es"]
     return links
+
+
+# Palabras que hacen de una molécula un ÉSTER o PROFÁRMACO ("propionate de fluticasone",
+# "candésartan cilexétil"). Sin tildes. Solo sirven para PROPONER un enlace de nivel base.
+ESTER_WORDS = (
+    "dipropionate", "propionate", "furoate", "valerate", "butyrate", "acetate", "cilexetil", "medoxomil",
+    "mofetil", "etexilate", "disoproxil", "axetil", "pivoxil", "proxetil", "probutate", "aceponate",
+)
+_ESTER_RE = _alt(ESTER_WORDS)
+
+
+def source_key(raw, country):
+    """Clave con la que se busca un nombre de origen en las tablas de enlaces de nivel base:
+    la molécula ya limpia de sales si se pudo, y si no el nombre tal cual, sin tildes."""
+    parse = parse_substance if country == "FR" else parse_substance_en
+    moiety = parse(raw)
+    return plain(moiety if moiety is not None else raw)
+
+
+def ester_base(raw, country):
+    """Si `raw` es un éster o profármaco ("fluticasone propionate", "propionate de fluticasone",
+    "béclométasone (dipropionate de)", "candésartan cilexétil"), devuelve el nombre de su BASE ya
+    limpio de sales ("fluticasone"); si no, None. Solo propone: nunca se usa sin confirmación."""
+    s = raw.lower().replace("’", "'").strip()
+    p = strip_accents(s)
+    if len(p) != len(s):
+        return None
+    # Primero se quita la SAL o el hidrato si los hay ("dabigatran etexilate mesilate"): la sal
+    # va detrás del éster y no cambia qué éster es.
+    if country == "FR":
+        salt = re.search(rf"\s*\((?:{_COUNTERIONS_RE})\s+(?:de|d')\s*\)$|\s+(?:{_TRAILING_RE})$", p)
+    else:
+        salt = re.search(rf"\s+(?:{_alt(COUNTERIONS_EN + HYDRATES_EN + CATIONS_EN)})$", p)
+    if salt:
+        p, s = p[: salt.start()], s[: salt.start()]
+    rest = None
+    if country == "FR":
+        m = re.fullmatch(rf"(?P<base>[^()]+?)\s*\((?:{_ESTER_RE})\s+(?:de|d')\s*\)", p)
+        if m:
+            rest = s[m.start("base"):m.end("base")]
+        if rest is None:
+            m = re.fullmatch(rf"(?:{_ESTER_RE})\s+(?:de |d')\s*(?P<base>.+)", p)
+            if m:
+                rest = s[m.start("base"):m.end("base")]
+    if rest is None:
+        m = re.fullmatch(rf"(?P<base>.+?)\s+(?:{_ESTER_RE})", p)  # "fluticasone propionate", "ténofovir disoproxil"
+        if m:
+            rest = s[m.start("base"):m.end("base")]
+    if rest is None:
+        return None
+    return (parse_substance if country == "FR" else parse_substance_en)(rest.strip())
 
 
 def build_es_index(names):
@@ -254,3 +371,24 @@ def resolve(substances, links, es_index, parse=parse_substance):
         components.append(plain(spanish))
     name = es_index.get(frozenset(components))
     return (name, "enlazado") if name else (None, "combinacion_sin_equivalente")
+
+
+def resolve_levels(substances, links, base_links, es_index, parse=parse_substance, country="FR"):
+    """(nombre español, motivo, nivel). nivel = "exacto" si todos los componentes tienen un enlace
+    exacto, "base" si alguno solo lo tiene de nivel base (distinto éster/sal), None si no hay enlace.
+    Con nivel "base" el nombre español es el de la BASE: el producto conserva su nombre propio y
+    solo se usa para el nivel amarillo."""
+    components, level = [], LEVEL_EXACT
+    for raw in substances:
+        moiety = parse(raw)
+        exact = links.get(plain(moiety)) if moiety is not None else None
+        if exact is not None:
+            components.append(plain(exact))
+            continue
+        base = base_links.get(source_key(raw, country))
+        if base is None:
+            return None, ("no_interpretable" if moiety is None else "sin_enlace"), None
+        components.append(plain(base))
+        level = LEVEL_BASE
+    name = es_index.get(frozenset(components))
+    return (name, "enlazado", level) if name else (None, "combinacion_sin_equivalente", None)

@@ -46,10 +46,20 @@ Diferencias importantes con CIMA (léelas antes de tocar este archivo):
 Ejecuta antes fetch_cima.py: el vocabulario español al que se enlaza sale de
 los productos de España que ya estén en la base.
 
+7. Medicamentos CON receta: un medicamento está "con receta" si su CIS aparece en
+   CIS_CPD_bdpm.txt. Se guardan con requires_prescription = 1 y la condición de prescripción
+   en legal_note ("liste I", "liste II", "stupéfiants"...). Se EXCLUYEN los que un paciente no
+   compra en una farmacia (uso hospitalario, farmacias hospitalarias, uso profesional, urgencias,
+   administración en un centro de salud) y los inyectables/parenterales y de diálisis: igual que
+   en España y el Reino Unido, para que las comparaciones entre países sean justas. OJO:
+   "prescription hospitalière" y "prescription initiale hospitalière" NO se excluyen (se
+   dispensan en farmacia). Ver HOSPITAL_CONDITIONS y PARENTERAL_ROUTES.
+
 Uso:
     pip install requests
-    python fetch_bdpm.py           # sincroniza Francia
-    python fetch_bdpm.py --debug   # descarga y analiza, sin tocar medipass.db
+    python fetch_bdpm.py              # sincroniza Francia (sin receta y con receta)
+    python fetch_bdpm.py --only-otc   # solo sin receta (como antes de añadir las recetas)
+    python fetch_bdpm.py --debug      # descarga y analiza, sin tocar medipass.db
 """
 
 import collections
@@ -75,6 +85,22 @@ FORM_MAP_PATH = os.path.join(HERE, "form_map_fr.csv")
 # Ambas constantes van ya sin tildes: se comparan con norm(), que las quita.
 HOMEOPATHIC_PROCEDURE = "enreg homeo (proc. nat.)"
 HOMEOPATHIC_MARKER = "homeopathique"  # dentro del nombre de la sustancia activa
+
+# Condiciones de prescripción (sin tildes) que indican que NO es un medicamento que un paciente
+# compre en una farmacia. No incluye "prescription hospitalière": esa sí se dispensa en farmacia.
+HOSPITAL_CONDITIONS = (
+    "usage hospitalier", "pharmacies a usage interieur", "usage professionnel", "usage en situation d'urgence",
+    "assistance medicale mobile", "administration doit etre effectuee dans un etablissement",
+    "delivrance reservee aux ets", "usage militaire", "centres de vaccination",
+)
+# Vías de administración parenterales (o de diálisis), sin tildes.
+PARENTERAL_ROUTES = (
+    "intraveineuse", "sous-cutanee", "intramusculaire", "peridurale", "epidurale", "intrathecale", "intraarterielle",
+    "intra-arterielle", "perineurale", "infiltration", "intraperitoneale", "intravitreenne", "intraarticulaire",
+    "intra-articulaire", "intravesicale", "intracerebroventriculaire", "intradermique", "periarticulaire",
+    "intralesionnelle", "hemodialyse", "hemofiltration", "intracoronaire", "intracamerulaire", "sous-conjonctivale",
+    "extracorporelle",
+)
 
 LINK_REASONS = {
     "enlazado": "enlazados con un principio activo español",
@@ -109,7 +135,19 @@ def load_form_map(path=FORM_MAP_PATH):
 
 
 
-def load_catalog():
+def exclusion_reason(form, routes, conditions):
+    """'hospital', 'inyectable' o None (solo para los de receta)."""
+    if any(h in norm(c) for c in conditions for h in HOSPITAL_CONDITIONS):
+        return "hospital"
+    form_n = norm(form)
+    if "injectable" in form_n or "perfusion" in form_n:
+        return "inyectable"
+    if any(p in norm(r) for r in routes.split(";") for p in PARENTERAL_ROUTES):
+        return "inyectable"
+    return None
+
+
+def load_catalog(include_prescription=True):
     print("Descargando BDPM (CIS, composición, condiciones de prescripción)...")
     cis_rows = parse_rows(download("CIS_bdpm.txt"))
     compo_rows = parse_rows(download("CIS_COMPO_bdpm.txt"))
@@ -117,7 +155,10 @@ def load_catalog():
     print(f"Descargado: {len(cis_rows)} especialidades, {len(compo_rows)} filas de composición, "
           f"{len(cpd_rows)} condiciones de prescripción")
 
-    restricted_cis = {r[0] for r in cpd_rows}
+    conditions_by_cis = collections.defaultdict(list)
+    for r in cpd_rows:
+        if len(r) >= 2 and r[1].strip() and r[1].strip() not in conditions_by_cis[r[0]]:
+            conditions_by_cis[r[0]].append(r[1].strip())
 
     substances_by_cis = collections.defaultdict(list)
     for r in compo_rows:
@@ -125,21 +166,30 @@ def load_catalog():
             substances_by_cis[r[0]].append(r[3])
 
     catalog = []
-    skipped_homeo = 0
+    skipped = collections.Counter()
     for r in cis_rows:
         if len(r) < 12:
             continue
         cis, name, form, routes, _amm_status, procedure, market_status = r[0:7]
-        if market_status != "Commercialisée" or cis in restricted_cis:
+        if market_status != "Commercialisée":
             continue
         substances = substances_by_cis.get(cis)
         if norm(procedure) == HOMEOPATHIC_PROCEDURE or (
             substances and any(HOMEOPATHIC_MARKER in norm(s) for s in substances)
         ):
-            skipped_homeo += 1
+            skipped["homeopático"] += 1
             continue
         if not substances:
             continue
+        conditions = conditions_by_cis.get(cis, [])
+        rx = bool(conditions)  # con receta = aparece en el archivo de condiciones de prescripción
+        if rx:
+            if not include_prescription:
+                continue
+            reason = exclusion_reason(form, routes, conditions)
+            if reason:
+                skipped[reason] += 1
+                continue
         catalog.append(
             {
                 "cis": cis,
@@ -147,19 +197,31 @@ def load_catalog():
                 "form": form.strip(),
                 "route": routes.split(";")[0].strip() if routes else "",
                 "substances": substances,
+                "requires_prescription": int(rx),
+                # liste I / liste II / stupéfiants primero: es lo que le importa al usuario
+                "legal_note": "; ".join(sorted(conditions, key=lambda c: (not c.lower().startswith(("liste", "stup")), c))[:3]) or None,
             }
         )
-    print(f"Comercializados sin receta: {len(catalog)} (excluidos {skipped_homeo} homeopáticos)")
+    otc = sum(1 for i in catalog if not i["requires_prescription"])
+    print(f"Comercializados: {otc} sin receta y {len(catalog) - otc} con receta "
+          f"(excluidos: {dict(skipped)})")
     return catalog
 
 
-def to_product(item, links, es_index, form_map, es_forms):
-    name, reason = ing.resolve(item["substances"], links, es_index)
+def to_product(item, links, es_index, form_map, es_forms, base_links=None):
+    """Con enlace EXACTO el producto pasa a llamarse como en España. Con enlace de nivel BASE
+    (éster/profármaco) conserva su propio nombre y guarda la base en `base_inn`: así no se mezcla
+    con los exactos. Sin enlace conserva su nombre francés."""
+    name, reason, level = ing.resolve_levels(item["substances"], links, base_links or {}, es_index,
+                                             parse=ing.parse_substance, country="FR")
+    own_name = " + ".join(s.lower() for s in item["substances"])
     target = map_form(item["form"], item["route"], form_map)
     return {
         "ref": item["cis"],
         "brand_name": item["brand_name"],
-        "ingredient": name or " + ".join(s.lower() for s in item["substances"]),
+        "ingredient": name if level == ing.LEVEL_EXACT else own_name,
+        "base_inn": name if level == ing.LEVEL_BASE else None,
+        "link_level": level,
         "link_reason": reason,
         # La forma de destino se escribe como ya está en España (con o sin tildes).
         "form": es_forms.get(ing.plain(target), target) if target else item["form"],
@@ -167,6 +229,9 @@ def to_product(item, links, es_index, form_map, es_forms):
         "native_form": item["form"],
         "route": item["route"],
         "composition": " + ".join(s.lower() for s in item["substances"]),
+        "requires_prescription": item.get("requires_prescription", 0),
+        "legal_category": importers.LEGAL_RX if item.get("requires_prescription") else importers.LEGAL_FREE,
+        "legal_note": item.get("legal_note"),
     }
 
 
@@ -179,6 +244,8 @@ def report(conn, products):
     print("\nEnlace de principios activos:")
     for key, text in LINK_REASONS.items():
         print(f"  {reasons[key]:5} productos {text}")
+    levels = collections.Counter(p["link_level"] for p in products)
+    print(f"  de los enlazados: {levels[ing.LEVEL_EXACT]} de nivel exacto y {levels[ing.LEVEL_BASE]} de nivel base (otro éster)")
     mapped = sum(p["form_mapped"] for p in products)
     print(f"Forma traducida a la de CIMA: {mapped} de {len(products)} productos ({100 * mapped // total} %)")
     unmapped = collections.Counter((norm(p["native_form"]), norm(p["route"])) for p in products if not p["form_mapped"])
@@ -200,10 +267,12 @@ def report(conn, products):
 
 def main():
     debug = "--debug" in sys.argv
-    catalog = load_catalog()
+    catalog = load_catalog(include_prescription="--only-otc" not in sys.argv)
 
     conn = sqlite3.connect(DB_PATH)
     conn.execute("PRAGMA foreign_keys = ON")
+    if not debug:
+        importers.ensure_schema(conn)
     if not conn.execute("SELECT 1 FROM countries WHERE code = 'FR'").fetchone():
         sys.exit("Falta el país 'FR' en countries: ejecuta primero seed_base.sql")
 
@@ -213,9 +282,10 @@ def main():
               "o casi nada se podrá enlazar.")
     es_index = ing.build_es_index(names)
     links, form_map = ing.load_links(), load_form_map()
+    base_links = ing.load_links(level=ing.LEVEL_BASE)
     print(f"Tabla de enlaces: {len(links)} principios activos | tabla de formas: {len(form_map)} filas")
 
-    products = [to_product(item, links, es_index, form_map, es_forms) for item in catalog]
+    products = [to_product(item, links, es_index, form_map, es_forms, base_links) for item in catalog]
     report(conn, products)
 
     if debug:

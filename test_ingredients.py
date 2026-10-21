@@ -129,6 +129,62 @@ class ParseSubstanceEn(unittest.TestCase):
             self.assertIsNone(ing.parse_substance_en(raw), raw)
 
 
+class SalesQueSiSeQuitan(unittest.TestCase):
+    """Sales e hidratos puros: la misma molécula activa (CIMA los nombra sin la sal)."""
+
+    def test_ingles(self):
+        cases = {
+            "Escitalopram oxalate": "escitalopram",
+            "Rivastigmine hydrogen tartrate": "rivastigmine",
+            "Pantoprazole sodium sesquihydrate": "pantoprazole",
+            "Sunitinib malate": "sunitinib",
+            "Rizatriptan benzoate": "rizatriptan",
+            "Amoxicillin trihydrate": "amoxicillin",
+            "Desmopressin acetate": "desmopressin",
+            "Salmeterol xinafoate": "salmeterol",
+            "Perindopril arginine": "perindopril",
+            "Bisoprolol hemifumarate": "bisoprolol",
+            "Fenofibrate micronised": "fenofibrate",
+        }
+        for raw, expected in cases.items():
+            self.assertEqual(ing.parse_substance_en(raw), expected, raw)
+
+    def test_frances(self):
+        cases = {
+            "HYDROGÉNOTARTRATE DE RIVASTIGMINE": "rivastigmine",
+            "OXALATE D'ESCITALOPRAM": "escitalopram",
+            "BENZOATE DE RIZATRIPTAN": "rizatriptan",
+            "ACÉTATE DE DESMOPRESSINE": "desmopressine",
+            "ATORVASTATINE CALCIQUE TRIHYDRATÉE": "atorvastatine",
+            "AMOXICILLINE TRIHYDRATÉE": "amoxicilline",
+            "PÉRINDOPRIL TERT-BUTYLAMINE": "périndopril",
+            "RIZATRIPTAN (BENZOATE DE)": "rizatriptan",
+        }
+        for raw, expected in cases.items():
+            self.assertEqual(ing.parse_substance(raw), expected, raw)
+
+
+class EsteresYAmbiguosNoSeQuitan(unittest.TestCase):
+    """Un contraión que puede ser sal O éster solo se quita para bases concretas. Estos nombres
+    se quedan enteros: un éster/profármaco no se trata como su base sin una decisión explícita."""
+
+    def test_ingles(self):
+        for raw in (
+            "Benzyl benzoate",            # otra sustancia, no "benzyl"
+            "Hydrocortisone acetate",     # éster
+            "Fludrocortisone acetate",    # éster
+            "Fluticasone propionate", "Beclometasone dipropionate", "Candesartan cilexetil",
+            "Olmesartan medoxomil", "Mycophenolate mofetil", "Abiraterone acetate", "Dabigatran etexilate",
+        ):
+            self.assertEqual(ing.parse_substance_en(raw), ing.plain(raw), raw)
+
+    def test_frances(self):
+        self.assertEqual(ing.parse_substance("BENZOATE DE BENZYLE"), "benzoate de benzyle")
+        self.assertEqual(ing.parse_substance("PROPIONATE DE FLUTICASONE"), "propionate de fluticasone")
+        self.assertIsNone(ing.parse_substance("ACÉTATE D'HYDROCORTISONE"))
+        self.assertIsNone(ing.parse_substance("ACÉTATE D'ABIRATÉRONE"))
+
+
 class ProponerEspanolEn(unittest.TestCase):
     def test_terminaciones(self):
         cases = {
@@ -143,9 +199,16 @@ class ProponerEspanolEn(unittest.TestCase):
             "zinc oxide": "zinc oxido",
             "ferrous fumarate": "hierro fumarato",
             "benzalkonium chloride": "benzalconio cloruro",
+            "isosorbide mononitrate": "mononitrato de isosorbida",
+            "isosorbide dinitrate": "dinitrato de isosorbida",
         }
         for en, es in cases.items():
             self.assertEqual(ing.propose_spanish_en(en), es, en)
+
+    def test_sal_de_un_acido_propone_el_acido(self):
+        self.assertEqual(ing.propose_acid_en("sodium valproate"), "acido valproico")
+        self.assertEqual(ing.propose_acid_en("potassium clavulanate"), "acido clavulanico")
+        self.assertIsNone(ing.propose_acid_en("paracetamol"))
 
     def test_la_k_se_puede_conservar(self):
         self.assertEqual(ing.propose_spanish_en("ketoconazole", k_to_c=False), "ketoconazol")
@@ -185,12 +248,25 @@ class TablaDeEnlacesUK(unittest.TestCase):
             self.assertNotEqual(links.get(ing.plain(en)), es, f"{en} -> {es} no debe estar en uso")
 
     def test_solo_se_usan_estados_revisados(self):
+        # Un mismo nombre puede tener varias filas (candidatos distintos), pero lo que se usa
+        # sale solo de las filas confirmadas o aprobadas.
         import csv
-        usable = ing.load_links(ing.LINKS_PATH_UK)
         with open(ing.LINKS_PATH_UK, encoding="utf-8", newline="") as fh:
-            for row in csv.DictReader(fh):
-                if ing.plain(row["nombre_en"]) in usable:
-                    self.assertIn(row["estado"], ing.USABLE_STATUSES, row["nombre_en"])
+            reviewed = {(ing.plain(r["nombre_en"]), r["nombre_es"]) for r in csv.DictReader(fh) if r["estado"] in ing.USABLE_STATUSES}
+        for name, es in ing.load_links(ing.LINKS_PATH_UK).items():
+            self.assertIn((name, es), reviewed, f"{name} -> {es} se usa sin estar revisado")
+
+    def test_ningun_nombre_tiene_dos_enlaces_en_uso(self):
+        # Si hubiera dos, load_links se quedaría con el último sin avisar.
+        import collections
+        import csv
+        for path, col in ((ing.LINKS_PATH, "nombre_fr"), (ing.LINKS_PATH_UK, "nombre_en")):
+            usable = collections.Counter()
+            with open(path, encoding="utf-8", newline="") as fh:
+                for r in csv.DictReader(fh):
+                    if r["estado"] in ing.USABLE_STATUSES:
+                        usable[ing.plain(r[col])] += 1
+            self.assertEqual([k for k, n in usable.items() if n > 1], [], path)
 
     def test_cada_par_en_uso_esta_confirmado_con_evidencia(self):
         import csv

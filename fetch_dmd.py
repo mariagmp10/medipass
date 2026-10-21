@@ -1,7 +1,7 @@
 """
 fetch_dmd.py
-Carga en products (country_code = 'UK') el catálogo de medicamentos SIN RECETA del
-Reino Unido a partir de NHS dm+d (NHSBSA dictionary of medicines and devices):
+Carga en products (country_code = 'UK') el catálogo de medicamentos del Reino Unido, sin receta
+y con receta, a partir de NHS dm+d (NHSBSA dictionary of medicines and devices):
 https://www.nhsbsa.nhs.uk/pharmacies-gp-practices-and-appliance-contractors/dictionary-medicines-and-devices-dmd
 
 Fuente:   NHS TRUD, elemento 24 "NHSBSA dm+d" (ZIP con XML, se publica cada semana).
@@ -30,11 +30,23 @@ Diferencias importantes con CIMA y BDPM (léelas antes de tocar este archivo):
    betamethasone, que no son equivalentes) o se equivoca del todo (ioversol -> iodine). El
    enlace con el nombre español usa nuestro parser conservador (ingredients.py) y
    ingredient_links_uk.csv, como en Francia.
-6. Forma y vía son códigos del propio dm+d (una sola forma por producto, ya normalizada) y se
+6. Medicamentos CON receta (POM): un producto es "con receta" si tiene algún envase activo POM y
+   NINGUNO P o GSL. Se guardan con requires_prescription = 1 y legal_note = "POM". El Reino
+   Unido NO incluye (decisión de María, octubre de 2026):
+     - inyectables y parenterales: forma con "injection"/"infusion" o alguna vía intravenosa,
+       intramuscular, subcutánea, intratecal, epidural... (ver PARENTERAL_ROUTES);
+     - productos de hospital: aquellos cuyos envases activos llevan TODOS la marca HOSP
+       ("hospital use only") del dm+d.
+   España y Francia aplican la misma exclusión, para que las comparaciones sean justas.
+   Para volver a incluirlos: quitar las dos comprobaciones de load_catalog().
+   Un producto con envases P/GSL y POM a la vez sigue siendo "sin receta" (hay un envase libre);
+   su legal_note lo dice ("P + POM").
+7. Forma y vía son códigos del propio dm+d (una sola forma por producto, ya normalizada) y se
    traducen a la de CIMA con form_map_uk.csv.
 
 Uso:
-    python fetch_dmd.py --zip RUTA_AL_ZIP            # sincroniza el Reino Unido con un ZIP ya descargado
+    python fetch_dmd.py --zip RUTA_AL_ZIP            # sincroniza el Reino Unido (sin receta y con receta)
+    python fetch_dmd.py --zip RUTA --only-otc        # solo sin receta (como antes de añadir las recetas)
     python fetch_dmd.py                              # igual, descargando la última versión con TRUD_API_KEY
     python fetch_dmd.py --zip RUTA --debug           # analiza y muestra el informe, sin tocar medipass.db
     python fetch_dmd.py --zip RUTA --inspect         # solo cuenta formas y vías del ZIP
@@ -77,6 +89,12 @@ SOURCE_NAME = "NHS dm+d"
 OTC_CATEGORIES = {"P", "GSL"}
 LICENSED = {"Medicines - MHRA/EMA", "Traditional Herbal Medicines"}
 DISCONTINUED = "0001"  # DISCONTINUED_IND: 0001 = Discontinued Flag, 0000 = Reinstated
+# Vías parenterales (en inglés, minúsculas): un producto con alguna de ellas es inyectable.
+PARENTERAL_ROUTES = (
+    "intravenous", "intramuscular", "subcutaneous", "intrathecal", "epidural", "intravitreal", "intradermal",
+    "intra-articular", "intra-arterial", "intracardiac", "intraosseous", "intracavernous", "intraperitoneal",
+    "intraventricular", "intralesional", "infiltration", "intracameral", "perineural", "intravesical",
+)
 
 
 def read_lookup(zf):
@@ -110,25 +128,43 @@ def release_info(zip_path):
     return (m.group(1), f"{m.group(2)}-{m.group(3)}-{m.group(4)}") if m else (None, None)
 
 
-def load_catalog(zip_path):
-    """Productos de marca sin receta (lista de dicts) y un resumen de lo excluido."""
+def is_parenteral(form, routes):
+    f = form.lower()
+    return "injection" in f or "infusion" in f or any(p in r.lower() for r in routes for p in PARENTERAL_ROUTES)
+
+
+def legal_status(cats):
+    """(requires_prescription, legal_category, legal_note) a partir de las categorías de los envases."""
+    if cats & OTC_CATEGORIES:
+        note = " + ".join(sorted(cats & {"GSL", "P", "POM"}, key=["GSL", "P", "POM"].index))
+        category = importers.LEGAL_PHARMACY if "P" in cats else importers.LEGAL_FREE
+        return 0, category, note
+    return 1, importers.LEGAL_RX, "POM"
+
+
+def load_catalog(zip_path, include_prescription=True):
+    """Productos de marca (lista de dicts) y un resumen de lo excluido."""
     zf = zipfile.ZipFile(zip_path)
     lookup = read_lookup(zf)
     legal = lookup["LEGAL_CATEGORY"]
 
-    # 1) Categorías legales de los envases activos de cada producto.
-    categories = collections.defaultdict(set)
+    # 1) Categorías legales de los envases activos de cada producto, y cuáles son "solo hospital".
+    hospital_packs = {r["APPID"] for r in iter_records(zf, "ampp", "PRESCRIB_INFO") if r.get("HOSP")}
+    categories, hospital = collections.defaultdict(set), collections.defaultdict(list)
     for r in iter_records(zf, "ampp", "AMPP"):
         if r.get("INVALID") == "1" or r.get("DISCCD") == DISCONTINUED:
             continue
         categories[r["APID"]].add(legal.get(r["LEGAL_CATCD"]))
+        hospital[r["APID"]].append(r["APPID"] in hospital_packs)
     otc = {apid for apid, cats in categories.items() if cats & OTC_CATEGORIES}
+    rx = {apid for apid, cats in categories.items() if "POM" in cats and not cats & OTC_CATEGORIES}
+    wanted = otc | (rx if include_prescription else set())
 
     # 2) Productos de marca: con licencia, disponibles y válidos.
     excluded = collections.Counter()
     amps = {}
     for r in iter_records(zf, "amp", "AMP"):
-        if r["APID"] not in otc:
+        if r["APID"] not in wanted:
             continue
         if r.get("INVALID") == "1":
             excluded["inválido"] += 1
@@ -136,6 +172,8 @@ def load_catalog(zip_path):
             excluded["sin licencia"] += 1
         elif lookup["AVAILABILITY_RESTRICTION"].get(r["AVAIL_RESTRICTCD"]) != "None":
             excluded["importado, especial o no disponible"] += 1
+        elif r["APID"] in rx and all(hospital[r["APID"]]):
+            excluded["hospital"] += 1
         else:
             amps[r["APID"]] = r
     vpids = {r["VPID"] for r in amps.values()}
@@ -163,7 +201,10 @@ def load_catalog(zip_path):
             excluded["homeopático"] += 1
         elif not substances.get(vpid):
             excluded["sin ingredientes"] += 1
+        elif apid in rx and is_parenteral(form, routes[vpid]):
+            excluded["inyectable"] += 1
         else:
+            needs_rx, category, note = legal_status(categories[apid])
             catalog.append(
                 {
                     "ref": apid,
@@ -173,7 +214,10 @@ def load_catalog(zip_path):
                     # tabla esté contenida en este texto.
                     "route": "; ".join(routes[vpid]),
                     "substances": substances[vpid],
-                    "mixed_legal": "POM" in categories[apid],
+                    "mixed_legal": "POM" in categories[apid] and not needs_rx,
+                    "requires_prescription": needs_rx,
+                    "legal_category": category,
+                    "legal_note": note,
                 }
             )
     return catalog, excluded
@@ -194,15 +238,21 @@ def debug_report(zip_path):
     print(f"\nIngredientes distintos: {len(ingredients)}")
 
 
-def to_product(item, links, es_index, form_map, es_forms):
+def to_product(item, links, es_index, form_map, es_forms, base_links=None):
     """Producto listo para sync_products. Sin enlace revisado ni forma conocida, el
     producto conserva su nombre y su forma en inglés y no se compara con nada."""
-    name, reason = ing.resolve(item["substances"], links, es_index, parse=ing.parse_substance_en)
+    name, reason, level = ing.resolve_levels(item["substances"], links, base_links or {}, es_index,
+                                             parse=ing.parse_substance_en, country="UK")
+    own_name = " + ".join(s.lower() for s in item["substances"])
     target = importers.map_form(item["form"], item["route"], form_map, exact_route=True)
     return {
         "ref": item["ref"],
         "brand_name": item["brand_name"],
-        "ingredient": name or " + ".join(s.lower() for s in item["substances"]),
+        # Enlace exacto: se llama como en España. Nivel base (éster/profármaco): conserva su nombre
+        # y guarda la base en base_inn. Sin enlace: su nombre en inglés.
+        "ingredient": name if level == ing.LEVEL_EXACT else own_name,
+        "base_inn": name if level == ing.LEVEL_BASE else None,
+        "link_level": level,
         "link_reason": reason,
         # La forma de destino se escribe como ya está en España (con o sin tildes).
         "form": es_forms.get(ing.plain(target), target) if target else item["form"],
@@ -210,6 +260,9 @@ def to_product(item, links, es_index, form_map, es_forms):
         "native_form": item["form"],
         "route": item["route"],
         "composition": " + ".join(s.lower() for s in item["substances"]),
+        "requires_prescription": item.get("requires_prescription", 0),
+        "legal_category": item.get("legal_category", importers.LEGAL_FREE),
+        "legal_note": item.get("legal_note"),
     }
 
 
@@ -250,6 +303,8 @@ def report(conn, products):
     print("\nEnlace de principios activos:")
     for key, text in LINK_REASONS.items():
         print(f"  {reasons[key]:5} productos {text}")
+    levels = collections.Counter(p["link_level"] for p in products)
+    print(f"  de los enlazados: {levels[ing.LEVEL_EXACT]} de nivel exacto y {levels[ing.LEVEL_BASE]} de nivel base (otro éster)")
     mapped = sum(p["form_mapped"] for p in products)
     print(f"Forma traducida a la de CIMA: {mapped} de {len(products)} productos ({100 * mapped // total} %)")
     unmapped = collections.Counter((ing.plain(p["native_form"]), ing.plain(p["route"])) for p in products if not p["form_mapped"])
@@ -276,6 +331,7 @@ def main():
     ap.add_argument("--zip", help="ZIP ya descargado de NHS TRUD (nhsbsa_dmd_*.zip); si falta, se descarga con la clave de API")
     ap.add_argument("--debug", action="store_true", help="analiza y muestra el informe, sin tocar medipass.db")
     ap.add_argument("--inspect", action="store_true", help="solo cuenta formas y vías del ZIP")
+    ap.add_argument("--only-otc", action="store_true", help="solo medicamentos sin receta")
     args = ap.parse_args()
 
     zip_path = args.zip
@@ -289,11 +345,14 @@ def main():
 
     version, released = release_info(zip_path)
     print(f"dm+d versión {version}, publicada el {released}")
-    catalog, excluded = load_catalog(zip_path)
-    print(f"Sin receta (P/GSL): {len(catalog)} productos. Excluidos: {dict(excluded)}")
+    catalog, excluded = load_catalog(zip_path, include_prescription=not args.only_otc)
+    n_rx = sum(i["requires_prescription"] for i in catalog)
+    print(f"{len(catalog) - n_rx} sin receta (P/GSL) y {n_rx} con receta (POM). Excluidos: {dict(excluded)}")
 
     conn = sqlite3.connect(DB_PATH)
     conn.execute("PRAGMA foreign_keys = ON")
+    if not args.debug:
+        importers.ensure_schema(conn)
     if not conn.execute("SELECT 1 FROM countries WHERE code = 'UK'").fetchone():
         sys.exit("Falta el país 'UK' en countries: ejecuta primero seed_base.sql")
 
@@ -303,9 +362,10 @@ def main():
               "o casi nada se podrá enlazar.")
     es_index = ing.build_es_index(names)
     links, form_map = ing.load_links(ing.LINKS_PATH_UK), importers.load_form_map(FORM_MAP_PATH)
+    base_links = ing.load_links(ing.LINKS_PATH_UK, level=ing.LEVEL_BASE)
     print(f"Tabla de enlaces: {len(links)} principios activos | tabla de formas: {len(form_map)} filas")
 
-    products = [to_product(item, links, es_index, form_map, es_forms) for item in catalog]
+    products = [to_product(item, links, es_index, form_map, es_forms, base_links) for item in catalog]
     report(conn, products)
 
     if args.debug:

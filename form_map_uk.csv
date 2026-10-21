@@ -1,14 +1,22 @@
 forma_uk,via_uk,forma_cima,productos_uk,evidencia
 oral tablet,oral,COMPRIMIDO,539,CIMA: «comprimido» (2.169) y «comprimido recubierto con película» (4.896) → COMPRIMIDO
 oral solution,oral,SOLUCION/SUSPENSION ORAL,169,CIMA: «solución oral» (264) y «jarabe» (53) → SOLUCION/SUSPENSION ORAL
+inhalation powder,inhalation,INHALACION PULMONAR,146,CIMA: «polvo para inhalación» (78) y «polvo para inhalación (unidosis)» (32) → INHALACION PULMONAR
 oral capsule,oral,CAPSULA,129,CIMA: «cápsula dura» (1.236) y «cápsula blanda» (142) → CAPSULA
+pressurised inhalation,inhalation,INHALACION PULMONAR,119,CIMA: «suspensión para inhalación en envase a presión» (48) y «solución para inhalación en envase a presión» (18) → INHALACION PULMONAR
 cutaneous cream,cutaneous,CREMA,115,CIMA: «crema» (137) → CREMA
 oral suspension,oral,SOLUCION/SUSPENSION ORAL,87,CIMA: «suspensión oral» (99) → SOLUCION/SUSPENSION ORAL
+sublingual tablet,sublingual,COMPRIMIDO SUBLINGUAL,86,CIMA: «comprimido sublingual» (42) → COMPRIMIDO SUBLINGUAL
+nebuliser liquid,inhalation,INHALACION PULMONAR,79,CIMA: «solución para inhalación por nebulizador» (20) y «suspensión para inhalación por nebulizador» (8) → INHALACION PULMONAR
 cutaneous gel,cutaneous,GEL,67,CIMA: «gel» (89) → GEL
 suppository,rectal,SUPOSITORIO,58,CIMA: «supositorio» (33) → SUPOSITORIO
+inhalation gas,inhalation,INHALACION PULMONAR,53,CIMA: «gas para inhalacion» (29) y «gas comprimido medicinal» (49) → INHALACION PULMONAR
 eye drops,ocular,COLIRIO,45,CIMA: «colirio en solución» (155) y «colirio en suspensión» (20) → COLIRIO
+oral tablet,gastroenteral; oral,COMPRIMIDO,44,CIMA: «comprimido» (2.164) → COMPRIMIDO
+gastro-resistant tablet,gastroenteral; oral,COMPRIMIDO,42,CIMA: «comprimido gastrorresistente» (251) → COMPRIMIDO
 effervescent tablet,oral,COMPRIMIDO EFERVESCENTE,40,CIMA: «comprimido efervescente» (49) → COMPRIMIDO EFERVESCENTE
 chewable tablet,oral,COMPRIMIDO MASTICABLE,37,CIMA: «comprimido masticable» (103) → COMPRIMIDO MASTICABLE
+soluble tablet,oral,COMPRIMIDO,37,CIMA: «comprimido soluble» (7) → COMPRIMIDO
 transdermal patch,transdermal,PARCHE TRANSDERMICO,34,CIMA: «parche transdérmico» (173) → PARCHE TRANSDERMICO
 powder for oral solution,oral,SOLUCION/SUSPENSION ORAL,33,CIMA: «polvo para solución oral» (81) → SOLUCION/SUSPENSION ORAL
 lozenge,oromucosal,COMPRIMIDO BUCAL/PARA CHUPAR,33,CIMA: «comprimido para chupar» (37) y «pastilla para chupar» (41) → COMPRIMIDO BUCAL/PARA CHUPAR
@@ -16,28 +24,48 @@ gastro-resistant tablet,oral,COMPRIMIDO,32,CIMA: «comprimido gastrorresistente�
 cutaneous solution,cutaneous,LIQUIDO USO TOPICO,30,CIMA: «solución cutánea» (76) → LIQUIDO USO TOPICO
 spray,nasal,PRODUCTO USO NASAL,27,CIMA: «solución para pulverización nasal» (36) y «suspensión para pulverización nasal» (43) → PRODUCTO USO NASAL
 modified-release tablet,oral,COMPRIMIDO LIBERACION MODIFICADA,26,CIMA: «comprimido de liberación prolongada» (617) y «comprimido de liberación modificada» (66) → COMPRIMIDO LIBERACION MODIFICADA
+modified-release granules,oral,POLVO/GRANULADO LIBERACION MODIFICADA,25,CIMA: «granulado de liberación modificada» (5) y «granulado de liberación prolongada» (2) → POLVO/GRANULADO LIBERACION MODIFICADA
 spray,oromucosal,PULVERIZACION BUCAL,22,CIMA: «solución para pulverización bucal» (13) → PULVERIZACION BUCAL
+eye ointment,ocular,POMADA OFTALMICA,22,CIMA: «pomada oftálmica» (15) → POMADA OFTALMICA
 medicated chewing-gum,oromucosal,CHICLE,21,CIMA: «chicle medicamentoso» (14) → CHICLE
 dispersible tablet,oral,COMPRIMIDO,20,CIMA: «comprimido dispersable» (36) → COMPRIMIDO
+gastro-resistant capsule,oral; gastroenteral,CAPSULA,19,CIMA: «cápsula dura gastrorresistente» (232) → CAPSULA
+oral solution,gastroenteral; oral,SOLUCION/SUSPENSION ORAL,18,CIMA: «solución oral» (264) → SOLUCION/SUSPENSION ORAL
+cutaneous liquid,cutaneous,LIQUIDO USO TOPICO,17,CIMA: «líquido cutáneo» (1) → LIQUIDO USO TOPICO
+oral lyophilisate,sublingual,COMPRIMIDO BUCODISPERSABLE/LIOTAB,16,CIMA: «liofilizado sublingual» (2) → COMPRIMIDO BUCODISPERSABLE/LIOTAB
 medicated plaster,cutaneous,APOSITO,15,CIMA: «apósito adhesivo medicamentoso» (10) → APOSITO
 enema,rectal,LIQUIDO RECTAL,14,CIMA: «solución rectal» (16) → LIQUIDO RECTAL
 pessary,vaginal,OVULO/CAPSULA/COMPRIMIDO VAGINAL,13,CIMA: «óvulo» (9) → OVULO/CAPSULA/COMPRIMIDO VAGINAL
+oral suspension,gastroenteral; oral,SOLUCION/SUSPENSION ORAL,12,CIMA: «suspensión oral» (99) → SOLUCION/SUSPENSION ORAL
 modified-release capsule,oral,CAPSULA LIBERACION MODIFICADA,10,CIMA: «cápsula dura de liberación prolongada» (152) y «cápsula dura de liberación modificada» (59) → CAPSULA LIBERACION MODIFICADA
 granules for oral solution,oral,SOLUCION/SUSPENSION ORAL,9,CIMA: «granulado para solución oral» (67) → SOLUCION/SUSPENSION ORAL
 cutaneous ointment,cutaneous,POMADA,9,CIMA: «pomada» (70) → POMADA
 shampoo,cutaneous,CHAMPU,9,CIMA: «champú» (12) → CHAMPU
+orodispersible film,oral,COMPRIMIDO BUCODISPERSABLE/LIOTAB,9,CIMA: «pelicula bucodispersable» (4) → COMPRIMIDO BUCODISPERSABLE/LIOTAB
 stick,cutaneous,SOLIDO USO TOPICO,8,CIMA: «barra cutánea» (2) → SOLIDO USO TOPICO
+sublingual spray,sublingual,PULVERIZACION SUBLINGUAL,8,CIMA: «solucion para pulverizacion sublingual» (1) → PULVERIZACION SUBLINGUAL
 orodispersible tablet,oral,COMPRIMIDO BUCODISPERSABLE/LIOTAB,7,CIMA: «comprimido bucodispersable» (327) → COMPRIMIDO BUCODISPERSABLE/LIOTAB
 gastro-resistant capsule,oral,CAPSULA,7,CIMA: «cápsula dura gastrorresistente» (232) → CAPSULA
 powder for oral suspension,oral,SOLUCION/SUSPENSION ORAL,7,CIMA: «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
 effervescent granules,oral,SOLUCION/SUSPENSION ORAL EFERVESCENTE,7,CIMA: «granulado efervescente» (13) → SOLUCION/SUSPENSION ORAL EFERVESCENTE
 spray,cutaneous,LIQUIDO USO TOPICO,7,CIMA: «solución para pulverización cutánea» (23) → LIQUIDO USO TOPICO
+modified-release drops,ocular,COLIRIO DE LIBERACION PROLONGADA,7,CIMA: «colirio de liberacion prolongada» (3) → COLIRIO DE LIBERACION PROLONGADA
+intrauterine device,intrauterine,DISPOSITIVO INTRAUTERINO,7,CIMA: «sistema de liberación intrauterino» (5) → DISPOSITIVO INTRAUTERINO
+oral solution,oral; gastroenteral,SOLUCION/SUSPENSION ORAL,7,CIMA: «solución oral» (264) → SOLUCION/SUSPENSION ORAL
+vaginal delivery system,vaginal,DISPOSITIVO VAGINAL,6,CIMA: «sistema de liberación vaginal» (8) → DISPOSITIVO VAGINAL
+rectal foam,rectal,SEMISOLIDO RECTAL,6,CIMA: «espuma rectal» (3) → SEMISOLIDO RECTAL
+gastro-resistant granules,oral; gastroenteral,SOLUCION/SUSPENSION ORAL,6,CIMA: «granulado gastrorresistente» (2) → SOLUCION/SUSPENSION ORAL
 oral drops,oral,SOLUCION/SUSPENSION GOTAS ORALES,5,CIMA: «gotas orales en solución» (53) → SOLUCION/SUSPENSION GOTAS ORALES
 cutaneous paste,cutaneous,PASTA,5,CIMA: «pasta cutánea» (1) → PASTA
 cutaneous emulsion,cutaneous,EMULSION,5,CIMA: «emulsión cutánea» (12) → EMULSION
 medicated nail lacquer,cutaneous,BARNIZ DE UNAS,5,CIMA: «barniz de uñas medicamentoso» (16) → BARNIZ DE UNAS
 rectal ointment,cutaneous; rectal,SEMISOLIDO RECTAL,5,CIMA: «pomada rectal» (11) → SEMISOLIDO RECTAL
+sublingual film,sublingual,COMPRIMIDO SUBLINGUAL,5,CIMA: «pelicula sublingual» (6) → COMPRIMIDO SUBLINGUAL
 oral powder,oral,SOLUCION/SUSPENSION ORAL,4,CIMA: «polvo oral» (7) → SOLUCION/SUSPENSION ORAL
+inhalation solution,inhalation,INHALACION PULMONAR,4,CIMA: «solución para inhalación» (4) → INHALACION PULMONAR
+powder for nebuliser solution,inhalation,INHALACION PULMONAR,4,CIMA: «polvo para solución para inhalación por nebulizador» (3) → INHALACION PULMONAR
+vaginal capsule,vaginal,OVULO/CAPSULA/COMPRIMIDO VAGINAL,4,CIMA: «cápsula vaginal blanda» (8) y «cápsula vaginal dura» (2) → OVULO/CAPSULA/COMPRIMIDO VAGINAL
+rectal ointment,rectal,SEMISOLIDO RECTAL,4,CIMA: «pomada rectal» (11) → SEMISOLIDO RECTAL
 ear drops,auricular,LIQUIDO OTICO,3,CIMA: «gotas óticas en solución» (15) → LIQUIDO OTICO
 pastille,oromucosal,COMPRIMIDO BUCAL/PARA CHUPAR,3,CIMA: «comprimido para chupar» (37) y «pastilla para chupar» (41) → COMPRIMIDO BUCAL/PARA CHUPAR
 vaginal cream,vaginal,SEMISOLIDO VAGINAL,3,CIMA: «crema vaginal» (13) → SEMISOLIDO VAGINAL
@@ -47,6 +75,7 @@ cutaneous spray solution,cutaneous,LIQUIDO USO TOPICO,2,CIMA: «solución para p
 cutaneous foam,cutaneous,LIQUIDO USO TOPICO,2,CIMA: «espuma cutánea» (6) → LIQUIDO USO TOPICO
 eye gel,ocular,GEL OFTALMICO,2,CIMA: «gel oftálmico» (9) → GEL OFTALMICO
 nasal drops,nasal,PRODUCTO USO NASAL,2,CIMA: «gotas nasales en solución» (6) → PRODUCTO USO NASAL
+oral suspension,oral; gastroenteral,SOLUCION/SUSPENSION ORAL,2,CIMA: «suspensión oral» (99) → SOLUCION/SUSPENSION ORAL
 oral liquid,oral,SOLUCION/SUSPENSION ORAL,1,CIMA: «solución oral» (264) → SOLUCION/SUSPENSION ORAL
 granules for oral suspension,oral,SOLUCION/SUSPENSION ORAL,1,CIMA: «granulado para suspensión oral» (20) → SOLUCION/SUSPENSION ORAL
 effervescent powder,oral,SOLUCION/SUSPENSION ORAL EFERVESCENTE,1,CIMA: «polvo efervescente» (6) → SOLUCION/SUSPENSION ORAL EFERVESCENTE

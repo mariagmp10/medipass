@@ -20,7 +20,9 @@ CREATE TABLE IF NOT EXISTS active_ingredients (
   inn_name TEXT NOT NULL UNIQUE,  -- ej. 'dimenhidrinato'; combinaciones: 'dimenhidrinato + cafeína'
   atc_code TEXT,                  -- código ATC si lo tenemos (clasificación internacional OMS)
   category TEXT NOT NULL,         -- 'Salud' | 'Producto sanitario' | 'Higiene' | 'Belleza'
-  common_use TEXT                 -- descripción breve en lenguaje natural
+  common_use TEXT,                -- descripción breve en lenguaje natural
+  base_inn TEXT                   -- principio activo BASE si este es un éster/profármaco ('fluticasona' para
+                                  -- 'fluticasone propionate'); NULL = es su propia base (ver README, "Dos niveles")
 );
 
 CREATE TABLE IF NOT EXISTS products (
@@ -29,6 +31,8 @@ CREATE TABLE IF NOT EXISTS products (
   country_code TEXT NOT NULL REFERENCES countries(code),
   brand_name TEXT NOT NULL,
   requires_prescription INTEGER,  -- 0 = libre, 1 = receta, NULL = desconocido
+  legal_category TEXT,            -- 'libre' | 'solo_farmacia' (p.ej. P del Reino Unido) | 'receta'; NULL = desconocido
+  legal_note TEXT,                -- etiqueta original del país: 'GSL', 'P', 'POM', 'Liste I', 'Sujeto a prescripción médica'...
   source TEXT NOT NULL,           -- 'CIMA_API' | 'manual_seed' | (futuro: 'ANSM_API', 'AIFA_API'...)
   source_ref TEXT,                -- p.ej. nº de registro CIMA, para poder re-consultar/auditar
   verified_at TEXT,               -- fecha ISO de la última verificación contra la fuente
@@ -51,12 +55,15 @@ DROP VIEW IF EXISTS equivalences;
 CREATE VIEW equivalences AS
 SELECT
   ai.inn_name,
+  COALESCE(ai.base_inn, ai.inn_name) AS base_inn,
   ai.category,
   ai.common_use,
   p.country_code,
   c.name AS country_name,
   p.brand_name,
   p.requires_prescription,
+  p.legal_category,
+  p.legal_note,
   p.source,
   p.source_ref,
   p.form,

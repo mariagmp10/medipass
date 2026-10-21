@@ -33,6 +33,11 @@ class MapForm(unittest.TestCase):
             ("dispositif", "transdermique", "PARCHE TRANSDERMICO"),
             ("emplâtre médicamenteux(se)", "cutanée", "APOSITO"),
             ("collyre en solution", "ophtalmique", "COLIRIO"),
+            ("comprimé à libération prolongée", "orale", "COMPRIMIDO LIBERACION MODIFICADA"),
+            ("gélule à libération prolongée", "orale", "CAPSULA LIBERACION MODIFICADA"),
+            ("comprimé", "sublinguale", "COMPRIMIDO SUBLINGUAL"),
+            ("poudre pour inhalation", "inhalée", "INHALACION PULMONAR"),
+            ("pommade", "ophtalmique", "POMADA OFTALMICA"),
         ]
         for form, route, expected in cases:
             self.assertEqual(bd.map_form(form, route, self.form_map), expected, f"{form} / {route}")
@@ -41,7 +46,7 @@ class MapForm(unittest.TestCase):
         for form, route in [
             ("gel", "orale"),                        # un gel oral no es un gel cutáneo
             ("gel", "rectale"),
-            ("comprimé", "sublinguale"),             # otra vía = otra forma
+            ("comprimé", "rectale"),                 # otra vía = otra forma
             ("comprimé", "vaginale"),
             ("solution pour application", "voie buccale autre"),
         ]:

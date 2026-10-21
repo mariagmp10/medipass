@@ -24,6 +24,11 @@ Estados:
 
 El importador solo usa "confirmado" y "aprobado".
 
+Cada fila lleva un `nivel`: "exacto" (misma molécula, aunque cambie la sal) o "base" (misma molécula
+BASE pero otro ÉSTER o profármaco: "fluticasone propionate" ~ "fluticasona"). Los de nivel base se
+proponen con ester_candidates() y pasan por la MISMA comprobación ATC; la app los enseña aparte, en
+amarillo, y nunca como "el mismo".
+
 Reino Unido (--country uk): igual, pero con los nombres en inglés del dm+d y escribiendo
 ingredient_links_uk.csv. Los candidatos salen de reglas ortográficas o del nombre español
 que Wikidata da al nombre inglés, y NUNCA se confirman solo por eso: hace falta que el código
@@ -64,14 +69,26 @@ BATCH = 50  # pares por consulta a Wikidata
 STATUS_ORDER = ["confirmado", "aprobado", "sin_confirmar", "sugerido", "contradice", "rechazado"]
 
 
-def sparql(query):
-    request = urllib.request.Request(
-        WIKIDATA_URL,
-        data=urllib.parse.urlencode({"query": query}).encode(),
-        headers={"User-Agent": USER_AGENT, "Accept": "application/sparql-results+json"},
-    )
-    with urllib.request.urlopen(request, timeout=120) as response:
-        return json.load(response)["results"]["bindings"]
+def sparql(query, attempts=4):
+    """Consulta a Wikidata con reintentos: si está saturado responde 429/50x o agota el tiempo,
+    y un lote perdido dejaba decenas de pares válidos "sin comprobar"."""
+    for attempt in range(attempts):
+        request = urllib.request.Request(
+            WIKIDATA_URL,
+            data=urllib.parse.urlencode({"query": query}).encode(),
+            headers={"User-Agent": USER_AGENT, "Accept": "application/sparql-results+json"},
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                return json.load(response)["results"]["bindings"]
+        except urllib.error.HTTPError as exc:
+            if exc.code not in (429, 500, 502, 503, 504) or attempt == attempts - 1:
+                raise
+            time.sleep(min(int(exc.headers.get("Retry-After") or 0) or 10 * (attempt + 1), 60))
+        except (urllib.error.URLError, TimeoutError):
+            if attempt == attempts - 1:
+                raise
+            time.sleep(10 * (attempt + 1))
 
 
 def literal(text, lang):
@@ -120,6 +137,47 @@ def french_moieties(catalog):
             if raw.lower() not in examples[key] and len(examples[key]) < 2:
                 examples[key].append(raw.lower())
     return display, products, examples, unparsed
+
+
+def english_ester_name(raw):
+    """El nombre INGLÉS de un éster francés, sin tildes: "propionate de fluticasone" ->
+    "fluticasone propionate". Wikidata suele tener el ATC del nombre inglés aunque no del francés."""
+    p = ing.strip_accents(raw.lower().replace("’", "'")).strip()
+    ester = ing._ESTER_RE
+    m = re.fullmatch(rf"(?P<base>[^()]+?)\s*\((?P<e>{ester})\s+(?:de|d')\s*\)", p) or re.fullmatch(
+        rf"(?P<e>{ester})\s+(?:de |d')\s*(?P<base>.+)", p)
+    if m:
+        return f"{m.group('base').strip()} {m.group('e')}"
+    return p if re.fullmatch(rf".+\s+(?:{ester})", p) else None
+
+
+def ester_candidates(catalog, country, es_components, exact_keys, id_field):
+    """Nombres de `country` ("FR" o "UK") que son un ÉSTER o profármaco y cuya BASE es un nombre
+    español que ya tenemos: {clave: (nombre mostrado, nombre español)}, más productos y ejemplos
+    por clave. Se omiten los que ya tienen un candidato exacto (`exact_keys`)."""
+    propose = ing.propose_spanish if country == "FR" else ing.propose_spanish_en
+    parse = ing.parse_substance if country == "FR" else ing.parse_substance_en
+    found, products, examples = {}, collections.defaultdict(set), collections.defaultdict(list)
+    for item in catalog:
+        for raw in item["substances"]:
+            key = ing.source_key(raw, country)
+            if key in exact_keys:
+                continue
+            base = ing.ester_base(raw, country)
+            if not base:
+                continue
+            guesses = [ing.plain(base), propose(base)]
+            if country == "UK":
+                guesses.append(ing.propose_spanish_en(base, k_to_c=False))
+            es = next((es_components[g] for g in guesses if g in es_components), None)
+            if es is None:
+                continue
+            moiety = parse(raw)
+            found[key] = (moiety if moiety is not None else raw.lower(), es)
+            products[key].add(item[id_field])
+            if raw.lower() not in examples[key] and len(examples[key]) < 2:
+                examples[key].append(raw.lower())
+    return found, products, examples
 
 
 def propose(display, es_components):
@@ -434,9 +492,10 @@ def uk_candidates(display, es_components, wikidata):
                un elemento de Wikidata podría ser el compuesto y no la molécula."""
     candidates = collections.defaultdict(dict)
     for key, moiety in display.items():
-        guesses = list(dict.fromkeys((
+        guesses = list(dict.fromkeys(g for g in (
             ing.plain(moiety), ing.propose_spanish_en(moiety), ing.propose_spanish_en(moiety, k_to_c=False),
-        )))
+            ing.propose_acid_en(moiety),
+        ) if g))
         exact = next((g for g in guesses if g in es_components), None)
         if exact:
             candidates[key][es_components[exact]] = "regla"
@@ -490,8 +549,17 @@ def main_uk(zip_path, offline):
     print(f"\nPrincipios activos británicos distintos: {len(display)} interpretables, "
           f"{len(unparsed)} que no se interpretan (se quedan en inglés)")
 
-    wikidata = {} if offline else wikidata_by_english_label(list(display.values()))
+    # Los de nivel base se buscan entre TODOS los nombres; después se descartan los que ya tienen un
+    # candidato exacto (en `display` están todos los interpretados, no solo los que tienen candidato).
+    esters, ester_products, ester_examples = ester_candidates(catalog, "UK", es_components, set(), "ref")
+    wikidata = {} if offline else wikidata_by_english_label(list(display.values()) + [name for name, _es in esters.values()])
     candidates = uk_candidates(display, es_components, wikidata)
+    esters = {key: value for key, value in esters.items() if not candidates.get(key)}
+    print(f"Candidatos de nivel base (éster/profármaco): {len(esters)}")
+    for key, (name, es) in esters.items():
+        display[key] = name
+        products[key], examples[key] = ester_products[key], ester_examples[key]
+        candidates[key][es] = "ester"
     spanish = {es for options in candidates.values() for es in options}
     print(f"Candidatos: {sum(1 for c in candidates.values() if 'regla' in c.values())} por regla, "
           f"{sum(1 for c in candidates.values() if 'wikidata' in c.values())} por Wikidata")
@@ -508,13 +576,14 @@ def main_uk(zip_path, offline):
                 status, evidence = "sugerido", f"hay {len(confirmed)} candidatos confirmados distintos; hay que decidir a mano. " + evidence
             elif outcome == "confirmado":
                 status = "confirmado"
-                evidence = {"regla": "regla + ", "wikidata": "Wikidata + ", "sugerencia": "sugerencia + "}[method] + evidence
+                evidence = {"regla": "regla + ", "wikidata": "Wikidata + ", "sugerencia": "sugerencia + ", "ester": "éster + "}[method] + evidence
             elif outcome == "contradice":
                 status = "contradice"
             else:
-                status = "sin_confirmar" if method == "regla" else "sugerido"
+                status = "sin_confirmar" if method in ("regla", "ester") else "sugerido"
             rows.append({
-                "nombre_en": display[key], "nombre_es": es, "estado": status, "evidencia": evidence,
+                "nombre_en": display[key], "nombre_es": es, "estado": status,
+                "nivel": ing.LEVEL_BASE if method == "ester" else ing.LEVEL_EXACT, "evidencia": evidence,
                 "productos_uk": len(products[key]), "ejemplos": " | ".join(examples[key]),
             })
     done = {ing.plain(r["nombre_en"]) for r in rows}
@@ -523,7 +592,7 @@ def main_uk(zip_path, offline):
 
     rows.sort(key=lambda r: (STATUS_ORDER.index(r["estado"]), -int(r["productos_uk"]), r["nombre_en"]))
     with open(ing.LINKS_PATH_UK, "w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=ing.LINK_FIELDS_UK)
+        writer = csv.DictWriter(fh, fieldnames=ing.LINK_FIELDS_UK, restval=ing.LEVEL_EXACT)
         writer.writeheader()
         writer.writerows(rows)
 
@@ -556,10 +625,33 @@ def main_fr(offline):
     print(f"Candidatos: {sum(1 for v in proposals.values() if v[1] == 'regla')} por regla exacta, "
           f"{sum(1 for v in proposals.values() if v[1] == 'sugerencia')} por parecido de nombres")
 
+    # Nivel base: ésteres/profármacos cuya base sí existe en España.
+    esters, ester_products, ester_examples = ester_candidates(catalog, "FR", es_components, set(proposals), "cis")
+    print(f"Candidatos de nivel base (éster/profármaco): {len(esters)}")
+    for key, (name, es) in esters.items():
+        display[key] = name
+        products[key], examples[key] = ester_products[key], ester_examples[key]
+        proposals[key] = (es, "ester")
+
     pairs = sorted({(display[key], es) for key, (es, _m) in proposals.items()})
     if not offline:
         enrich_with_aemps_atc(cima_atc, {es for _fr, es in pairs})
     checks = verify(pairs, cima_atc, offline)
+
+    # Para los ésteres sin datos en francés, se prueba el nombre inglés reordenado.
+    retry = [(display[k], es) for k, (es, m) in proposals.items()
+             if m == "ester" and checks[(display[k], es)][0] == "sin_datos"]
+    english = {pair: english_ester_name(pair[0]) for pair in retry}
+    if retry and not offline:
+        try:
+            found = english_label_check([(english[p], p[1]) for p in retry if english[p]], cima_atc)
+        except Exception as exc:
+            print(f"[aviso] la comprobación inglesa de ésteres falló ({exc})")
+            found = {}
+        for pair in retry:
+            result = found.get((english[pair], pair[1]))
+            if result:
+                checks[pair] = result
 
     manual = load_manual_decisions(ing.LINKS_PATH)
     rows = []
@@ -567,13 +659,14 @@ def main_fr(offline):
         outcome, evidence = checks[(display[key], es)]
         if outcome == "confirmado":
             status = "confirmado"
-            evidence = ("sugerencia + " if method == "sugerencia" else "regla + ") + evidence
+            evidence = {"sugerencia": "sugerencia + ", "ester": "éster + "}.get(method, "regla + ") + evidence
         elif outcome == "contradice":
             status = "contradice"
         else:
-            status = "sin_confirmar" if method == "regla" else "sugerido"
+            status = "sugerido" if method == "sugerencia" else "sin_confirmar"
         row = {
-            "nombre_fr": display[key], "nombre_es": es, "estado": status, "evidencia": evidence,
+            "nombre_fr": display[key], "nombre_es": es, "estado": status,
+            "nivel": ing.LEVEL_BASE if method == "ester" else ing.LEVEL_EXACT, "evidencia": evidence,
             "productos_fr": len(products[key]), "ejemplos": " | ".join(examples[key]),
         }
         rows.append(manual.get(key, row))
@@ -583,7 +676,7 @@ def main_fr(offline):
 
     rows.sort(key=lambda r: (STATUS_ORDER.index(r["estado"]), -int(r["productos_fr"]), r["nombre_fr"]))
     with open(ing.LINKS_PATH, "w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=ing.LINK_FIELDS)
+        writer = csv.DictWriter(fh, fieldnames=ing.LINK_FIELDS, restval=ing.LEVEL_EXACT)
         writer.writeheader()
         writer.writerows(rows)
 
