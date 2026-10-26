@@ -111,6 +111,16 @@ _TRAILING_RE = _alt(TRAILING)
 _CATIONS_RE = _alt(CATIONS)
 
 
+# Descriptores de plantas entre paréntesis (sin tildes): qué parte y qué extracto.
+_BOTANICAL_WORDS = (
+    "partie aerienne", "parties aeriennes", "feuille", "feuilles", "racine", "racines", "fruit", "fruits",
+    "fleur", "fleurs", "ecorce", "sommite fleurie", "sommites fleuries", "plante entiere", "herbe",
+    "extrait sec", "extrait mou", "extrait fluide", "extrait aqueux", "extrait hydroalcoolique",
+    "extrait titre", "extrait standardise", "teinture", "poudre", "huile essentielle",
+)
+_BOTANICAL_RE = "|".join(re.escape(w) for w in sorted(_BOTANICAL_WORDS, key=len, reverse=True))
+
+
 def _bare_anions():
     """Palabras que son solo un anión o una palabra de éster: si un nombre se queda en una de ellas, es que
     se ha perdido la molécula."""
@@ -124,6 +134,16 @@ def parse_substance(raw):
     p = strip_accents(s)
     if len(p) != len(s):  # algún carácter raro: mejor no interpretarlo
         return None
+    # Plantas: "hydrocotyle (partie aérienne d') (extrait sec de)" -> "hydrocotyle". Se quitan la parte de
+    # la planta y el tipo de extracto: se compara la PLANTA (el tipo de extracto y la dosis no se
+    # comparan, igual que la dosis de cualquier otro medicamento). `s` y `p` tienen la misma longitud,
+    # así que se quita el mismo tramo de los dos.
+    while True:
+        m = re.search(rf"\s*\((?:{_BOTANICAL_RE})(?:\s+(?:de|d'))?\s*\)", p)
+        if not m:
+            break
+        p, s = p[: m.start()] + p[m.end():], s[: m.start()] + s[m.end():]
+    s, p = s.strip(), p.strip()
     start, end = 0, len(p)
 
     # "lopéramide (chlorhydrate de)" -> "lopéramide"
@@ -371,6 +391,19 @@ def resolve(substances, links, es_index, parse=parse_substance):
         components.append(plain(spanish))
     name = es_index.get(frozenset(components))
     return (name, "enlazado") if name else (None, "combinacion_sin_equivalente")
+
+
+def component_names(substances, links, base_links, parse=parse_substance, country="FR"):
+    """Nombre comparable de cada sustancia, en el mismo orden: el español (sin tildes) si tiene enlace
+    exacto o de base, y si no el nombre de origen limpio. Sirve para alinear las dosis con las de otro país."""
+    out = []
+    for raw in substances:
+        moiety = parse(raw)
+        es = links.get(plain(moiety)) if moiety is not None else None
+        if es is None:
+            es = base_links.get(source_key(raw, country))
+        out.append(plain(es) if es else plain(moiety if moiety is not None else raw))
+    return out
 
 
 def resolve_levels(substances, links, base_links, es_index, parse=parse_substance, country="FR"):

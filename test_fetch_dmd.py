@@ -36,6 +36,7 @@ def build_zip(path):
         + _lookup("AVAILABILITY_RESTRICTION", {"0000": "None", "0001": "Imported"})
         + _lookup("FORM", {"1": "Oral tablet", "2": "Homeopathic tablet", "3": "Solution for injection"})
         + _lookup("ROUTE", {"1": "Oral", "2": "Intravenous"})
+        + _lookup("UNIT_OF_MEASURE", {"5": "mg", "6": "ml"})
         + "</LOOKUP>"
     )
     ampp = [  # APPID, APID, LEGAL_CATCD, DISCCD
@@ -63,7 +64,7 @@ def build_zip(path):
     ) + "</AMPS></ACTUAL_MEDICINAL_PRODUCTS>"
     vmp_xml = (
         "<VIRTUAL_MED_PRODUCTS><VMPS>" + _record("VMP", VPID=1, NM="Ibuprofen 200mg tablets") + _record("VMP", VPID=2, NM="Hom") + _record("VMP", VPID=3, NM="Ibuprofen injection") + "</VMPS>"
-        "<VIRTUAL_PRODUCT_INGREDIENT>" + _record("VPI", VPID=1, ISID=10) + _record("VPI", VPID=2, ISID=11) + _record("VPI", VPID=3, ISID=10) + "</VIRTUAL_PRODUCT_INGREDIENT>"
+        "<VIRTUAL_PRODUCT_INGREDIENT>" + _record("VPI", VPID=1, ISID=10, STRNT_NMRTR_VAL=200, STRNT_NMRTR_UOMCD=5) + _record("VPI", VPID=2, ISID=11) + _record("VPI", VPID=3, ISID=10) + "</VIRTUAL_PRODUCT_INGREDIENT>"
         "<DRUG_FORM>" + _record("DFORM", VPID=1, FORMCD=1) + _record("DFORM", VPID=2, FORMCD=2) + _record("DFORM", VPID=3, FORMCD=3) + "</DRUG_FORM>"
         "<DRUG_ROUTE>" + _record("DROUTE", VPID=1, ROUTECD=1) + _record("DROUTE", VPID=2, ROUTECD=1) + _record("DROUTE", VPID=3, ROUTECD=2) + "</DRUG_ROUTE>"
         "</VIRTUAL_MED_PRODUCTS>"
@@ -123,6 +124,9 @@ class SinReceta(unittest.TestCase):
     def test_forma_via_e_ingredientes(self):
         p = self.by_ref["1"]
         self.assertEqual((p["form"], p["route"], p["substances"]), ("Oral tablet", "Oral", ["Ibuprofen"]))
+
+    def test_la_concentracion_se_lee_del_dmd(self):
+        self.assertEqual(self.by_ref["1"]["vpi"], [("200", "mg", None, None)])
 
     def test_version_y_fecha_salen_del_nombre_del_archivo(self):
         self.assertEqual(dmd.release_info(self.path), ("9.9.9", "2026-01-01"))

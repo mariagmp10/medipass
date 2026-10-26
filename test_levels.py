@@ -69,6 +69,26 @@ class UnAnionSueltoNoIdentificaNada(unittest.TestCase):
         self.assertEqual(ing.parse_substance_en("Hydrocortisone acetate"), "hydrocortisone acetate")
 
 
+class PlantasYExtractos(unittest.TestCase):
+    """Se compara la PLANTA: la parte y el tipo de extracto entre paréntesis se quitan."""
+
+    def test_se_quitan_los_descriptores_botanicos(self):
+        cases = {
+            "HYDROCOTYLE (PARTIE AÉRIENNE D') (EXTRAIT SEC DE)": "hydrocotyle",
+            "GINKGO (FEUILLE DE) (EXTRAIT SEC DE)": "ginkgo",
+            "THYM (HUILE ESSENTIELLE DE)": "thym",
+        }
+        for raw, expected in cases.items():
+            self.assertEqual(ing.parse_substance(raw), expected, raw)
+
+    def test_los_parentesis_de_sal_siguen_funcionando(self):
+        self.assertEqual(ing.parse_substance("LOPÉRAMIDE (CHLORHYDRATE DE)"), "lopéramide")
+        self.assertIsNone(ing.parse_substance("BÉCLOMÉTASONE (DIPROPIONATE DE)"))  # éster: nivel base, no exacto
+
+    def test_centella_asiatica_esta_enlazada(self):
+        self.assertEqual(ing.load_links().get("hydrocotyle"), "centella asiática")
+
+
 class ResolverPorNiveles(unittest.TestCase):
     index = ing.build_es_index(["fluticasona", "salmeterol + fluticasona", "salmeterol", "paracetamol"])
     exact = {ing.plain("salmeterol"): "salmeterol", ing.plain("paracetamol"): "paracetamol"}

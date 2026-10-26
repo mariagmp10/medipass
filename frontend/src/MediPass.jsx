@@ -36,7 +36,22 @@ const COLORS = {
   rx: "#C62828",
   rxDark: "#8E1B1B",
   rxBg: "#FDECEA",
+  info: "#2F6FA8",
+  infoBg: "#EAF2FA",
 };
+
+/* Familias de formas "parecidas": mismo principio activo en otra forma que se usa de manera parecida.
+   Solo crema <-> pomada. OJO: en CIMA son dos clases SEPARADAS (CREMA y POMADA); esto es un criterio
+   nuestro, apoyado en que la Farmacopea Europea agrupa ambas (con geles y pastas) como "preparaciones
+   semisólidas de aplicación cutánea". La crema es una emulsión aceite/agua; la pomada, una base grasa
+   casi sin agua: la absorción puede diferir. Se enseña como nivel aparte ("forma parecida"), nunca
+   como equivalente exacto. Pendiente de visto bueno farmacéutico; añadir más familias solo con evidencia. */
+const FORM_FAMILIES = [["CREMA", "POMADA"]];
+
+function relatedForms(rawForm) {
+  const family = FORM_FAMILIES.find((f) => f.includes((rawForm ?? "").toUpperCase()));
+  return family ? family.filter((f) => f !== (rawForm ?? "").toUpperCase()) : [];
+}
 
 const COUNTRIES = [
   { code: "ES", name: "España" },
@@ -93,6 +108,8 @@ function productFromRow(row) {
   return {
     marca: row.brand_name,
     receta: !!row.requires_prescription,
+    strengths: row.strengths ? JSON.parse(row.strengths) : null,
+    audience: row.audience,
     innName: row.inn_name,
     baseInn: row.base_inn,
     legalCategory: row.legal_category,
@@ -134,13 +151,8 @@ function groupEquivalences(rows) {
 
     const med = groups.get(id);
     const product = productFromRow(row);
-    const slot = (med.equivalencias[row.country_code] ??= { otc: null, rx: null });
-    const kind = product.receta ? "rx" : "otc";
-    if (slot[kind]) {
-      slot[kind].total += 1;
-    } else {
-      slot[kind] = { ...product, total: 1 };
-    }
+    const slot = (med.equivalencias[row.country_code] ??= { otc: [], rx: [] });
+    slot[product.receta ? "rx" : "otc"].push(product);
     if (row.country_code === "ES" && row.atc_group && !med.atcGroup) {
       med.atcGroup = row.atc_group;
     }
@@ -154,17 +166,111 @@ function groupEquivalences(rows) {
   }));
 }
 
-/* En un país, un mismo grupo puede tener productos sin receta y con receta
-   (ibuprofeno 400 mg libre, 600 mg con receta). Elegimos el del mismo estatus
-   que el producto de origen (wantRx) y, si no hay, el otro: el aviso de receta
-   se ve igualmente. `otherStatus` avisa de que también existe el otro tipo. */
-function pickVariant(entry, wantRx) {
+/* DOSIS Y PÚBLICO. Cada producto trae su dosis normalizada (`strengths`, en mg por unidad o por ml/g,
+   ver doses.py) y su público (`audience`, 'child' si el nombre lo dice). Solo se comparan dosis del MISMO
+   tipo (por unidad con por unidad, concentración con concentración): lo demás es "no comparable". */
+function doseDistance(ref, cand) {
+  if (!ref?.strengths?.length || !cand?.strengths?.length || ref.strengths.length !== cand.strengths.length) return null;
+  const byName = new Map(cand.strengths.map((s) => [s.i, s]));
+  let sum = 0;
+  for (const r of ref.strengths) {
+    const c = byName.get(r.i);
+    if (!c || c.b !== r.b || !(r.v > 0) || !(c.v > 0)) return null;
+    sum += Math.abs(Math.log2(c.v / r.v));
+  }
+  return sum / ref.strengths.length; // 0 = misma dosis; 1 = el doble o la mitad
+}
+
+function fmtMg(v) {
+  if (v >= 1000) return `${+(v / 1000).toPrecision(3)} g`;
+  if (v >= 1) return `${+v.toPrecision(3)} mg`;
+  return `${+(v * 1000).toPrecision(3)} µg`;
+}
+
+function formatStrengths(strengths, form) {
+  if (!strengths?.length) return null;
+  const semisolid = /crema|pomada|gel|pasta|semisolido|polvo|champu/i.test(form ?? "");
+  return strengths
+    .map((s) => `${strengths.length > 1 ? `${capitalize(s.i)} ` : ""}${fmtMg(s.v)}${s.b === "conc" ? (semisolid ? "/g" : "/ml") : ""}`)
+    .join(" + ");
+}
+
+/* Ordena los candidatos de un país: primero los del mismo público que el producto de referencia (si la
+   referencia no es infantil, los productos infantiles van al final), luego la dosis más cercana (la
+   comparable antes que la que no lo es) y por último el nombre. */
+function rankCandidates(list, ref) {
+  const refChild = ref?.audience === "child";
+  const score = (c) => {
+    let s = refChild ? (c.audience === "child" ? 0 : 100) : c.audience === "child" ? 100 : 0;
+    if (ref) {
+      const d = doseDistance(ref, c);
+      s += d === null ? 10 : d;
+    }
+    return s;
+  };
+  return list
+    .map((c) => [score(c), c])
+    .sort((a, b) => a[0] - b[0] || a[1].marca.localeCompare(b[1].marca))
+    .map((x) => x[1]);
+}
+
+/* En un país, un mismo grupo puede tener productos sin receta y con receta (ibuprofeno 400 mg libre,
+   600 mg con receta). Se elige la lista del mismo estatus que el producto de origen (wantRx) y, si no
+   hay, la otra: el aviso de receta se ve igualmente. Dentro de la lista se elige el mejor según el
+   producto de referencia (`ref`), salvo que el usuario haya elegido uno a mano (`pickedName`).
+   Devuelve el producto con: total, index (posición en el ranking), ranked (todos los productos, ya
+   ordenados, para el desplegable), key (dónde guardar la elección) y otherStatus. */
+function pickVariant(entry, wantRx, ref = null, pickedName = null, key = null) {
   if (!entry) return null;
   const preferred = wantRx ? entry.rx : entry.otc;
   const other = wantRx ? entry.otc : entry.rx;
-  const chosen = preferred ?? other;
-  if (!chosen) return null;
-  return { ...chosen, otherStatus: preferred && other ? { receta: !!other.receta, total: other.total } : null };
+  let list = preferred.length ? preferred : other;
+  if (pickedName && !list.some((c) => c.marca === pickedName) && other.some((c) => c.marca === pickedName)) {
+    list = other; // el producto elegido (p. ej. buscando una marca) es del otro estatus
+  }
+  if (!list.length) return null;
+  const ranked = rankCandidates(list, ref);
+  const index = Math.max(0, ranked.findIndex((c) => c.marca === pickedName));
+  const others = list === preferred ? other : preferred;
+  return {
+    ...ranked[index],
+    total: ranked.length,
+    index,
+    ranked,
+    key,
+    otherStatus: others.length ? { receta: !!others[0].receta, total: others.length } : null,
+  };
+}
+
+/* Resumen de la dosis y el público de los dos productos que se enseñan. */
+function doseSummary(a, b, nameA, nameB) {
+  const parts = [];
+  let warn = false;
+  const fa = formatStrengths(a.strengths, a.form);
+  const fb = formatStrengths(b.strengths, b.form);
+  const d = doseDistance(a, b);
+  if (d !== null) {
+    if (d < 0.05) {
+      parts.push(`Misma cantidad declarada (${fa}); puede referirse a la sal.`);
+    } else {
+      parts.push(`La dosis es distinta: ${fa} en ${nameA} frente a ${fb} en ${nameB}.`);
+      warn = true;
+    }
+  } else if (fa && fb) {
+    parts.push(`No se puede comparar la dosis: ${fa} en ${nameA} y ${fb} en ${nameB} se expresan de forma distinta.`);
+    warn = true;
+  } else {
+    parts.push("No tenemos la dosis de uno de los dos productos, así que no se puede comparar.");
+    warn = true;
+  }
+  if (a.audience === "child" && b.audience !== "child") {
+    parts.push(`El de ${nameA} es infantil y el de ${nameB} no lo parece.`);
+    warn = true;
+  } else if (a.audience !== "child" && b.audience === "child") {
+    parts.push(`El de ${nameB} es infantil y el de ${nameA} no lo parece.`);
+    warn = true;
+  }
+  return { text: parts.join(" "), warn };
 }
 
 /* --------------------------------------------------------- */
@@ -223,7 +329,7 @@ function CountryPicker({ label, value, onChange }) {
   );
 }
 
-function FlapCard({ country, data, highlight, approx }) {
+function FlapCard({ country, data, highlight, approx, similarForm, onPick }) {
   const countryName = COUNTRIES.find((c) => c.code === country)?.name ?? country;
   return (
     <div
@@ -236,6 +342,8 @@ function FlapCard({ country, data, highlight, approx }) {
           ? `2px solid ${COLORS.rx}`
           : approx
           ? `2px solid ${COLORS.amber}`
+          : similarForm
+          ? `2px solid ${COLORS.info}`
           : `1px solid ${COLORS.inkBorder}`,
         overflow: "hidden",
       }}
@@ -278,9 +386,49 @@ function FlapCard({ country, data, highlight, approx }) {
         >
           {data.marca}
         </div>
+        {data.source !== "manual_seed" && (
+          <div style={{ marginTop: 8, fontSize: 13, color: "#F5F3ED" }}>
+            {formatStrengths(data.strengths, data.form)
+              ? `Dosis: ${formatStrengths(data.strengths, data.form)}`
+              : "Dosis: no disponible"}
+            {data.audience === "child" && (
+              <span style={{ marginLeft: 8, fontSize: 11, padding: "1px 7px", borderRadius: 6, background: COLORS.info, color: "#fff" }}>
+                Infantil
+              </span>
+            )}
+          </div>
+        )}
         {data.total > 1 && (
           <div style={{ marginTop: 8, fontSize: 12, color: COLORS.slateLight }}>
-            y {data.total - 1} más de esta forma en {countryName}
+            <div>
+              Producto {data.index + 1} de {data.total} de esta forma en {countryName}
+            </div>
+            {onPick && (
+              <select
+                aria-label={`Elegir otro producto en ${countryName}`}
+                value={data.index}
+                onChange={(e) => onPick(data.ranked[Number(e.target.value)].marca)}
+                style={{
+                  marginTop: 6,
+                  width: "100%",
+                  fontSize: 12,
+                  padding: "6px 8px",
+                  borderRadius: 8,
+                  border: `1px solid ${COLORS.slateLight}`,
+                  background: COLORS.ink,
+                  color: "#F5F3ED",
+                  cursor: "pointer",
+                }}
+              >
+                {data.ranked.map((c, i) => (
+                  <option key={`${c.marca}-${i}`} value={i}>
+                    {[`${i + 1}. ${c.marca}`, formatStrengths(c.strengths, c.form), c.audience === "child" ? "infantil" : null]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
         )}
         {data.source === "manual_seed" && (
@@ -298,6 +446,24 @@ function FlapCard({ country, data, highlight, approx }) {
             Ejemplo sin verificar
           </div>
         )}
+        {similarForm && (
+          <div
+            style={{
+              marginTop: 12,
+              padding: "8px 12px",
+              borderRadius: 8,
+              background: COLORS.info,
+              color: "#fff",
+            }}
+          >
+            <div style={{ fontWeight: 700, fontSize: 12, letterSpacing: "0.03em" }}>
+              MISMO PRINCIPIO ACTIVO · FORMA PARECIDA
+            </div>
+            <div style={{ marginTop: 3, fontSize: 12 }}>
+              En {countryName}: {similarForm.label}
+            </div>
+          </div>
+        )}
         {approx && (
           <div
             style={{
@@ -309,7 +475,7 @@ function FlapCard({ country, data, highlight, approx }) {
             }}
           >
             <div style={{ fontWeight: 700, fontSize: 12, letterSpacing: "0.03em" }}>
-              MISMO PRINCIPIO ACTIVO BASE · POSIBLE OTRO ÉSTER O SAL
+              MISMO PRINCIPIO ACTIVO BASE · POSIBLE OTRO ÉSTER, SAL O EXTRACTO
             </div>
             <div style={{ marginTop: 3, fontSize: 12 }}>
               En {countryName}: {approx.names.join(", ")}
@@ -431,7 +597,9 @@ export default function MediPass() {
   // Cuando el usuario encuentra un principio activo buscando por una marca
   // concreta (ej. "Cristalmina"), recordamos esa marca para mostrarla en
   // vez del producto representativo por defecto de ese país.
-  const [preferredBrand, setPreferredBrand] = useState(null);
+  // Producto elegido a mano: al buscar una marca concreta o al pulsar "Ver otro producto".
+  // Clave: grupo|país (marca buscada) o grupo|país|producto de referencia (botón).
+  const [picked, setPicked] = useState({});
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/config`)
@@ -533,50 +701,70 @@ export default function MediPass() {
       if (row.source === "manual_seed" || !row.base_inn) continue;
       const key = `${row.base_inn}||${row.form ?? ""}`;
       const slotMap = (index[row.country_code] ??= new Map());
-      const slot = slotMap.get(key) ?? { otc: null, rx: null, names: new Set() };
+      const slot = slotMap.get(key) ?? { otc: [], rx: [], names: new Set() };
       slotMap.set(key, slot);
       slot.names.add(row.inn_name);
       const product = productFromRow(row);
-      const kind = product.receta ? "rx" : "otc";
-      if (slot[kind]) slot[kind].total += 1;
-      else slot[kind] = { ...product, total: 1 };
+      slot[product.receta ? "rx" : "otc"].push(product);
     }
     return index;
   }, [rows]);
 
   const selected = meds.find((m) => m.id === selectedId);
 
-  function approxVariant(countryCode, wantRx) {
+  // El mejor producto de `entry` para un país según el producto de referencia `ref` (el del otro lado),
+  // o el que el usuario haya elegido a mano.
+  function choose(entry, countryCode, wantRx, ref) {
+    const key = `${selectedId}|${countryCode}|${ref?.marca ?? ""}`;
+    const explicit = picked[key] ?? picked[`${selectedId}|${countryCode}`] ?? null;
+    return pickVariant(entry, wantRx, ref, explicit, key);
+  }
+
+  function approxVariant(countryCode, wantRx, ref) {
     if (!selected) return null;
     const slot = baseIndex[countryCode]?.get(`${selected.baseInn}||${selected.rawForm}`);
-    const data = pickVariant(slot, wantRx);
+    const data = choose(slot, countryCode, wantRx, ref);
     if (!data) return null;
     // Solo cuenta si el nombre difiere del del grupo (si no, sería un equivalente exacto).
     const names = [...slot.names].filter((n) => n !== selected.innName).sort();
     return names.length ? { data, names } : null;
   }
 
-  function equivalenceFor(countryCode, wantRx) {
-    const entry = selected?.equivalencias[countryCode];
-    if (
-      preferredBrand &&
-      preferredBrand.groupId === selectedId &&
-      preferredBrand.countryCode === countryCode
-    ) {
-      const own = pickVariant(entry, preferredBrand.data.receta);
-      return { ...preferredBrand.data, total: own?.total ?? 1, otherStatus: own?.otherStatus ?? null };
-    }
-    return pickVariant(entry, wantRx);
+  function equivalenceFor(countryCode, wantRx, ref) {
+    return choose(selected?.equivalencias[countryCode], countryCode, wantRx, ref);
   }
 
-  const fromData = selected && equivalenceFor(from, false);
-  const toData = selected && equivalenceFor(to, !!fromData?.receta);
+  const fromData = selected && equivalenceFor(from, false, null);
+  const toData = selected && equivalenceFor(to, !!fromData?.receta, fromData);
+  // Nivel "forma parecida": el mismo principio activo (exacto) en una forma de la misma familia.
+  function similarFormVariant(countryCode, wantRx, ref) {
+    if (!selected) return null;
+    for (const otherForm of relatedForms(selected.rawForm)) {
+      const slot = baseIndex[countryCode]?.get(`${selected.baseInn}||${otherForm}`);
+      if (slot && slot.names.has(selected.innName)) {
+        const data = choose(slot, countryCode, wantRx, ref);
+        if (data) return { data, label: formLabel(otherForm) };
+      }
+    }
+    return null;
+  }
+
   // Nivel "misma base": solo si ese país no tiene el grupo exacto.
-  const approxFrom = selected && !fromData ? approxVariant(from, !!toData?.receta) : null;
-  const approxTo = selected && !toData ? approxVariant(to, !!fromData?.receta) : null;
-  const shownFrom = fromData ?? approxFrom?.data ?? null;
-  const shownTo = toData ?? approxTo?.data ?? null;
+  const approxFrom = selected && !fromData ? approxVariant(from, !!toData?.receta, toData) : null;
+  const approxTo = selected && !toData ? approxVariant(to, !!fromData?.receta, fromData) : null;
+  const similarFrom = selected && !fromData && !approxFrom ? similarFormVariant(from, !!toData?.receta, toData) : null;
+  const similarTo = selected && !toData && !approxTo ? similarFormVariant(to, !!fromData?.receta, fromData) : null;
+  const shownFrom = fromData ?? approxFrom?.data ?? similarFrom?.data ?? null;
+  const shownTo = toData ?? approxTo?.data ?? similarTo?.data ?? null;
   const receWarning = selected && shownFrom && shownTo && shownFrom.receta !== shownTo.receta;
+  const countryNameOf = (code) => COUNTRIES.find((c) => c.code === code)?.name ?? code;
+  const dose =
+    shownFrom && shownTo && shownFrom.source !== "manual_seed" && shownTo.source !== "manual_seed"
+      ? doseSummary(shownFrom, shownTo, countryNameOf(from), countryNameOf(to))
+      : null;
+  // Desplegable de productos: guarda el elegido a mano para ese país (y para ese producto de referencia).
+  const next = (d) =>
+    d && d.total > 1 ? (name) => setPicked((prev) => ({ ...prev, [d.key]: name })) : undefined;
 
   // Foto y composición solo existen para los productos de España (vienen de CIMA).
   const esSideData = from === "ES" ? shownFrom : to === "ES" ? shownTo : null;
@@ -701,9 +889,9 @@ export default function MediPass() {
                 <button
                   key={r.key}
                   onClick={() => {
-                    setPreferredBrand(
-                      r.brandMatch ? { groupId: r.groupId, ...r.brandMatch } : null
-                    );
+                    if (r.brandMatch) {
+                      setPicked((prev) => ({ ...prev, [`${r.groupId}|${r.brandMatch.countryCode}`]: r.brandMatch.data.marca }));
+                    }
                     setSelectedId(r.groupId);
                     setQuery("");
                   }}
@@ -879,9 +1067,11 @@ export default function MediPass() {
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "stretch" }}>
               {fromData ? (
-                <FlapCard country={from} data={fromData} />
+                <FlapCard country={from} data={fromData} onPick={next(fromData)} />
               ) : approxFrom ? (
-                <FlapCard country={from} data={approxFrom.data} approx={{ names: approxFrom.names }} />
+                <FlapCard country={from} data={approxFrom.data} approx={{ names: approxFrom.names }} onPick={next(approxFrom.data)} />
+              ) : similarFrom ? (
+                <FlapCard country={from} data={similarFrom.data} similarForm={{ label: similarFrom.label }} onPick={next(similarFrom.data)} />
               ) : (
                 <CountryNotice country={from} group={selected} rows={rows} isReal={realCountries.has(from)} includeRx={includeRx} />
               )}
@@ -889,9 +1079,11 @@ export default function MediPass() {
                 <Plane size={16} color={COLORS.slateLight} />
               </div>
               {toData ? (
-                <FlapCard country={to} data={toData} highlight />
+                <FlapCard country={to} data={toData} highlight onPick={next(toData)} />
               ) : approxTo ? (
-                <FlapCard country={to} data={approxTo.data} highlight approx={{ names: approxTo.names }} />
+                <FlapCard country={to} data={approxTo.data} highlight approx={{ names: approxTo.names }} onPick={next(approxTo.data)} />
+              ) : similarTo ? (
+                <FlapCard country={to} data={similarTo.data} highlight similarForm={{ label: similarTo.label }} onPick={next(similarTo.data)} />
               ) : (
                 <CountryNotice country={to} group={selected} rows={rows} isReal={realCountries.has(to)} includeRx={includeRx} />
               )}
@@ -899,14 +1091,35 @@ export default function MediPass() {
 
             {fromData && toData && fromData.source !== "manual_seed" && toData.source !== "manual_seed" && (
               <p style={{ marginTop: 10, fontSize: 12, color: COLORS.slate }}>
-                Mismo principio activo y misma forma; la dosis puede variar.
+                Mismo principio activo y misma forma.
+              </p>
+            )}
+            {dose && (
+              <p
+                style={{
+                  marginTop: 10,
+                  fontSize: 13,
+                  color: dose.warn ? COLORS.warnText : COLORS.slate,
+                  background: dose.warn ? COLORS.warnBg : "transparent",
+                  border: dose.warn ? `1px solid ${COLORS.warnBorder}` : "none",
+                  borderRadius: 8,
+                  padding: dose.warn ? "8px 12px" : 0,
+                }}
+              >
+                <strong>Dosis y público.</strong> {dose.text}
+              </p>
+            )}
+            {(similarFrom || similarTo) && shownFrom && shownTo && (
+              <p style={{ marginTop: 10, fontSize: 13, color: COLORS.info, background: COLORS.infoBg, border: `1px solid ${COLORS.info}`, borderRadius: 8, padding: "8px 12px" }}>
+                <strong>No es la misma forma.</strong> Es el mismo principio activo, pero en {(similarTo ?? similarFrom).label.toLowerCase()} en lugar de {selected.forma.toLowerCase()}.
+                Se usan de manera parecida, pero pueden diferir en textura y absorción. Consulta a un farmacéutico.
               </p>
             )}
             {(approxFrom || approxTo) && shownFrom && shownTo && (
               <p style={{ marginTop: 10, fontSize: 13, color: COLORS.warnText, background: COLORS.warnBg, border: `1px solid ${COLORS.warnBorder}`, borderRadius: 8, padding: "8px 12px" }}>
                 <strong>No está confirmado que sea exactamente la misma sustancia.</strong> Comparten el principio activo base
                 ({selected.baseInn}), pero figuran con nombres distintos ({selected.innName} y {(approxTo ?? approxFrom).names.join(", ")}):
-                puede tratarse de otro éster o sal y diferir en potencia y dosis. Consulta a un farmacéutico.
+                puede tratarse de otro éster, sal o extracto y diferir en potencia y dosis. Consulta a un farmacéutico.
               </p>
             )}
 
@@ -962,7 +1175,7 @@ export default function MediPass() {
               <span>
                 Datos servidos por el backend local desde medipass.db. España (CIMA), Francia (BDPM) y Reino Unido (NHS dm+d): medicamentos comercializados, de fuentes oficiales
                 {includeRx
-                  ? ", sin receta y con receta (los con receta se marcan en rojo). No se incluyen inyectables ni productos de uso hospitalario. Una franja ámbar indica el mismo principio activo base con un nombre distinto, que puede ser otro éster o sal."
+                  ? ", sin receta y con receta (los con receta se marcan en rojo). No se incluyen inyectables ni productos de uso hospitalario. Una franja ámbar indica el mismo principio activo base con un nombre distinto (otro éster, sal o extracto); una azul, el mismo principio activo en una forma parecida (crema o pomada)."
                   : ", solo sin receta."}{" "}
                 En el Reino Unido, «solo en farmacia» (P) no requiere receta pero lo dispensa un farmacéutico. Alemania, Italia y Portugal: ejemplos manuales sin verificar. Contains public sector information licensed under the Open Government Licence v3.0.
               </span>

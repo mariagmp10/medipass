@@ -567,6 +567,7 @@ vibegron,vibegrón,confirmado,exacto,"regla + Wikidata (Q27283524, nombre inglé
 zanamivir,zanamivir,confirmado,exacto,"regla + Wikidata (Q146075, nombre inglés «zanamivir»): mismo ATC que la AEMPS/CIMA (J05AH01)",1,zanamivir
 fluticasone propionate,fluticasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",125,fluticasone propionate
 candesartan cilexetil,candesartán,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Francia («candésartan cilexétil»). Nivel base: es un éster/profármaco, no la misma molécula.",89,candesartan cilexetil
+solifenacin,solifenacina,aprobado,exacto,Revisión manual (pendiente de visto bueno farmacéutico): el mismo elemento de Wikidata (Q59575279) ya confirma solifénacine → solifenacina en la tabla de Francia.,53,solifenacin succinate
 olmesartan medoxomil,olmesartán,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Francia («olmésartan médoxomil»). Nivel base: es un éster/profármaco, no la misma molécula.",51,olmesartan medoxomil
 betamethasone valerate,betametasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",50,betamethasone valerate
 betamethasone dipropionate,betametasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",37,betamethasone dipropionate
@@ -574,23 +575,24 @@ dabigatran etexilate mesilate,dabigatrán,aprobado,base,"Revisión manual (pendi
 sodium bicarbonate,sodio bicarbonato,aprobado,exacto,Revisión manual: es la misma sustancia (bicarbonato sódico). Los ATC difieren solo por el uso: Wikidata lista el intravenoso (B05CB04) y la AEMPS el antiácido (A02AH). Pendiente de visto bueno de María.,34,sodium bicarbonate
 clobetasol propionate,clobetasol,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",28,clobetasol propionate
 cyproterone acetate,ciproterona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Francia («acétate de cyprotérone»). Nivel base: es un éster/profármaco, no la misma molécula.",28,cyproterone acetate
+mycophenolate mofetil,micofenolato mofetilo,aprobado,exacto,Revisión manual (pendiente de visto bueno farmacéutico): es la misma DCI (el nombre español incluye «mofetilo»); ni Wikidata ni la AEMPS dan ATC para comprobarlo.,27,mycophenolate mofetil
+rabeprazole,rabeprazol,aprobado,exacto,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado en la tabla de Francia (rabéprazole → rabeprazol, por Wikipedia fr).",20,rabeprazole sodium
 abiraterone acetate,abiraterona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Francia («acétate d'abiratérone»). Nivel base: es un éster/profármaco, no la misma molécula.",14,abiraterone acetate
 sodium chloride,sodio cloruro,aprobado,exacto,"Revisión manual: es la misma sustancia (cloruro sódico). Los ATC difieren solo por el uso: Wikidata lista los intravenosos (B05CB01, A12CA01) y la AEMPS los nasales (R01AX10). Pendiente de visto bueno de María.",11,sodium chloride
 tenofovir disoproxil,tenofovir,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Francia («ténofovir disoproxil»). Nivel base: es un éster/profármaco, no la misma molécula.",4,tenofovir disoproxil
+carmellose,carmelosa,aprobado,exacto,Revisión manual (pendiente de visto bueno farmacéutico): es la misma DCI (carmelosa = carboximetilcelulosa); ni Wikidata ni la AEMPS dan ATC para comprobarlo.,2,carmellose sodium
 carbidopa,carbidopa,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,87,carbidopa monohydrate | carbidopa
 potassium clavulanate,ácido clavulánico,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,58,potassium clavulanate
 amisulpride,amisulprida,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,54,amisulpride
 carbamazepine,carbamazepina,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,50,carbamazepine
 sodium valproate,ácido valproico,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,50,sodium valproate
 salbutamol,salbutamol,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,38,salbutamol sulfate | salbutamol
-mycophenolate mofetil,micofenolato mofetilo,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,27,mycophenolate mofetil
 promethazine,prometazina,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,26,promethazine hydrochloride | promethazine teoclate
 sodium alginate,sodio alginato,sin_confirmar,exacto,"Wikidata (Q1187513, nombre inglés «sodium alginate»): falta el código ATC para comprobar",25,sodium alginate
 eslicarbazepine acetate,eslicarbazepina,sin_confirmar,base,"Wikidata (Q410273, nombre inglés «eslicarbazepine acetate»): falta el código ATC para comprobar",23,eslicarbazepine acetate
 estradiol valerate,estradiol,sin_confirmar,base,"Wikidata (Q5401768, nombre inglés «estradiol valerate»): falta el código ATC para comprobar",23,estradiol valerate
 medroxyprogesterone acetate,medroxiprogesterona,sin_confirmar,base,"Wikidata (Q2823834, nombre inglés «medroxyprogesterone acetate»): falta el código ATC para comprobar",23,medroxyprogesterone acetate
 metoprolol,metoprolol,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,22,metoprolol tartrate
-rabeprazole,rabeprazol,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,20,rabeprazole sodium
 fludrocortisone acetate,fludrocortisona,sin_confirmar,base,Wikidata no tiene ningún elemento con ese nombre en inglés,19,fludrocortisone acetate
 sodium citrate,sodio citrato,sin_confirmar,exacto,"Wikidata (Q409728, nombre inglés «sodium citrate»): falta el código ATC para comprobar",18,sodium citrate | sodium citrate dihydrate
 hydrocortisone acetate,hidrocortisona,sin_confirmar,base,Wikidata no tiene ningún elemento con ese nombre en inglés,17,hydrocortisone acetate
@@ -611,7 +613,6 @@ dimeticone,dimeticona,sin_confirmar,exacto,Wikidata no tiene ningún elemento co
 sodium ascorbate,ácido ascórbico,sin_confirmar,exacto,"Wikidata (Q424551, nombre inglés «sodium ascorbate»): falta el código ATC para comprobar",4,sodium ascorbate
 propafenone,propafenona,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,3,propafenone hydrochloride
 tioguanine,tioguanina,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,3,tioguanine
-carmellose,carmelosa,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,2,carmellose sodium
 filgotinib,filgotinib,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,2,filgotinib maleate
 inavolisib,inavolisib,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,2,inavolisib
 mepyramine,mepiramina,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,2,mepyramine maleate
@@ -626,7 +627,6 @@ nomegestrol acetate,nomegestrol,sin_confirmar,base,Wikidata no tiene ningún ele
 prednisolone acetate,prednisolona,sin_confirmar,base,Wikidata no tiene ningún elemento con ese nombre en inglés,1,prednisolone acetate
 sodium fusidate,ácido fusídico,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,1,sodium fusidate
 voxilaprevir,voxilaprevir,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,1,voxilaprevir
-solifenacin,solifenacina,sugerido,exacto,"Wikidata (Q59575279, nombre inglés «solifenacin»): falta el código ATC para comprobar",53,solifenacin succinate
 oxybutynin,oxibutinina,sugerido,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,49,oxybutynin hydrochloride | oxybutynin
 ascorbic acid,vitamina c,sugerido,exacto,"Wikidata (Q193598, Q199678, nombre inglés «ascorbic acid»): falta el código ATC para comprobar",45,ascorbic acid
 cimetidine,citidina,sugerido,exacto,"Wikidata (Q409492, nombre inglés «cimetidine»): falta el código ATC para comprobar",24,cimetidine

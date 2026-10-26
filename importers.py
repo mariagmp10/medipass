@@ -15,6 +15,7 @@ claves y llama a sync_products():
     legal_category         'libre' | 'solo_farmacia' | 'receta'
     legal_note             etiqueta original del país (GSL, P, POM, "Liste I"...)
     base_inn               (opcional) nombre español de la BASE si `ingredient` es un éster/profármaco
+    strengths, audience    (opcionales) dosis normalizada en JSON y público 'child'/'adult' (ver doses.py)
 """
 
 import csv
@@ -30,7 +31,7 @@ SCHEMA_PATH = os.path.join(HERE, "schema.sql")
 # Columnas añadidas a products después de la primera versión del esquema.
 NEW_PRODUCT_COLUMNS = {
     "form": "TEXT", "dose": "TEXT", "composition": "TEXT", "atc_code": "TEXT", "atc_group": "TEXT",
-    "photo_url": "TEXT", "legal_category": "TEXT", "legal_note": "TEXT",
+    "photo_url": "TEXT", "legal_category": "TEXT", "legal_note": "TEXT", "strengths": "TEXT", "audience": "TEXT",
 }
 
 LEGAL_FREE, LEGAL_PHARMACY, LEGAL_RX = "libre", "solo_farmacia", "receta"
@@ -166,10 +167,12 @@ def sync_products(conn, products, country, source):
                     """
                     UPDATE products
                     SET active_ingredient_id = ?, brand_name = ?, form = ?, composition = ?,
-                        requires_prescription = ?, legal_category = ?, legal_note = ?, verified_at = ?
+                        requires_prescription = ?, legal_category = ?, legal_note = ?, strengths = ?, audience = ?,
+                        verified_at = ?
                     WHERE id = ?
                     """,
-                    (ingredient_id, p["brand_name"], p["form"], p["composition"], rx, category, note, today, existing[0]),
+                    (ingredient_id, p["brand_name"], p["form"], p["composition"], rx, category, note,
+                     p.get("strengths"), p.get("audience"), today, existing[0]),
                 )
                 stats["updated"] += 1
             else:
@@ -177,10 +180,12 @@ def sync_products(conn, products, country, source):
                     """
                     INSERT INTO products
                         (active_ingredient_id, country_code, brand_name, requires_prescription,
-                         legal_category, legal_note, source, source_ref, form, composition, verified_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         legal_category, legal_note, source, source_ref, form, composition, strengths, audience,
+                         verified_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
-                    (ingredient_id, country, p["brand_name"], rx, category, note, source, p["ref"], p["form"], p["composition"], today),
+                    (ingredient_id, country, p["brand_name"], rx, category, note, source, p["ref"], p["form"],
+                     p["composition"], p.get("strengths"), p.get("audience"), today),
                 )
                 stats["inserted"] += 1
         except sqlite3.IntegrityError:

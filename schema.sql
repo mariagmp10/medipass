@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS products (
   atc_code TEXT,                  -- ATC más específico del producto (p.ej. 'R06AA52')
   atc_group TEXT,                 -- grupo terapéutico (ATC nivel 3) en texto
   photo_url TEXT,                 -- foto del producto, si la fuente la ofrece
+  strengths TEXT,                 -- dosis normalizada (JSON, ver doses.py): [{"i":"ibuprofeno","v":400,"b":"unit"}]
+  audience TEXT,                  -- 'child' | 'adult' | NULL (heurística por el nombre comercial)
   UNIQUE(active_ingredient_id, country_code, brand_name)
 );
 
@@ -71,7 +73,9 @@ SELECT
   p.composition,
   p.atc_code,
   p.atc_group,
-  p.photo_url
+  p.photo_url,
+  p.strengths,
+  p.audience
 FROM products p
 JOIN active_ingredients ai ON ai.id = p.active_ingredient_id
 JOIN countries c ON c.code = p.country_code;

@@ -43,6 +43,7 @@ from datetime import date
 
 import requests
 
+import doses
 import importers
 import ingredients as ing
 
@@ -330,6 +331,8 @@ def main():
         f"Sincronizado: {stats['inserted']} nuevos, {stats['updated']} actualizados, "
         f"{stats['deleted']} borrados, {stats['duplicates']} omitidos por nombre repetido"
     )
+
+    print(f"Dosis y público calculados para {doses.backfill_es(conn)} productos de España")
 
     if "--no-details" not in sys.argv:
         enrich_details(conn, refresh="--refresh-details" in sys.argv, include_rx="--details-rx" in sys.argv)

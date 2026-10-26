@@ -70,6 +70,7 @@ import unicodedata
 
 import requests
 
+import doses
 import importers
 import ingredients as ing
 from importers import load_spanish_vocabulary, map_form  # noqa: F401  (se reexportan: las usan las pruebas)
@@ -161,9 +162,11 @@ def load_catalog(include_prescription=True):
             conditions_by_cis[r[0]].append(r[1].strip())
 
     substances_by_cis = collections.defaultdict(list)
+    compo_by_cis = collections.defaultdict(list)  # (sustancia, dosificación, referencia), mismo orden
     for r in compo_rows:
         if len(r) >= 7 and r[6] == "SA":  # SA = sustancia activa; ST = fracción terapéutica, se ignora
             substances_by_cis[r[0]].append(r[3])
+            compo_by_cis[r[0]].append((r[3], r[4], r[5]))
 
     catalog = []
     skipped = collections.Counter()
@@ -197,6 +200,7 @@ def load_catalog(include_prescription=True):
                 "form": form.strip(),
                 "route": routes.split(";")[0].strip() if routes else "",
                 "substances": substances,
+                "compo": compo_by_cis[cis],
                 "requires_prescription": int(rx),
                 # liste I / liste II / stupéfiants primero: es lo que le importa al usuario
                 "legal_note": "; ".join(sorted(conditions, key=lambda c: (not c.lower().startswith(("liste", "stup")), c))[:3]) or None,
@@ -216,7 +220,10 @@ def to_product(item, links, es_index, form_map, es_forms, base_links=None):
                                              parse=ing.parse_substance, country="FR")
     own_name = " + ".join(s.lower() for s in item["substances"])
     target = map_form(item["form"], item["route"], form_map)
+    names = ing.component_names(item["substances"], links, base_links or {}, parse=ing.parse_substance, country="FR")
     return {
+        "strengths": doses.dumps(doses.fr_strengths(item.get("compo") or [], names)),
+        "audience": doses.audience_of(item["brand_name"]),
         "ref": item["cis"],
         "brand_name": item["brand_name"],
         "ingredient": name if level == ing.LEVEL_EXACT else own_name,

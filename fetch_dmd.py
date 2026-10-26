@@ -68,6 +68,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
 
+import doses
 import importers
 import ingredients as ing
 
@@ -187,11 +188,17 @@ def load_catalog(zip_path, include_prescription=True):
         if r["VPID"] in vpids:
             routes[r["VPID"]].append(lookup["ROUTE"].get(r["ROUTECD"], ""))
     names = {r["ISID"]: r["NM"] for r in iter_records(zf, "ingredient", "ING")}
+    uom = lookup.get("UNIT_OF_MEASURE", {})
+    concentration = collections.defaultdict(list)  # (numerador, unidad, denominador, unidad), mismo orden que substances
     for r in iter_records(zf, "vmp", "VPI"):
         if r["VPID"] in vpids:
             n = names.get(r["ISID"])
             if n and n not in substances[r["VPID"]]:
                 substances[r["VPID"]].append(n)
+                concentration[r["VPID"]].append((
+                    r.get("STRNT_NMRTR_VAL"), uom.get(r.get("STRNT_NMRTR_UOMCD")),
+                    r.get("STRNT_DNMTR_VAL"), uom.get(r.get("STRNT_DNMTR_UOMCD")),
+                ))
 
     catalog = []
     for apid, r in amps.items():
@@ -214,6 +221,7 @@ def load_catalog(zip_path, include_prescription=True):
                     # tabla esté contenida en este texto.
                     "route": "; ".join(routes[vpid]),
                     "substances": substances[vpid],
+                    "vpi": concentration[vpid],
                     "mixed_legal": "POM" in categories[apid] and not needs_rx,
                     "requires_prescription": needs_rx,
                     "legal_category": category,
@@ -245,7 +253,10 @@ def to_product(item, links, es_index, form_map, es_forms, base_links=None):
                                              parse=ing.parse_substance_en, country="UK")
     own_name = " + ".join(s.lower() for s in item["substances"])
     target = importers.map_form(item["form"], item["route"], form_map, exact_route=True)
+    names = ing.component_names(item["substances"], links, base_links or {}, parse=ing.parse_substance_en, country="UK")
     return {
+        "strengths": doses.dumps(doses.uk_strengths(item.get("vpi") or [], names)),
+        "audience": doses.audience_of(item["brand_name"]),
         "ref": item["ref"],
         "brand_name": item["brand_name"],
         # Enlace exacto: se llama como en España. Nivel base (éster/profármaco): conserva su nombre

@@ -631,16 +631,20 @@ propionate de fluticasone,fluticasona,aprobado,base,"Revisión manual (pendiente
 dipropionate de béclométasone,beclometasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Reino Unido («beclometasone dipropionate»). Nivel base: es un éster/profármaco, no la misma molécula.",27,dipropionate de béclométasone | dipropionate de béclométasone monohydraté
 dabigatran étexilate,dabigatrán,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",21,mésilate de dabigatran étexilate | dabigatran étexilate (mésilate de)
 dipropionate de bétaméthasone,betametasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",12,dipropionate de bétaméthasone
+mycophénolate mofétil,micofenolato mofetilo,aprobado,exacto,Revisión manual (pendiente de visto bueno farmacéutico): es la misma DCI (el nombre español incluye «mofetilo»); ni Wikidata ni la AEMPS dan ATC para comprobarlo.,11,mycophénolate mofétil
+bromazépam,bromacepam,aprobado,exacto,Revisión manual (pendiente de visto bueno farmacéutico): CIMA escribe bromazepam como «bromacepam»; Wikidata Q422435 lo identifica (ATC N05BA08) pero la AEMPS no tiene entrada para comprobarlo.,10,bromazépam
 dipropionate de béclométhasone,beclometasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Reino Unido («beclometasone dipropionate»). Nivel base: es un éster/profármaco, no la misma molécula.",6,dipropionate de béclométhasone
 propionate de clobétasol,clobetasol,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",6,propionate de clobétasol
 valérate de bétaméthasone,betametasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",6,valérate de bétaméthasone
+ketotifène,ketotifeno,aprobado,exacto,Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla del Reino Unido (ketotifen → ketotifeno).,3,fumarate de ketotifène | ketotifène (fumarate de)
 béclométasone (dipropionate de),beclometasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Reino Unido («beclometasone dipropionate»). Nivel base: es un éster/profármaco, no la misma molécula.",2,béclométasone (dipropionate de)
 béclométasone dipropionate,beclometasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el mismo compuesto ya está confirmado por ATC en la tabla de Reino Unido («beclometasone dipropionate»). Nivel base: es un éster/profármaco, no la misma molécula.",2,béclométasone dipropionate
 bétaméthasone (dipropionate de),betametasona,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",2,bétaméthasone (dipropionate de)
 clobétasol (propionate de),clobetasol,aprobado,base,"Revisión manual (pendiente de visto bueno farmacéutico): el nombre es la base más el éster (DCI) y Wikidata no da el ATC del éster. Nivel base: es un éster/profármaco, no la misma molécula.",2,clobétasol (propionate de)
+carmellose,carmelosa,aprobado,exacto,Revisión manual (pendiente de visto bueno farmacéutico): es la misma DCI (carmelosa = carboximetilcelulosa); ni Wikidata ni la AEMPS dan ATC para comprobarlo.,1,carmellose sodique
+hydrocotyle,centella asiática,aprobado,exacto,"Revisión manual (pendiente de visto bueno farmacéutico): sinónimo taxonómico: Wikidata Q324714 se llama «Hydrocotyle asiatica» en francés y «Centella asiática» en español. Se compara la PLANTA: el tipo de extracto (seco, titulado...) y la dosis no se comparan.",1,hydrocotyle (partie aérienne d') (extrait sec de)
 paraffine liquide,parafina líquida,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,20,paraffine liquide
 amylmétacrésol,amilmetacresol,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,16,amylmétacrésol
-mycophénolate mofétil,micofenolato mofetilo,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,11,mycophénolate mofétil
 proguanil,proguanilo,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,10,chlorhydrate de proguanil
 polymyxine b,polimixina b,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,9,sulfate de polymyxine b | polymyxine b (sulfate de)
 norgestimate,norgestimato,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,7,norgestimate
@@ -648,7 +652,6 @@ acétate de fludrocortisone,fludrocortisona,sin_confirmar,base,Wikidata no tiene
 cyprotérone (acétate de),ciproterona,sin_confirmar,base,Wikidata no tiene datos suficientes para este par,5,cyprotérone (acétate de)
 dydrogestérone,didrogesterona,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,5,dydrogestérone
 acétate de médroxyprogestérone,medroxiprogesterona,sin_confirmar,base,Wikidata no tiene datos suficientes para este par,3,acétate de médroxyprogestérone
-ketotifène,ketotifeno,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,3,fumarate de ketotifène | ketotifène (fumarate de)
 momélotinib,momelotinib,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,3,dichlorhydrate de momélotinib
 acétate d'hydrocortisone,hidrocortisona,sin_confirmar,base,Wikidata no tiene datos suficientes para este par,2,acétate d'hydrocortisone
 acétate de dexaméthasone,dexametasona,sin_confirmar,base,Wikidata no tiene datos suficientes para este par,2,acétate de dexaméthasone
@@ -688,7 +691,6 @@ vibégron,vibegrón,sin_confirmar,exacto,Wikidata no tiene datos suficientes par
 voxilaprévir,voxilaprevir,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,1,voxilaprévir
 élafibranor,elafibranor,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,1,élafibranor
 étrasimod,etrasimod,sin_confirmar,exacto,Wikidata no tiene datos suficientes para este par,1,étrasimod arginine
-bromazépam,bromacepam,sugerido,exacto,Wikidata no tiene datos suficientes para este par,10,bromazépam
 acide ursodésoxycholique,ácido ursodeoxicólico,sugerido,exacto,Wikidata no tiene datos suficientes para este par,8,acide ursodésoxycholique
 l-cystine,cistina,sugerido,exacto,Wikidata no tiene datos suficientes para este par,5,l-cystine
 acide ursodéoxycholique,ácido ursodeoxicólico,sugerido,exacto,Wikidata no tiene datos suficientes para este par,3,acide ursodéoxycholique
@@ -697,7 +699,6 @@ acide l-glutamique,ácido glutámico,sugerido,exacto,Wikidata no tiene datos suf
 cyclosilicate de zirconium,ciclosilicato sodio y zirconio,sugerido,exacto,Wikidata no tiene datos suficientes para este par,2,cyclosilicate de zirconium sodique
 l-arginine,arginina,sugerido,exacto,Wikidata no tiene datos suficientes para este par,2,chlorhydrate de l-arginine | l-arginine
 acide l-aspartique,ácido aspártico,sugerido,exacto,Wikidata no tiene datos suficientes para este par,1,acide l-aspartique
-carmellose,carmelosa,sugerido,exacto,Wikidata no tiene datos suficientes para este par,1,carmellose sodique
 cimétidine,citidina,sugerido,exacto,Wikidata no tiene datos suficientes para este par,1,cimétidine
 l-alanine,alanina,sugerido,exacto,Wikidata no tiene datos suficientes para este par,1,l-alanine
 pentosane polysulfate,pentosano polisulfato sodio,sugerido,exacto,Wikidata no tiene datos suficientes para este par,1,pentosane polysulfate sodique

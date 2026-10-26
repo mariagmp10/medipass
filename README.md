@@ -235,6 +235,56 @@ o masticar"...) se queda en francés y no se compara.
   isómeros del mentol), las enzimas (amilasa, lipasa, proteasa), y la
   equinácea y el tomillo (extractos de planta, con varias especies posibles).
 
+### Equivalencias rápidas de octubre de 2026 (plantas, formas parecidas, pares pendientes)
+
+- **Plantas**: el parser francés quita la parte de la planta y el tipo de extracto entre paréntesis
+  (`hydrocotyle (partie aérienne d') (extrait sec de)` → `hydrocotyle`). Se compara la **planta**;
+  el tipo de extracto (seco, titulado...) y la dosis no se comparan. `hydrocotyle` → centella
+  asiática está aprobado a mano (Wikidata Q324714 es «Hydrocotyle asiatica» en francés y «Centella
+  asiática» en español); pendiente de visto bueno farmacéutico.
+- **Forma parecida** (franja azul en la app): si un país no tiene el grupo exacto, ni de nivel base,
+  pero sí el mismo principio activo en otra forma de la misma familia, se enseña aparte y avisa
+  ("no es la misma forma"). Hoy solo hay una familia, **crema ↔ pomada** (`FORM_FAMILIES` en
+  `MediPass.jsx`). OJO: en CIMA son dos clases separadas; es un criterio nuestro, apoyado en que la
+  Farmacopea Europea agrupa ambas como "preparaciones semisólidas de aplicación cutánea". La crema es
+  una emulsión aceite/agua y la pomada una base grasa casi sin agua, así que la absorción puede
+  diferir. Pendiente de visto bueno farmacéutico; no se añaden más familias sin evidencia.
+  Ejemplo: Blastoestimulina (pomada, España) → Madécassol (crema, Francia).
+- **Pares aprobados a mano (exactos, pendientes de visto bueno farmacéutico)**: micofenolato mofetilo
+  (FR y UK), ketotifeno (FR), bromacepam (FR), carmelosa (FR y UK), rabeprazol (UK), solifenacina
+  (UK). Ni Wikidata ni la AEMPS dan ATC para comprobarlos automáticamente; en varios casos el mismo
+  compuesto ya estaba confirmado en la otra tabla.
+
+### Dosis y público: qué producto se enseña
+
+Antes la app enseñaba, de cada país, el primer producto por orden alfabético: así salió un jarabe
+infantil de 100 mg/5 ml frente a un sobre de adultos de 400 mg. Ahora **elige el mejor** y cada tarjeta lleva un
+**desplegable con todos los productos** de esa forma en ese país (ordenados, el mejor primero, con su
+dosis y una marca si es infantil) para elegir otro si no convence; el otro lado se reajusta contra el nuevo.
+
+- **Dosis normalizada** (`doses.py`, columna `products.strengths`, JSON): para cada principio activo,
+  los mg por unidad (comprimido, sobre, cápsula, dosis) o los mg por ml/g. Cada fuente se lee a su
+  manera: España del texto libre de CIMA (22 formatos; se interpreta el 94 %), Francia de la composición
+  (cantidad + referencia «un comprimé», «5 ml»; 79 %) y el Reino Unido de la concentración estructurada
+  del dm+d (92 %). Lo que no se sabe interpretar con seguridad se deja **fuera**: es mejor decir «no se
+  puede comparar» que inventar un número (p. ej. «400 mg/10 mg» para un solo principio activo,
+  parches en mg/hora, unidades internacionales, homeopatía).
+- **Público** (`products.audience`): heurística por palabras del nombre comercial (*Children's*, *Junior*,
+  *infantil*, *enfants*, *3 Months Plus*, *6 Years Plus*...). Un nombre sin pistas queda sin clasificar,
+  que es lo habitual en un producto general. **Se equivoca cuando el nombre no lo dice**: el Calprofen
+  100 mg/5 ml es pediátrico y no se detecta.
+- **Orden de elección**, dentro del mismo estatus de receta que el producto de origen: (1) mismo público
+  (si el de origen no es infantil, los infantiles van al final; si lo es, primero los infantiles),
+  (2) dosis más cercana (la comparable antes que la que no lo es), (3) nombre.
+- **Solo se comparan dosis del mismo tipo** (por unidad con por unidad, concentración con
+  concentración). Un sobre de 400 mg y una suspensión de 20 mg/ml no se comparan, y la app lo dice.
+- **Limitaciones**: la cantidad puede referirse a la **sal** y no a la base (ibuprofeno arginina 684 mg
+  equivale a ibuprofeno 400 mg) y no se corrige; los productos con receta de España no tienen composición
+  (solo se pidió el detalle de los sin receta), así que su dosis sale del texto de CIMA; en Francia el
+  79 % se debe a que muchas dosificaciones son homeopáticas o vienen sin referencia.
+- La nota bajo las tarjetas dice si la cantidad declarada coincide, si es distinta, si no es comparable
+  y si uno de los productos es infantil y el otro no.
+
 ### Dos niveles de equivalencia
 
 CIMA nombra los medicamentos por la molécula **sin el éster o profármaco**: "fluticasona",
@@ -279,8 +329,8 @@ Cada fila lleva la razón en `evidencia`. Si no estás de acuerdo con alguna, ca
 (fludrocortisone acetate, hydrocortisone acetate, medroxyprogesterone acetate, estradiol
 valerate, eslicarbazepine acetate, norethisterone acetate...).
 
-**Pruebas**: `python -m unittest test_ingredients test_fetch_bdpm test_fetch_dmd test_prescription test_levels -v`
-(93). Incluyen pares que **nunca** deben enlazarse (alanina / alantoína, ketoprofeno /
+**Pruebas**: `python -m unittest test_ingredients test_fetch_bdpm test_fetch_dmd test_prescription test_levels test_doses -v`
+(111). Incluyen pares que **nunca** deben enlazarse (alanina / alantoína, ketoprofeno /
 piketoprofeno, *hyoscine butylbromide* / hioscina, *benzyl benzoate*, ésteres y sus bases...),
 combinaciones de forma y vía que no deben traducirse, un ZIP de dm+d en miniatura para comprobar
 las reglas de qué entra (P/GSL/POM, inyectables, hospital, sin licencia, homeopáticos), las reglas
@@ -384,6 +434,7 @@ medipass.db  ←── backend/app.py (Flask, puerto 5000)  ←── frontend/ 
 - `fetch_cima.py` — sincroniza España desde CIMA (ver abajo)
 - `fetch_bdpm.py` — sincroniza Francia desde la BDPM (ver abajo)
 - `fetch_dmd.py` — sincroniza el Reino Unido desde NHS dm+d (ver abajo)
+- `doses.py` — normaliza la dosis de los tres países y deduce el público (ver «Dosis y público»)
 - `importers.py` — piezas comunes de los importadores extranjeros (tabla de
   formas, vocabulario español, sincronización de `products`)
 - `ingredients.py` — enlace de principios activos entre idiomas (ver "Enlace
@@ -394,7 +445,7 @@ medipass.db  ←── backend/app.py (Flask, puerto 5000)  ←── frontend/ 
 - `form_map_fr.csv`, `form_map_uk.csv` — traducción de formas francesas e
   inglesas a las de CIMA
 - `.env` — clave de API de NHS TRUD (no se sube a GitHub)
-- `test_ingredients.py`, `test_fetch_bdpm.py`, `test_fetch_dmd.py`, `test_prescription.py`, `test_levels.py` — pruebas
+- `test_ingredients.py`, `test_fetch_bdpm.py`, `test_fetch_dmd.py`, `test_prescription.py`, `test_levels.py`, `test_doses.py` — pruebas
 - `medipass.db` — la base ya construida
 - `backend/app.py` — servidor Flask
 - `frontend/` — app Vite + React
@@ -492,12 +543,10 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 ## Límites conocidos
 
 - Los datos de Alemania, Italia y Portugal son ejemplos sin verificar.
-- Cada grupo enseña **un** producto por país (el primero por nombre) y cuenta
-  los demás; puedes elegir uno concreto buscando su marca. **La dosis no se
-  compara**: "equivalente" significa mismo principio activo y misma forma, y
-  los dos productos que se enseñan pueden tener concentraciones distintas
-  (por ejemplo, Dalsydol 400 mg en España frente a Advil 200 mg en Francia o
-  Anadin Joint Pain 200 mg en el Reino Unido).
+- Cada grupo enseña **un** producto por país, el mejor según su público y su dosis (ver «Dosis y
+  público»), y un desplegable con todos los demás. **La dosis solo se compara cuando es del mismo tipo** y la
+  cantidad puede referirse a la sal; «equivalente» significa mismo principio activo y misma forma, y el
+  producto elegido puede tener otra concentración (la app lo dice).
 - La forma de España es la "simplificada" de CIMA (unos 50 valores,
   bastante gruesa: "solución/suspensión oral" agrupa jarabes, polvos y
   granulados). La de Francia se traduce con `form_map_fr.csv` (94 % de los
@@ -527,26 +576,19 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 - El estatus de receta de Francia sigue siendo una regla **inferida** (aparecer en el archivo de
   condiciones de prescripción): no hay campo explícito. La condición original se guarda en
   `legal_note` ("liste I", "liste II"...); no se ha auditado exhaustivamente.
-- **La dosis no se compara** y el producto que se enseña de cada país es el primero por nombre
-  entre los del mismo estatus que el de origen. Esto produce comparaciones engañosas (un sobre
-  adulto de 400 mg frente a una suspensión infantil de 100 mg/5 ml): es el siguiente paso.
+- El público (adulto o niño) se deduce del nombre: un producto infantil cuyo nombre no lo diga
+  (Calprofen) no se detecta.
 
 ## Próximos pasos
 
 - Que alguien con conocimiento farmacéutico revise: los 33 pares exactos y 17 de nivel base sin
   comprobar en `ingredient_links.csv`, los 41 y 8 de `ingredient_links_uk.csv`, y todo lo aprobado
   a mano (bicarbonato y cloruro sódicos; los 21 ésteres de la sección "Dos niveles")
-- **Elegir el producto por dosis y público** (la "Fase B"): guardar la dosis estructurada de los tres
-  países (Francia la trae en la composición, el dm+d como concentración con unidades en un código
-  aparte, España desordenada), detectar adultos/niños por palabras del nombre (heurística), y
-  elegir en cada país el producto del mismo estatus, público y dosis más cercana, avisando si no
-  hay la misma. Cuidado: ibuprofeno arginina 684 mg y ibuprofeno 400 mg son la misma dosis
-  expresada con y sin sal; si no son comparables, decirlo en vez de inventar.
+- Mejorar la elección por dosis y público: corregir la dosis cuando se expresa como sal, deducir lo
+  pediátrico por la concentración y la forma (no solo por el nombre) y pedir el detalle de los productos
+  con receta de España para tener su composición
 - **Alternativas "mismo uso, otra sustancia"** por código ATC (p. ej. Maalox para el Almax): es una
   recomendación, así que antes hay que revisarlo con un farmacéutico y con el asunto legal
-- **Sinónimos botánicos** (hydrocotyle = centella asiática) y familias de formas (pomada ≈ crema):
-  Madécassol (Francia) no se enlaza con la Blastoestimulina porque la planta tiene otro nombre y
-  la forma es crema frente a pomada
 - Priorizar los pares pendientes que más productos afectan: micofenolato mofetilo, bromacepam,
   ketotifeno, carmelosa, solifenacina y rabeprazol
 - Conseguir acceso a **BotPlus/BADIS** o **Medipim** para datos reales de
@@ -565,6 +607,14 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
   ejecutar `curate_ingredient_links.py` para enlazar sus principios activos
 - Antes de publicar la app: decidir con un abogado si se muestran los medicamentos con receta; si
   no, arrancar el backend con `INCLUDE_PRESCRIPTION=0` (los datos siguen en la base)
+- **Cuentas de usuario y «Mis medicamentos»** (idea de María, octubre de 2026): poder crear una
+  cuenta, guardar medicamentos en favoritos y consultarlos después más rápido, en una sección «Mis
+  medicamentos». Hay que decidir antes: cómo se inicia sesión (correo y contraseña, enlace por
+  correo, o Google), dónde se guardan los datos (hoy la app es solo local; con cuentas hace falta
+  un servidor y una base de datos de usuarios, es decir, desplegar) y la **privacidad**: la lista de
+  medicamentos de una persona es un dato de salud (RGPD, categoría especial), así que habrá que
+  limitar lo que se guarda, pedir consentimiento y permitir borrar la cuenta. Va junto con el
+  despliegue a Vercel y con la consulta legal.
 - Desplegar a **Vercel** cuando esté lista para compartir con otras personas
 
 ### Para después de cerrar la integración de las bases de datos
