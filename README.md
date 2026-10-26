@@ -300,6 +300,19 @@ povidona iodada...) y tres que se aprobaron como en el Reino Unido: ácido ascó
 sódico (la AEMPS solo lista ATC de usos tópicos o nasales). Se rechazó *dimeticone* → simeticona (la simeticona es
 dimeticona activada con sílice).
 
+### Plantas: enlace manual de nivel base (octubre de 2026)
+
+Las plantas no tienen código ATC ni apenas datos en Wikidata, así que no se pueden confirmar con el método de
+siempre. Se enlazaron **a mano**, solo de **nivel base** (franja ámbar, «misma planta, el extracto puede
+variar»), 27 nombres de origen con 12 principios activos españoles: valeriana, pelargonium sidoides, hiedra
+(*hedera helix*), ginkgo, pasiflora, cimicifuga, gayuba (*uva-ursi*), rhodiola, serenoa, vitex, vid roja y
+plantago ovata (cáscara de ispaghula), más los senósidos a-b (la misma sustancia, pero la AEMPS no tiene ATC para
+comprobarla y por eso también va en ámbar). Cada fila está `aprobada`, con la evidencia escrita y pendiente de
+revisión farmacéutica. Se dejaron fuera a propósito la equinácea (el Reino Unido no precisa la especie), el
+tomillo (otra especie posible y otra forma) y la esencia de lavanda (aceite frente a extracto). Sin pareja en otro
+país: equisetum, eschscholtzia, harpagophytum, polypodium, rhamnus y vaccinium. Efecto: los medicamentos españoles
+sin equivalente en ninguno de los otros tres países pasaron de 349 a 317 (de 1.016 sin receta).
+
 ### Equivalencias rápidas de octubre de 2026 (plantas, formas parecidas, pares pendientes)
 
 - **Plantas**: el parser francés quita la parte de la planta y el tipo de extracto entre paréntesis

@@ -51,7 +51,14 @@ def main():
         only_none += len(missing) == len(OTHERS)
         out.append([brand, inn, form, legal, status["FR"], status["IT"], status["UK"], ", ".join(missing)])
     out.sort(key=lambda r: (-len(r[7].split(", ")) if r[7] else 0, r[1], r[0]))
-    with open(OUT, "w", encoding="utf-8-sig", newline="") as fh:
+    target = OUT
+    try:
+        fh = open(target, "w", encoding="utf-8-sig", newline="")
+    except PermissionError:  # el archivo está abierto en Excel: se escribe al lado con otro nombre
+        target = OUT.replace(".csv", "_nuevo.csv")
+        print(f"[aviso] {OUT} está abierto en otro programa; se escribe {target}")
+        fh = open(target, "w", encoding="utf-8-sig", newline="")
+    with fh:
         w = csv.writer(fh, delimiter=";")
         w.writerow(["medicamento_espana", "principio_activo", "forma", "estatus_legal", "Francia", "Italia", "Reino Unido", "sin_equivalente_en"])
         w.writerows(out)
@@ -59,7 +66,7 @@ def main():
     print(f"  sin equivalente en NINGUNO de los tres países: {only_none}")
     for i, (_c, name) in enumerate(OTHERS):
         print(f"  sin equivalente en {name}: {sum(1 for r in out if r[4 + i] == 'no')}")
-    print(f"Escrito {OUT}")
+    print(f"Escrito {target}")
 
 
 if __name__ == "__main__":

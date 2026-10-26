@@ -309,6 +309,30 @@ class TablaDeEnlacesUK(unittest.TestCase):
                     self.assertTrue(row["evidencia"].strip(), f"{row['nombre_en']} sin evidencia")
 
 
+class PlantasSoloEnNivelBase(unittest.TestCase):
+    """Las plantas se enlazan a mano y solo de nivel base (franja ámbar): el extracto puede variar."""
+    PLANTAS = (
+        (ing.LINKS_PATH, "FR", "extrait sec de racine de valériane", "valeriana officinalis"),
+        (ing.LINKS_PATH, "FR", "extrait sec de feuille de lierre grimpant", "hedera helix"),
+        (ing.LINKS_PATH_UK, "UK", "valerian root extract", "valeriana officinalis"),
+        (ing.LINKS_PATH_UK, "UK", "ispaghula husk", "plantago ovata"),
+        (ing.LINKS_PATH_IT, "IT", "valeriana", "valeriana officinalis"),
+        (ing.LINKS_PATH_IT, "IT", "estratto liquido essiccato delle radici di pelargonium sidoides", "pelargonium sidoides"),
+    )
+
+    def test_estan_en_el_nivel_base_y_no_en_el_exacto(self):
+        for path, country, name, es in self.PLANTAS:
+            key = ing.source_key(name, country)
+            self.assertEqual(ing.load_links(path, level=ing.LEVEL_BASE).get(key), es, name)
+            self.assertNotIn(key, ing.load_links(path), f"{name} no debe ser exacto")
+
+    def test_echinacea_tomillo_y_lavanda_siguen_sin_enlazar(self):
+        # Dudosos que se dejaron fuera a propósito (especie sin precisar o aceite frente a extracto)
+        links = ing.load_links(ing.LINKS_PATH_UK, level=ing.LEVEL_BASE)
+        for name in ("echinacea", "echinacea root extract", "thyme", "lavender oil"):
+            self.assertNotIn(ing.source_key(name, "UK"), links, name)
+
+
 class TablaDeEnlacesIT(unittest.TestCase):
     # Pares que NUNCA deben estar en uso: parecen iguales y son sustancias distintas (o no son exactos).
     PROHIBIDOS = {
