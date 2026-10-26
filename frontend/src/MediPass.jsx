@@ -653,8 +653,10 @@ export default function MediPass() {
 
     const results = [];
 
+    // Solo medicamentos que existen en el país de origen ("Desde"): así lo que se elige siempre tiene
+    // su tarjeta de origen y no hay que adivinar de qué país es cada resultado.
     meds
-      .filter((m) => `${m.name} ${m.forma}`.toLowerCase().includes(q))
+      .filter((m) => m.equivalencias[from] && `${m.name} ${m.forma}`.toLowerCase().includes(q))
       .slice(0, 6)
       .forEach((m) => {
         results.push({
@@ -668,7 +670,7 @@ export default function MediPass() {
       });
 
     rows
-      .filter((r) => r.brand_name.toLowerCase().includes(q))
+      .filter((r) => r.country_code === from && r.brand_name.toLowerCase().includes(q))
       .slice(0, 8)
       .forEach((r) => {
         const gid = groupId(r);
@@ -687,14 +689,15 @@ export default function MediPass() {
       });
 
     return results;
-  }, [meds, rows, query]);
+  }, [meds, rows, query, from]);
 
+  // Listado completo: los medicamentos del país de origen ("Desde").
   const esProducts = useMemo(
     () =>
       rows
-        .filter((r) => r.country_code === "ES")
+        .filter((r) => r.country_code === from)
         .sort((a, b) => a.brand_name.localeCompare(b.brand_name)),
-    [rows]
+    [rows, from]
   );
   const esFiltered = useMemo(
     () =>
@@ -891,7 +894,7 @@ export default function MediPass() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Busca un medicamento…"
+              placeholder={`Busca en ${countryNameOf(from)}…`}
               style={{
                 width: "100%",
                 background: COLORS.paperCard,
@@ -908,7 +911,7 @@ export default function MediPass() {
             <div style={{ marginTop: 8, border: `1px solid ${COLORS.cardBorder}`, borderRadius: 10, overflow: "hidden" }}>
               {searchResults.length === 0 && (
                 <div style={{ padding: 12, fontSize: 14, color: COLORS.slate }}>
-                  No hay resultados para "{query}".
+                  No hay resultados para "{query}" en {countryNameOf(from)}.
                 </div>
               )}
               {searchResults.map((r, i) => (
@@ -945,7 +948,15 @@ export default function MediPass() {
           )}
 
           <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
-            <CountryPicker label="Desde" value={from} onChange={setFrom} countries={pickerCountries} />
+            <CountryPicker
+              label="Desde"
+              value={from}
+              onChange={(code) => {
+                setFrom(code);
+                setListLimit(200);
+              }}
+              countries={pickerCountries}
+            />
             <CountryPicker label="Hacia" value={to} onChange={setTo} countries={pickerCountries} />
           </div>
         </div>
@@ -964,7 +975,7 @@ export default function MediPass() {
               cursor: "pointer",
             }}
           >
-            {showESList ? "Volver al buscador" : `Ver todos los medicamentos en España (${esProducts.length})`}
+            {showESList ? "Volver al buscador" : `Ver todos los medicamentos en ${countryNameOf(from)} (${esProducts.length})`}
           </button>
         </div>
 

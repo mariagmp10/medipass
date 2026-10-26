@@ -648,6 +648,11 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
   recomendación, así que antes hay que revisarlo con un farmacéutico y con el asunto legal
 - Priorizar los pares pendientes que más productos afectan: micofenolato mofetilo, bromacepam,
   ketotifeno, carmelosa, solifenacina y rabeprazol
+- **Parafarmacia** (idea de María, octubre de 2026): añadir productos que no son medicamentos (cosmética,
+  higiene, apósitos, productos sanitarios...). Hoy no hay fuente real; ver el punto siguiente. Habrá que decidir
+  qué entra (la categoría del esquema ya prevé 'Producto sanitario', 'Higiene' y 'Belleza') y cómo se
+  comparan: sin principio activo único, la unidad de equivalencia cambia (p. ej. tipo de producto + ingredientes
+  clave, o código de producto).
 - Conseguir acceso a **BotPlus/BADIS** o **Medipim** para datos reales de
   parafarmacia y productos sanitarios (hoy no hay ninguna fuente real);
   antes, preguntarles si su licencia permite una app para el público
