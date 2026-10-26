@@ -359,17 +359,31 @@ cd frontend && npm run build:static     # genera frontend/dist, lo que se public
 npm run preview -- --mode static        # (opcional) ver cómo queda, en http://localhost:4173
 ```
 
-**Publicar en Vercel** (gratis, con tu cuenta de GitHub; hay que hacerlo en persona, no puede hacerlo
-nadie por ti):
-1. Entra en vercel.com con tu cuenta de GitHub → *Add New… → Project* → importa el repositorio `medipass`.
-2. **Root Directory: `frontend`**. Vercel detecta Vite; `frontend/vercel.json` ya fija el comando
-   (`npm run build:static`) y la carpeta de salida (`dist`).
-3. *Deploy*. Te da un enlace del tipo `medipass-xxxx.vercel.app`, que es el que se puede enviar.
-4. Para actualizar los datos: `python export_static.py`, commit y push; Vercel vuelve a publicar solo.
+**Publicar en GitHub Pages** (el camino elegido; gratis). GitHub Pages gratuito solo publica repositorios
+**públicos**, y este proyecto tiene dentro la base de datos con recetas. Por eso la web se publica desde un
+repositorio **aparte, `medipass-web`**, que contiene solo la web ya construida (nada de base de datos, código
+ni claves); el repositorio de trabajo `medipass` puede ser privado.
+1. En GitHub, crea un repositorio **nuevo, público y vacío** llamado `medipass-web` (sin README ni
+   `.gitignore`).
+2. Clónalo **al lado** de este proyecto (la carpeta debe llamarse `medipass-web`):
+   `cd ..` (la carpeta que contiene `medipass`) y `git clone https://github.com/TU_USUARIO/medipass-web.git`
+3. `python publish_web.py` (en la carpeta `medipass`): regenera el catálogo público, construye la web, la
+   copia a `medipass-web`, hace commit y push. Con `--no-push` hace todo menos subirlo. Antes de copiar
+   comprueba que el catálogo no tiene recetas ni ejemplos manuales; si los tuviera, no publica nada.
+4. En GitHub: `medipass-web` → *Settings* → *Pages* → *Source: Deploy from a branch* → rama `main`, carpeta
+   `/ (root)` → *Save*. En un par de minutos la web aparece en `https://TU_USUARIO.github.io/medipass-web/`;
+   ese es el enlace que se puede enviar.
+5. Para actualizar los datos: `python publish_web.py` otra vez (no hace falta tocar nada más).
 
-Medidas para que sea solo "para quien reciba el enlace": la página lleva `noindex` (meta, `robots.txt` y la
-cabecera `X-Robots-Tag`), así que los buscadores no la indexan; **pero el enlace no tiene contraseña**:
-cualquiera que lo conozca puede entrar. Poner contraseña en Vercel es de pago (*Password Protection*).
+La web usa rutas relativas (`base: "./"` en `vite.config.js`, solo en modo `static`), así que funciona en una
+subcarpeta como `/medipass-web/` y también en la raíz de otro servicio. Alternativas con el mismo contenido:
+Netlify (arrastrar la carpeta `frontend/dist` a netlify.com), Cloudflare Pages o Vercel (`frontend/vercel.json`
+ya fija el comando `npm run build:static` y la carpeta `dist`).
+
+Medidas para que sea solo "para quien reciba el enlace": la página lleva `<meta name="robots" content="noindex">`,
+así que los buscadores no deberían indexarla (en GitHub Pages `robots.txt` y `X-Robots-Tag` no se aplican, porque la
+web vive en una subcarpeta del dominio); **pero el enlace no tiene contraseña**: cualquiera que lo conozca puede
+entrar, y GitHub Pages no ofrece contraseña.
 
 Avisos visibles en la versión pública: "Versión de prueba para valoración... no los ha revisado ningún
 profesional sanitario", "Información orientativa, no sustituye el consejo de un farmacéutico o médico", y
@@ -381,8 +395,11 @@ traduce las formas y enlaza los principios activos con su nombre español; hay q
 corresponda si eso cuenta como alteración. Y, como siempre, la consulta legal sobre mostrar medicamentos
 (en esta versión, solo sin receta).
 
-También conviene saber que `medipass.db` está en el repositorio: si el repositorio de GitHub es público, la
-base completa (con recetas) es visible para cualquiera, aunque la web publicada no las muestre.
+También conviene saber que `medipass.db` está en el repositorio de trabajo: si ese repositorio es público, la
+base completa (con recetas) es visible para cualquiera, aunque la web publicada no las muestre. Por eso se
+recomienda ponerlo **privado** (GitHub → Settings → Danger Zone → Change repository visibility); la web pública
+no depende de él. Lo que ya fue público ha podido verse o copiarse mientras lo fue; quitar la base del
+historial de git obligaría a reescribirlo y forzar el envío, y no se ha hecho.
 
 ## Alcance legal
 
@@ -655,7 +672,8 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
   medicamentos de una persona es un dato de salud (RGPD, categoría especial), así que habrá que
   limitar lo que se guarda, pedir consentimiento y permitir borrar la cuenta. Va junto con el
   despliegue a Vercel y con la consulta legal.
-- Difundir la versión de prueba más allá de gente cercana (ver «Publicar una versión de prueba»)
+- Difundir la versión de prueba más allá de gente cercana (ver «Publicar una versión de prueba»); y poner el
+  repositorio de trabajo `medipass` en privado
 
 ### Para después de cerrar la integración de las bases de datos
 
