@@ -31,8 +31,10 @@ Uso:
     python fetch_cima.py --details-rx       # pide también el detalle de los de receta (más de una hora)
     python fetch_cima.py --dry-run          # cuenta qué se importaría, sin tocar medipass.db
     python fetch_cima.py --debug            # imprime el JSON crudo de 1 medicamento y sale
+    python fetch_cima.py --apply-overrides  # aplica es_ingredient_overrides.csv a la base, sin red
 """
 
+import csv
 import json
 import os
 import sqlite3
@@ -124,11 +126,46 @@ def exclusion_reason(med):
     return None
 
 
+OVERRIDES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "es_ingredient_overrides.csv")
+
+
+def load_overrides(path=OVERRIDES_PATH):
+    """{nº de registro: (principio activo real, base)}. El 'vtm' de CIMA a veces agrupa varias sales o ésteres
+    bajo la base (Avamys, que es fluticasona FUROATO, figura como «fluticasona» igual que el propionato). El
+    detalle de cada medicamento da el principio activo real; este archivo recoge, con su evidencia, los casos
+    ya comprobados para que no se pierdan al volver a sincronizar (el detalle de los de receta no se pide)."""
+    out = {}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8", newline="") as fh:
+            for row in csv.DictReader(fh):
+                out[row["nregistro"]] = (row["nombre"].strip().lower(), (row["base"] or "").strip().lower() or None)
+    return out
+
+
+OVERRIDES = load_overrides()
+
+
+def apply_overrides(conn):
+    """Aplica los cambios de es_ingredient_overrides.csv a los productos ya guardados (sin red)."""
+    changed = 0
+    for regno, (name, base) in load_overrides().items():
+        row = conn.execute(
+            "SELECT id FROM products WHERE country_code = 'ES' AND source = 'CIMA_API' AND source_ref = ?", (regno,)
+        ).fetchone()
+        if row:
+            conn.execute("UPDATE products SET active_ingredient_id = ? WHERE id = ?",
+                         (importers.get_or_create_ingredient(conn, name, base), row[0]))
+            changed += 1
+    conn.commit()
+    return changed
+
+
 def to_product(med):
     """Convierte un medicamento del listado de CIMA en los campos que guardamos."""
     vtm = ((med.get("vtm") or {}).get("nombre") or "").strip().lower()
     if not med.get("nregistro") or not med.get("nombre") or not vtm:
         return None
+    vtm, base = OVERRIDES.get(med["nregistro"], (vtm, None))
     rx = bool(med.get("receta"))
     return {
         "requires_prescription": int(rx),
@@ -137,6 +174,7 @@ def to_product(med):
         "nregistro": med["nregistro"],
         "brand_name": med["nombre"],
         "vtm": vtm,
+        "base": base,
         "form": (med.get("formaFarmaceuticaSimplificada") or {}).get("nombre"),
         "dose": med.get("dosis"),
         "photo_url": pick_photo(med.get("fotos")),
@@ -198,7 +236,7 @@ def sync_products(conn, products):
     ).rowcount
 
     for p in products:
-        ingredient_id = get_or_create_ingredient(conn, p["vtm"])
+        ingredient_id = importers.get_or_create_ingredient(conn, p["vtm"], p.get("base"))
         existing = conn.execute(
             "SELECT id FROM products WHERE country_code = 'ES' AND source = 'CIMA_API' AND source_ref = ?",
             (p["nregistro"],),
@@ -310,6 +348,13 @@ def main():
         nregistro = data["resultados"][0]["nregistro"]
         detail = cima_get("medicamento", {"nregistro": nregistro})
         print(json.dumps(detail, indent=2, ensure_ascii=False)[:4000])
+        return
+
+    if "--apply-overrides" in sys.argv:
+        conn = sqlite3.connect(DB_PATH)
+        importers.ensure_schema(conn)
+        print(f"Aplicados {apply_overrides(conn)} cambios de {os.path.basename(OVERRIDES_PATH)}")
+        conn.close()
         return
 
     include_rx = "--only-otc" not in sys.argv

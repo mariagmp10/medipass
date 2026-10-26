@@ -313,6 +313,23 @@ tomillo (otra especie posible y otra forma) y la esencia de lavanda (aceite fren
 país: equisetum, eschscholtzia, harpagophytum, polypodium, rhamnus y vaccinium. Efecto: los medicamentos españoles
 sin equivalente en ninguno de los otros tres países pasaron de 349 a 317 (de 1.016 sin receta).
 
+### Strepsils y Avamys: dos casos que enseñaron dos huecos (octubre de 2026)
+
+- **Strepsils** no coincidía porque el amilmetacresol y el alcohol diclorobencílico no estaban enlazados: ni Wikidata
+  ni la AIFA dan un ATC propio para el primero, y el segundo solo tenía enlace con una de sus grafías francesas. Se
+  aprobaron a mano (12 nombres en las tres tablas, más «ascorbato sódico» para la versión con vitamina C), con la
+  grafía de cada idioma y el ATC R02AA03 ya confirmado para el alcohol. Ahora Strepsils sale con equivalentes en
+  Francia y el Reino Unido (en Italia el producto equivalente, Benagol, lleva además mentol, así que es otra combinación).
+- **Avamys** estaba en los cuatro países, pero España lo tenía como «fluticasona» a secas. El `vtm` de CIMA agrupa
+  bajo la base el furoato y el propionato (Avamys es furoato; Flixonase, propionato), y el detalle de cada
+  medicamento, que sí dice «FLUTICASONA FUROATO» (ATC R01AD12), no se pide para los productos con receta.
+  `es_ingredient_overrides.csv` recoge esas correcciones ya comprobadas (6 productos) con su evidencia y las aplica
+  `fetch_cima.py` (también sin red: `python fetch_cima.py --apply-overrides`). Con ellas y tres enlaces exactos
+  (`furoate de fluticasone`, `fluticasone furoate`, `fluticasone furoato` → «fluticasona furoato»), Avamys sale igual
+  en los cuatro países y la comparación es verde. **Limitación:** el mismo problema puede afectar a otras
+  sales o ésteres que CIMA agrupa bajo una base (hay que comprobarlos de uno en uno; la forma general sería pedir
+  el detalle de todos los de receta, más de una hora).
+
 ### Equivalencias rápidas de octubre de 2026 (plantas, formas parecidas, pares pendientes)
 
 - **Plantas**: el parser francés quita la parte de la planta y el tipo de extracto entre paréntesis

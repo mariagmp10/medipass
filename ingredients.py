@@ -501,7 +501,9 @@ def component_names(substances, links, base_links, parse=parse_substance, countr
     out = []
     for raw in substances:
         moiety = parse(raw)
-        es = links.get(plain(moiety)) if moiety is not None else None
+        # Si el nombre no se interpreta ("alcool dichloro-2,4 benzylique") solo vale un enlace revisado
+        # escrito con el nombre tal cual: así lo aprobado a mano sigue funcionando.
+        es = links.get(plain(moiety if moiety is not None else raw))
         if es is None:
             es = base_links.get(source_key(raw, country))
         out.append(plain(es) if es else plain(moiety if moiety is not None else raw))
@@ -516,7 +518,7 @@ def resolve_levels(substances, links, base_links, es_index, parse=parse_substanc
     components, level = [], LEVEL_EXACT
     for raw in substances:
         moiety = parse(raw)
-        exact = links.get(plain(moiety)) if moiety is not None else None
+        exact = links.get(plain(moiety if moiety is not None else raw))  # ver component_names
         if exact is not None:
             components.append(plain(exact))
             continue

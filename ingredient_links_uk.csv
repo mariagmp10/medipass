@@ -603,14 +603,12 @@ benzalkonium chloride,benzalconio cloruro,sin_confirmar,exacto,"Wikidata (Q72445
 ferrous fumarate,hierro fumarato,sin_confirmar,exacto,"Wikidata (Q416370, nombre inglés «ferrous fumarate»): falta el código ATC para comprobar",12,ferrous fumarate
 dydrogesterone,didrogesterona,sin_confirmar,exacto,"Wikidata (Q4161380, nombre inglés «dydrogesterone»): falta el código ATC para comprobar",11,dydrogesterone
 mexiletine,mexiletina,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,10,mexiletine hydrochloride
-amylmetacresol,amilmetacresol,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,8,amylmetacresol
 zinc acetate,zinc acetato,sin_confirmar,exacto,"Wikidata (Q204639, nombre inglés «zinc acetate»): falta el código ATC para comprobar",8,zinc acetate
 calcium folinate,ácido folínico,sin_confirmar,exacto,"Wikidata (Q27077063, nombre inglés «calcium folinate»): falta el código ATC para comprobar",7,calcium folinate
 ferrous gluconate,hierro gluconato,sin_confirmar,exacto,"Wikidata (Q421291, nombre inglés «ferrous gluconate»): falta el código ATC para comprobar",6,ferrous gluconate
 flupentixol,flupentixol,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,5,flupentixol dihydrochloride
 cytisinicline,citisiniclina,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,4,cytisinicline
 dimeticone,dimeticona,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,4,dimeticone
-sodium ascorbate,ácido ascórbico,sin_confirmar,exacto,"Wikidata (Q424551, nombre inglés «sodium ascorbate»): falta el código ATC para comprobar",4,sodium ascorbate
 propafenone,propafenona,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,3,propafenone hydrochloride
 tioguanine,tioguanina,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,3,tioguanine
 filgotinib,filgotinib,sin_confirmar,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,2,filgotinib maleate
@@ -650,7 +648,6 @@ thyme,thymus vulgaris,sugerido,exacto,"Wikidata (Q148668, Q3215980, nombre ingl�
 tirbanibulin,tirbanibulina,sugerido,exacto,"Wikidata (Q27888424, nombre inglés «tirbanibulin»): falta el código ATC para comprobar",2,tirbanibulin
 norelgestromin,norelgestromina,sugerido,exacto,Wikidata no tiene ningún elemento con ese nombre en inglés,1,norelgestromin
 promazine,prometazina,contradice,exacto,"Wikidata (Q419822, nombre inglés «promazine»): ATC N05AA03 frente a AEMPS/CIMA D04AA10, R06AD02",15,promazine hydrochloride
-fluticasone furoate,fluticasona,contradice,base,"Wikidata (Q2166700, nombre inglés «fluticasone furoate»): ATC R01AD12, R03BA09 frente a AEMPS/CIMA D07AC17, R01AD08, R03BA05",14,fluticasone furoate
 dydrogesterone,medroxiprogesterona,contradice,exacto,"Wikidata (Q4161380, nombre inglés «dydrogesterone»): ATC G03DB01 frente a AEMPS/CIMA G03AC06, G03DA02, L02AB02",11,dydrogesterone
 potassium citrate,ácido cítrico,contradice,exacto,"Wikidata (Q419921, nombre inglés «potassium citrate»): ATC A12BA02 frente a AEMPS/CIMA A09AB04",5,potassium citrate
 hydrocortisone butyrate,hidrocortisona,contradice,base,"Wikidata (Q5954738, nombre inglés «hydrocortisone butyrate»): ATC D07AB02 frente a AEMPS/CIMA A01AC03, A07EA02, C05AA01, D07AA02, D07XA01, H02AB09, S01BA02, S01CB03, S02BA01",4,hydrocortisone butyrate
@@ -662,3 +659,7 @@ pelargonium sidoides root extract,pelargonium sidoides,aprobado,base,"Revisión 
 rhodiola rosea root extract,rhodiola rosea,aprobado,base,"Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): misma planta que «rhodiola rosea» con otro nombre (parte: raíz); los datos oficiales no permiten asegurar que sea el mismo extracto, por eso es de nivel base (franja ámbar) y no exacto.",1,rhodiola rosea root extract
 ispaghula husk,plantago ovata,aprobado,base,"Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): misma planta que «plantago ovata» con otro nombre (parte: cáscara de la semilla (ispaghula)); los datos oficiales no permiten asegurar que sea el mismo extracto, por eso es de nivel base (franja ámbar) y no exacto.",7,ispaghula husk
 sennosides,senósidos a-b,aprobado,base,"Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): misma planta que «senósidos a-b» con otro nombre (mismos senósidos; Wikidata (Q502327) da ATC A06AB06 y el nombre español «senósido», pero la AEMPS no tiene ATC para comprobarlo); los datos oficiales no permiten asegurar que sea el mismo extracto, por eso es de nivel base (franja ámbar) y no exacto.",8,sennosides
+amylmetacresol,amilmetacresol,aprobado,exacto,"Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): es el mismo principio activo (amilmetacresol, el antiséptico de las pastillas Strepsils) con la grafía de su idioma; ningún país da un ATC propio para comprobarlo.",8,amylmetacresol
+dichlorobenzyl alcohol,alcohol diclorobencílico,aprobado,exacto,"Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): es el mismo principio activo (alcohol 2,4-diclorobencílico) con otra grafía; el par con la grafía «alcool dichlorobenzylique» ya está confirmado por ATC (R02AA03).",8,dichlorobenzyl alcohol
+sodium ascorbate,ascorbato sodio,aprobado,exacto,"Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): es el mismo compuesto (ascorbato sódico, la sal del ácido ascórbico) con la grafía de su idioma.",4,sodium ascorbate
+fluticasone furoate,fluticasona furoato,aprobado,exacto,"Comprobado con el ATC oficial: R01AD12 en el detalle de CIMA (AEMPS) de Avamys, Avancort, Furamist y fluticasona Teva nasal, que declaran el principio activo FLUTICASONA FUROATO, y R01AD12 en los productos de este país; es la misma molécula (furoato, no propionato).",7,fluticasone furoate

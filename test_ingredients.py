@@ -309,6 +309,37 @@ class TablaDeEnlacesUK(unittest.TestCase):
                     self.assertTrue(row["evidencia"].strip(), f"{row['nombre_en']} sin evidencia")
 
 
+class CasosRevisadosAMano(unittest.TestCase):
+    """Strepsils (amilmetacresol + alcohol diclorobencílico) y Avamys (fluticasona furoato)."""
+
+    def test_strepsils_en_los_tres_idiomas(self):
+        for path, country, names in (
+            (ing.LINKS_PATH, "FR", ("amylmétacrésol", "alcool dichloro-2,4 benzylique", "alcool dichlorobenzylique")),
+            (ing.LINKS_PATH_UK, "UK", ("amylmetacresol", "dichlorobenzyl alcohol")),
+            (ing.LINKS_PATH_IT, "IT", ("amilmetacresolo", "alcool 2.4 diclorobenzilico")),
+        ):
+            links = ing.load_links(path)
+            for name in names:
+                self.assertIn(links.get(ing.source_key(name, country)), ("amilmetacresol", "alcohol diclorobencílico"), name)
+
+    def test_el_furoato_de_fluticasona_no_es_el_propionato(self):
+        for path, name in ((ing.LINKS_PATH, "furoate de fluticasone"), (ing.LINKS_PATH_UK, "fluticasone furoate"),
+                           (ing.LINKS_PATH_IT, "fluticasone furoato")):
+            self.assertEqual(ing.load_links(path).get(ing.plain(name)), "fluticasona furoato", name)
+        for path, name in ((ing.LINKS_PATH_UK, "fluticasone propionate"), (ing.LINKS_PATH_IT, "fluticasone propionato")):
+            self.assertNotEqual(ing.load_links(path).get(ing.plain(name)), "fluticasona furoato", name)
+
+    def test_las_correcciones_de_cima_llevan_evidencia(self):
+        import csv
+        import os
+        path = os.path.join(os.path.dirname(os.path.abspath(ing.__file__)), "es_ingredient_overrides.csv")
+        with open(path, encoding="utf-8", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+        self.assertTrue(rows)
+        for row in rows:
+            self.assertTrue(row["evidencia"].strip() and row["nombre"].strip(), row["nregistro"])
+
+
 class PlantasSoloEnNivelBase(unittest.TestCase):
     """Las plantas se enlazan a mano y solo de nivel base (franja ámbar): el extracto puede variar."""
     PLANTAS = (
