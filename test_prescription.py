@@ -167,5 +167,33 @@ class Interruptor(unittest.TestCase):
             importlib.reload(importlib.import_module("app"))
 
 
+class CatalogoPublico(unittest.TestCase):
+    """La versión que se publica en internet NUNCA lleva medicamentos con receta ni ejemplos manuales."""
+
+    def test_el_catalogo_publico_no_tiene_recetas_ni_ejemplos(self):
+        import json
+        import tempfile
+
+        import export_static
+
+        old = export_static.OUT_DIR
+        export_static.OUT_DIR = tempfile.mkdtemp()
+        try:
+            export_static.main()
+            with open(os.path.join(export_static.OUT_DIR, "equivalences.json"), encoding="utf-8") as fh:
+                rows = json.load(fh)
+            with open(os.path.join(export_static.OUT_DIR, "config.json"), encoding="utf-8") as fh:
+                config = json.load(fh)
+        finally:
+            export_static.OUT_DIR = old
+        self.assertTrue(rows)
+        self.assertEqual([r for r in rows if r["requires_prescription"]], [])
+        self.assertEqual([r for r in rows if r["legal_category"] == "receta"], [])
+        self.assertEqual([r for r in rows if r["source"] == "manual_seed"], [])
+        self.assertEqual({r["country_code"] for r in rows}, {"ES", "FR", "UK"})
+        self.assertFalse(config["include_prescription"])
+        self.assertTrue(config["data_dates"]["FR"])  # la licencia de la BDPM exige citar la fecha
+
+
 if __name__ == "__main__":
     unittest.main()

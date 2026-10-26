@@ -344,6 +344,46 @@ con este principio activo"; y, para países sin datos reales, "todavía no
 tenemos datos verificados". Las tarjetas de ejemplos manuales llevan la
 etiqueta "Ejemplo sin verificar".
 
+## Publicar una versión de prueba en internet (sin recetas)
+
+La versión pública es una **web estática**: no necesita el backend de Flask. El catálogo se guarda en dos
+archivos (`frontend/public/equivalences.json` y `config.json`) que genera `export_static.py` con **solo
+medicamentos sin receta y datos de fuentes oficiales** (se excluyen los de receta y los ejemplos manuales
+de Alemania, Italia y Portugal; los selectores solo ofrecen España, Francia y Reino Unido). Una prueba
+garantiza que esos archivos nunca llevan recetas ni ejemplos. La versión completa, con recetas, sigue
+corriendo solo en local.
+
+```bash
+python export_static.py                 # regenera el catálogo público (hacerlo cada vez que cambien los datos)
+cd frontend && npm run build:static     # genera frontend/dist, lo que se publica
+npm run preview -- --mode static        # (opcional) ver cómo queda, en http://localhost:4173
+```
+
+**Publicar en Vercel** (gratis, con tu cuenta de GitHub; hay que hacerlo en persona, no puede hacerlo
+nadie por ti):
+1. Entra en vercel.com con tu cuenta de GitHub → *Add New… → Project* → importa el repositorio `medipass`.
+2. **Root Directory: `frontend`**. Vercel detecta Vite; `frontend/vercel.json` ya fija el comando
+   (`npm run build:static`) y la carpeta de salida (`dist`).
+3. *Deploy*. Te da un enlace del tipo `medipass-xxxx.vercel.app`, que es el que se puede enviar.
+4. Para actualizar los datos: `python export_static.py`, commit y push; Vercel vuelve a publicar solo.
+
+Medidas para que sea solo "para quien reciba el enlace": la página lleva `noindex` (meta, `robots.txt` y la
+cabecera `X-Robots-Tag`), así que los buscadores no la indexan; **pero el enlace no tiene contraseña**:
+cualquiera que lo conozca puede entrar. Poner contraseña en Vercel es de pago (*Password Protection*).
+
+Avisos visibles en la versión pública: "Versión de prueba para valoración... no los ha revisado ningún
+profesional sanitario", "Información orientativa, no sustituye el consejo de un farmacéutico o médico", y
+en el pie las tres fuentes **con su fecha** y la atribución OGL v3.0 del NHS.
+
+**Pendiente de comprobar antes de difundirlo más allá de gente cercana**: la licencia de la BDPM exige citar
+la fuente y la fecha y **no alterar los datos**. La app conserva el nombre original de cada producto, pero
+traduce las formas y enlaza los principios activos con su nombre español; hay que comprobar con quien
+corresponda si eso cuenta como alteración. Y, como siempre, la consulta legal sobre mostrar medicamentos
+(en esta versión, solo sin receta).
+
+También conviene saber que `medipass.db` está en el repositorio: si el repositorio de GitHub es público, la
+base completa (con recetas) es visible para cualquiera, aunque la web publicada no las muestre.
+
 ## Alcance legal
 
 Antes de mostrar esto a usuarios reales, investigamos la Directiva 2001/83/CE
@@ -615,7 +655,7 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
   medicamentos de una persona es un dato de salud (RGPD, categoría especial), así que habrá que
   limitar lo que se guarda, pedir consentimiento y permitir borrar la cuenta. Va junto con el
   despliegue a Vercel y con la consulta legal.
-- Desplegar a **Vercel** cuando esté lista para compartir con otras personas
+- Difundir la versión de prueba más allá de gente cercana (ver «Publicar una versión de prueba»)
 
 ### Para después de cerrar la integración de las bases de datos
 

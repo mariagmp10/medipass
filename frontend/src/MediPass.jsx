@@ -15,6 +15,20 @@ import {
 
 const API_BASE_URL = "http://127.0.0.1:5000";
 
+/* Versión PÚBLICA: `npm run build:static` (modo "static"). Lee equivalences.json y config.json, que genera
+   export_static.py con SOLO medicamentos sin receta y datos de fuentes oficiales, y no necesita backend.
+   En local (`npm run dev`) sigue hablando con el backend de Flask. */
+const STATIC_MODE = import.meta.env.MODE === "static";
+const dataUrl = (name) =>
+  STATIC_MODE
+    ? `${import.meta.env.BASE_URL}${name}.json`
+    : `${API_BASE_URL}/api/${name === "config" ? "config" : "equivalences"}`;
+
+function fmtDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso ?? "");
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : null;
+}
+
 /* ---------------------------------------------------------
    PALETA / TOKENS
 --------------------------------------------------------- */
@@ -275,7 +289,7 @@ function doseSummary(a, b, nameA, nameB) {
 
 /* --------------------------------------------------------- */
 
-function CountryPicker({ label, value, onChange }) {
+function CountryPicker({ label, value, onChange, countries = COUNTRIES }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, minWidth: 0 }}>
       <span
@@ -307,7 +321,7 @@ function CountryPicker({ label, value, onChange }) {
             outline: "none",
           }}
         >
-          {COUNTRIES.map((c) => (
+          {countries.map((c) => (
             <option key={c.code} value={c.code} style={{ background: COLORS.inkDark, color: "#fff" }}>
               {c.name}
             </option>
@@ -589,7 +603,8 @@ export default function MediPass() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [from, setFrom] = useState("ES");
-  const [to, setTo] = useState("DE");
+  const [to, setTo] = useState("FR");
+  const [dataDates, setDataDates] = useState({}); // fecha de los datos de cada país (config.json)
   const [showESList, setShowESList] = useState(false);
   const [includeRx, setIncludeRx] = useState(true); // lo confirma el backend (INCLUDE_PRESCRIPTION)
   const [listFilter, setListFilter] = useState("all"); // all | otc | rx
@@ -602,11 +617,14 @@ export default function MediPass() {
   const [picked, setPicked] = useState({});
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/config`)
+    fetch(dataUrl("config"))
       .then((res) => res.json())
-      .then((cfg) => setIncludeRx(!!cfg.include_prescription))
+      .then((cfg) => {
+        setIncludeRx(!!cfg.include_prescription);
+        setDataDates(cfg.data_dates ?? {});
+      })
       .catch(() => {});
-    fetch(`${API_BASE_URL}/api/equivalences`)
+    fetch(dataUrl("equivalences"))
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
@@ -757,6 +775,8 @@ export default function MediPass() {
   const shownFrom = fromData ?? approxFrom?.data ?? similarFrom?.data ?? null;
   const shownTo = toData ?? approxTo?.data ?? similarTo?.data ?? null;
   const receWarning = selected && shownFrom && shownTo && shownFrom.receta !== shownTo.receta;
+  // En la versión pública solo se ofrecen los países con datos reales (no los de ejemplo).
+  const pickerCountries = STATIC_MODE ? COUNTRIES.filter((c) => realCountries.has(c.code)) : COUNTRIES;
   const countryNameOf = (code) => COUNTRIES.find((c) => c.code === code)?.name ?? code;
   const dose =
     shownFrom && shownTo && shownFrom.source !== "manual_seed" && shownTo.source !== "manual_seed"
@@ -780,9 +800,13 @@ export default function MediPass() {
   if (status === "error") {
     return (
       <div style={{ minHeight: "100vh", background: COLORS.paper, color: COLORS.warnText, fontFamily: "sans-serif", padding: 40 }}>
-        No se pudo conectar con el backend en {API_BASE_URL}.
+        {STATIC_MODE ? "No se pudieron cargar los datos. Prueba a recargar la página." : `No se pudo conectar con el backend en ${API_BASE_URL}.`}
         <br />
-        ¿Está corriendo <code>python app.py</code> dentro de la carpeta <code>backend/</code>?
+        {!STATIC_MODE && (
+          <>
+            ¿Está corriendo <code>python app.py</code> dentro de la carpeta <code>backend/</code>?
+          </>
+        )}
       </div>
     );
   }
@@ -846,6 +870,8 @@ export default function MediPass() {
           <Info size={16} color={COLORS.warnIcon} style={{ flexShrink: 0 }} />
           <span>
             Información orientativa, no sustituye el consejo de un farmacéutico o médico.
+            {STATIC_MODE &&
+              " Versión de prueba para valoración: los datos vienen de fuentes oficiales, pero no los ha revisado ningún profesional sanitario."}
           </span>
         </div>
 
@@ -865,7 +891,7 @@ export default function MediPass() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Busca por nombre o principio activo…"
+              placeholder="Busca un medicamento…"
               style={{
                 width: "100%",
                 background: COLORS.paperCard,
@@ -919,8 +945,8 @@ export default function MediPass() {
           )}
 
           <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
-            <CountryPicker label="Desde" value={from} onChange={setFrom} />
-            <CountryPicker label="Hacia" value={to} onChange={setTo} />
+            <CountryPicker label="Desde" value={from} onChange={setFrom} countries={pickerCountries} />
+            <CountryPicker label="Hacia" value={to} onChange={setTo} countries={pickerCountries} />
           </div>
         </div>
 
@@ -1173,11 +1199,25 @@ export default function MediPass() {
             <div style={{ marginTop: 12, display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: COLORS.slateLight }}>
               <Info size={13} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>
-                Datos servidos por el backend local desde medipass.db. España (CIMA), Francia (BDPM) y Reino Unido (NHS dm+d): medicamentos comercializados, de fuentes oficiales
+                {STATIC_MODE ? (
+                  <>
+                    Medicamentos comercializados sin receta, de fuentes oficiales: España (CIMA, AEMPS
+                    {fmtDate(dataDates.ES) ? `; datos del ${fmtDate(dataDates.ES)}` : ""}), Francia (Base de données publique des
+                    médicaments, ANSM{fmtDate(dataDates.FR) ? `; datos del ${fmtDate(dataDates.FR)}` : ""}) y Reino Unido (NHS dm+d,
+                    NHSBSA{fmtDate(dataDates.UK) ? `; datos del ${fmtDate(dataDates.UK)}` : ""}). Una franja ámbar indica el mismo
+                    principio activo base con un nombre distinto (otro éster, sal o extracto); una azul, el mismo principio activo en
+                    una forma parecida (crema o pomada). En el Reino Unido, «solo en farmacia» (P) no requiere receta pero lo
+                    dispensa un farmacéutico. Contains public sector information licensed under the Open Government Licence v3.0.
+                  </>
+                ) : (
+                  <>
+                    Datos servidos por el backend local desde medipass.db. España (CIMA), Francia (BDPM) y Reino Unido (NHS dm+d): medicamentos comercializados, de fuentes oficiales
                 {includeRx
                   ? ", sin receta y con receta (los con receta se marcan en rojo). No se incluyen inyectables ni productos de uso hospitalario. Una franja ámbar indica el mismo principio activo base con un nombre distinto (otro éster, sal o extracto); una azul, el mismo principio activo en una forma parecida (crema o pomada)."
                   : ", solo sin receta."}{" "}
                 En el Reino Unido, «solo en farmacia» (P) no requiere receta pero lo dispensa un farmacéutico. Alemania, Italia y Portugal: ejemplos manuales sin verificar. Contains public sector information licensed under the Open Government Licence v3.0.
+                  </>
+                )}
               </span>
             </div>
           </section>

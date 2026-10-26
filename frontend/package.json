@@ -4,7 +4,10 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build",
+    "build:static": "vite build --mode static",
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^18.3.1",
