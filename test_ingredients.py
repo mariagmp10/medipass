@@ -129,6 +129,39 @@ class ParseSubstanceEn(unittest.TestCase):
             self.assertIsNone(ing.parse_substance_en(raw), raw)
 
 
+class ParseSubstanceIt(unittest.TestCase):
+    """Nombres de la AIFA (italiano): la sal va DESPUÉS del principio activo."""
+
+    def test_quita_sales_de_bases_organicas(self):
+        for raw, expected in (
+            ("LOPERAMIDE CLORIDRATO", "loperamide"), ("NAFAZOLINA NITRATO", "nafazolina"),
+            ("DESTROMETORFANO BROMIDRATO", "destrometorfano"), ("DICLOFENAC SODICO", "diclofenac"),
+            ("IBUPROFENE SALE DI LISINA", "ibuprofene"), ("PARACETAMOLO", "paracetamolo"),
+            ("SENNA FOGLIA", "senna"), ("SENNA ESTRATTO SECCO", "senna"), ("CODEINA FOSFATO", "codeina"),
+        ):
+            self.assertEqual(ing.parse_substance_it(raw), expected, raw)
+
+    def test_esteres_y_sales_inorganicas_se_dejan_enteros(self):
+        for raw, expected in (
+            ("MAGNESIO IDROSSIDO", "magnesio idrossido"), ("ZINCO SOLFATO", "zinco solfato"),
+            ("BETAMETASONE DIPROPIONATO", "betametasone dipropionato"), ("SODIO CLORURO", "sodio cloruro"),
+            ("ACIDO ACETILSALICILICO", "acido acetilsalicilico"),
+        ):
+            self.assertEqual(ing.parse_substance_it(raw), expected, raw)
+
+    def test_se_niega_a_interpretar_lo_raro(self):
+        for raw in ("VITAMINA B12 (1000 MCG)", "ESTRATTO 5:1", "SODIO", ""):
+            self.assertIsNone(ing.parse_substance_it(raw), raw)
+
+    def test_proponer_espanol(self):
+        for raw, expected in (
+            ("magnesio idrossido", "magnesio hidroxido"), ("idrocortisone", "hidrocortisona"),
+            ("destrometorfano", "dextrometorfano"), ("ibuprofene", "ibuprofeno"), ("paracetamolo", "paracetamol"),
+            ("betametasone", "betametasona"),
+        ):
+            self.assertEqual(ing.propose_spanish_it(raw), expected, raw)
+
+
 class SalesQueSiSeQuitan(unittest.TestCase):
     """Sales e hidratos puros: la misma molécula activa (CIMA los nombra sin la sal)."""
 
@@ -274,6 +307,58 @@ class TablaDeEnlacesUK(unittest.TestCase):
             for row in csv.DictReader(fh):
                 if row["estado"] in ing.USABLE_STATUSES:
                     self.assertTrue(row["evidencia"].strip(), f"{row['nombre_en']} sin evidencia")
+
+
+class TablaDeEnlacesIT(unittest.TestCase):
+    # Pares que NUNCA deben estar en uso: parecen iguales y son sustancias distintas (o no son exactos).
+    PROHIBIDOS = {
+        "delorazepam": "lorazepam",
+        "dimeticone": "simeticona",
+        "dimenidrinato": "difenhidramina",
+        "diclofenac": "benzocaína",
+        "benzalconio cloruro": "carmelosa",
+        "promazina": "prometazina",
+        "isoconazolo": "tioconazol",
+        "flunitrazepam": "flurazepam",
+        "amifampridina": "fampridina",
+        "estazolam": "ketazolam",
+    }
+
+    def test_ningun_par_prohibido_esta_en_uso(self):
+        links = ing.load_links(ing.LINKS_PATH_IT)
+        for it, es in self.PROHIBIDOS.items():
+            self.assertNotEqual(links.get(ing.plain(it)), es, f"{it} -> {es} no debe estar en uso")
+
+    def test_los_esteres_solo_estan_en_el_nivel_base(self):
+        exact = ing.load_links(ing.LINKS_PATH_IT)
+        base = ing.load_links(ing.LINKS_PATH_IT, level=ing.LEVEL_BASE)
+        for name in ("fluticasone propionato", "beclometasone dipropionato", "mometasone furoato", "candesartan cilexetil"):
+            self.assertNotIn(name, exact, f"{name} no debe ser exacto")
+            self.assertIn(name, base, f"{name} debe estar en el nivel base")
+
+    def test_solo_se_usan_estados_revisados(self):
+        import csv
+        with open(ing.LINKS_PATH_IT, encoding="utf-8", newline="") as fh:
+            reviewed = {(ing.plain(r["nome_it"]), r["nombre_es"]) for r in csv.DictReader(fh) if r["estado"] in ing.USABLE_STATUSES}
+        for name, es in ing.load_links(ing.LINKS_PATH_IT).items():
+            self.assertIn((name, es), reviewed, f"{name} -> {es} se usa sin estar revisado")
+
+    def test_ningun_nombre_tiene_dos_enlaces_en_uso(self):
+        import collections
+        import csv
+        usable = collections.Counter()
+        with open(ing.LINKS_PATH_IT, encoding="utf-8", newline="") as fh:
+            for r in csv.DictReader(fh):
+                if r["estado"] in ing.USABLE_STATUSES:
+                    usable[(ing.plain(r["nome_it"]), r["nivel"])] += 1
+        self.assertEqual([k for k, n in usable.items() if n > 1], [])
+
+    def test_cada_par_en_uso_tiene_evidencia(self):
+        import csv
+        with open(ing.LINKS_PATH_IT, encoding="utf-8", newline="") as fh:
+            for row in csv.DictReader(fh):
+                if row["estado"] in ing.USABLE_STATUSES:
+                    self.assertTrue(row["evidencia"].strip(), f"{row['nome_it']} sin evidencia")
 
 
 if __name__ == "__main__":

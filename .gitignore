@@ -21,3 +21,8 @@ frontend/dist/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Cache regenerable de consultas al maestro de ATC de la AEMPS
+aemps_atc_cache.json
+medipass.db.bak*
+sin_equivalente_es.csv

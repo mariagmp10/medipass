@@ -38,7 +38,7 @@ LEGAL_FREE, LEGAL_PHARMACY, LEGAL_RX = "libre", "solo_farmacia", "receta"
 
 # Fuentes que NO son vocabulario español: sus nombres de principios activos se
 # conservan en el idioma original cuando no hay enlace revisado.
-IMPORTED_SOURCES = ("BDPM", "DMD")
+IMPORTED_SOURCES = ("BDPM", "DMD", "AIFA")
 
 
 def ensure_schema(conn):

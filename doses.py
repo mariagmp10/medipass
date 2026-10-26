@@ -148,13 +148,54 @@ def uk_strengths(vpi, names):
     return out
 
 
+# ------------------------------------------------------------------------------------ Italia
+def it_strengths(rows, names, solid):
+    """`rows`: (cantidad, unidad) de PA_confezioni de la AIFA para cada principio activo; `names`: nombre
+    comparable de cada uno (el español si está enlazado), en el mismo orden; `solid`: la forma es de unidad
+    (comprimido, cápsula, supositorio...). Solo se interpretan las CONCENTRACIONES («mg/ml», «mg/g», «%») y
+    los mg o g de una forma de unidad: «milligrammi» a secas no dice si es por comprimido o por envase."""
+    out = []
+    for (quantity, unit), name in zip(rows, names):
+        try:
+            q = float((quantity or "").strip().replace(",", "."))
+        except ValueError:
+            return []
+        u = (unit or "").strip().lower()
+        if q <= 0:
+            return []
+        if u in ("milligram(s)/millilitre", "milligram(s)/gram"):
+            out.append({"i": ing.plain(name), "v": q, "b": "conc"})
+        elif u == "percent":
+            out.append({"i": ing.plain(name), "v": q * 10, "b": "conc"})  # 1 % = 10 mg por ml o por g
+        elif u in ("milligrammi", "grammi") and solid:
+            out.append({"i": ing.plain(name), "v": q * (1000.0 if u == "grammi" else 1.0), "b": "unit"})
+        else:
+            return []
+    return out
+
+
+_IT_DOSE = re.compile(rf"{NUM}\s*(?:mg|g|ug)\s*/\s*(?:{NUM})?\s*(?:ml|g)\b|{NUM}\s*%|{NUM}\s*(?:mg|g|ug)(?![a-z])")
+
+
+def it_description_strength(description, name, solid):
+    """Dosis de un producto italiano de UN solo principio activo a partir del texto del envase
+    («200 MG COMPRESSE RIVESTITE», «120 mg/5 ml sciroppo», «5% COLLIRIO»). `solid`: la presentación es de
+    unidad (comprimido, sobre...): solo entonces un «mg» a secas es por unidad."""
+    s = re.sub(r"\bmicrogrammi\b", "ug", _norm(description))
+    m = _IT_DOSE.search(s)
+    one = _es_single(m.group(0), name) if m else None
+    if one is None or (one["b"] == "unit" and not solid):
+        return []
+    return [one]
+
+
 # ------------------------------------------------------------------------------------ público
 _CHILD = re.compile(
     r"\b(infantil|infantiles|pediatric\w*|paediatric\w*|nino|ninos|junior|bebe|bebes|lactante|lactantes|"
     r"kids?|baby|babies|child|children|childrens|infant|infants|enfant|enfants|nourrisson|nourrissons|"
-    r"pediatrique|pediatriques)\b"
+    r"pediatrique|pediatriques|bambino|bambini|pediatrico|pediatrica|neonato|neonati|lattante|lattanti)\b"
 )
-_ADULT = re.compile(r"\b(adulto|adultos|adult|adults|adulte|adultes)\b")
+_ADULT = re.compile(r"\b(adulto|adultos|adult|adults|adulte|adultes|adulti)\b")
 _MONTHS = re.compile(r"\b(\d+)\s*(?:months?|mois|meses)\b")
 _YEARS = re.compile(r"\b(\d+)\s*(?:years?|ans|anos)\s*(?:plus|\+)?")
 

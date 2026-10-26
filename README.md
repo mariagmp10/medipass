@@ -25,15 +25,16 @@ combinaciones también son grupos aparte ("dimenhidrinato" no es lo mismo que
 | 🇪🇸 España | 11.556 (1.016 sin receta + 10.540 con receta) | **CIMA API (AEMPS)** — pública, JSON, sin login | Real, oficial |
 | 🇫🇷 Francia | 9.208 (1.493 sin receta + 7.715 con receta) | **BDPM (ANSM/data.gouv.fr)** — descarga pública oficial | Real, oficial |
 | 🇬🇧 Reino Unido | 5.661 (1.231 sin receta, 641 de ellos «solo en farmacia», + 4.430 con receta) | **NHS dm+d (NHSBSA)** — descarga con cuenta gratuita en NHS TRUD, licencia OGL v3.0 | Real, oficial |
-| 🇩🇪🇮🇹🇵🇹 DE/IT/PT | 6 por país | `manual_seed` (escritos a mano, de memoria) | **Sin verificar** — ejemplos para poder probar la app, no para producción |
+| 🇮🇹 Italia | 8.635 (1.482 sin receta, 650 de ellos «SOP» solo en farmacia, + 7.149 con receta) | **AIFA (Agenzia Italiana del Farmaco)** — descarga pública en CSV, licencia CC-BY 4.0 | Real, oficial |
+| 🇩🇪🇵🇹 DE/PT | 6 por país | `manual_seed` (escritos a mano, de memoria) | **Sin verificar** — ejemplos para poder probar la app, no para producción |
 
-El Reino Unido conserva además 5 ejemplos manuales (los que todavía no tienen
+El Reino Unido conserva además 5 ejemplos manuales e Italia 4 (los que todavía no tienen
 un producto real de la misma forma con el que sustituirlos).
 
 **Desde octubre de 2026 la base incluye también los medicamentos CON receta** (decisión de
 María), marcados con un aviso rojo grande en la app y con un interruptor para ocultarlos
 (`INCLUDE_PRESCRIPTION`; ver "Alcance legal"). No se incluyen inyectables ni productos de uso
-hospitalario, en ninguno de los tres países. Todo lo que sigue sobre cada fuente describe cómo
+hospitalario, en ninguno de los cuatro países. Todo lo que sigue sobre cada fuente describe cómo
 se decide qué entra.
 
 **España** es el catálogo de CIMA de medicamentos **comercializados**, sin receta
@@ -100,6 +101,31 @@ y los inyectables (1.736). Cómo se decide qué es "sin receta":
 - La clave de API de TRUD va en `.env` (`TRUD_API_KEY=...`), que **nunca se
   sube a GitHub** (está en `.gitignore`).
 
+**Italia** es el catálogo de la AIFA (`fetch_aifa.py`, datos del 26/10/2026; los archivos no traen número de
+versión, así que se usa la fecha de descarga): 160.225 envases, de los que se guardan 8.631 productos
+(1.482 sin receta y 7.149 con receta; los 4 ejemplos manuales restantes siguen en la base). Se excluyen
+74.313 envases homeopáticos, 2.578 de **importación paralela** (medicamentos de otro país reetiquetados:
+duplican un producto que ya está, y el Reino Unido también excluye los importados), 33 no autorizados, los de
+uso exclusivamente hospitalario o del especialista (1.305), los inyectables con receta (1.589) y los de
+diálisis o lavado (40). «Vendibili al pubblico su prescrizione di centri ospedalieri o di specialisti» sí
+se queda: se compra en la farmacia. Cómo se decide qué es «sin receta»:
+- La columna `FORNITURA` trae el régimen oficial: «non soggetti a prescrizione medica, **da banco**» (OTC;
+  se guarda como `libre`) o «…**ma non da banco**» (SOP, sin receta pero sin publicidad al público; se guarda
+  como `solo_farmacia`, que la app enseña como «Sin receta, solo en farmacia»). Un producto con algún envase sin
+  receta cuenta como sin receta, igual que en el Reino Unido. La etiqueta original queda en `legal_note`.
+- Un producto es un `COD_FARMACO`; si tiene varias formas (267 sin receta), cada forma es un producto.
+- La forma (texto italiano, sin vía de administración) se traduce con `form_map_it.csv` (103 filas, 96 % de los
+  productos), con la misma evidencia de CIMA que las tablas francesa e inglesa.
+- Los principios activos (`PA_ASSOCIATI`) vienen con la sal detrás («PIRIDOSSINA CLORIDRATO»), a veces repetidos o
+  en otro idioma («IBUPROFEN»); `parse_substance_it` los limpia con las mismas reglas conservadoras (ver «Enlace
+  entre idiomas»).
+- Dosis: 76 % de los productos con dosis interpretada. Salen de dos sitios: las cantidades de `PA_confezioni.csv`
+  (muchas vacías) y el texto del envase («200 MG COMPRESSE»), este último solo con un principio activo (en una
+  combinación no se sabe qué cifra es de cuál). Si los dos existen y no coinciden, no se da dosis. Las cantidades
+  en «milligrammi»/«grammi» no dicen si son por comprimido o por envase: solo se usan en formas de unidad.
+- **Atribución obligatoria (CC-BY 4.0)**: «Fonte: AIFA (Agenzia Italiana del Farmaco), dati aperti, licenza
+  CC-BY 4.0», más la fecha de los datos. El pie de la app lo cita.
+
 Esto es intencional: no existe un "CIMA europeo" único. Cada país tiene su
 propia agencia, con su propio formato. La ruta lógica es: dejar el esquema
 listo para todos, conectar cada país de verdad, y sustituir cada ejemplo
@@ -117,6 +143,20 @@ Reino Unido, y **574** existen en los tres países. Contando también el nivel "
 | España → ni Francia ni Reino Unido | | | **15 %** |
 | Francia → Reino Unido | 59 % | 3 % | **38 %** |
 | Reino Unido → Francia | 52 % | 3 % | **46 %** |
+
+Con Italia (todos los productos, con y sin receta; entre paréntesis, solo sin receta):
+
+| | exacto | misma base | sin equivalente |
+|---|---|---|---|
+| España → Italia | 82 % (58 %) | 1 % | **15 %** (41 %) |
+| Francia → Italia | 64 % (36 %) | 2 % | **32 %** (63 %) |
+| Reino Unido → Italia | 59 % (36 %) | 2 % | **37 %** (62 %) |
+| Italia → España | 65 % (47 %) | 2 % | **31 %** (52 %) |
+| Italia → Francia | 54 % (34 %) | 2 % | **42 %** (64 %) |
+| Italia → Reino Unido | 55 % (33 %) | 2 % | **42 %** (65 %) |
+
+Los sin receta de Italia quedan más huérfanos porque el catálogo italiano de venta libre es muy local
+(muchas hierbas, antisépticos y combinaciones propias: econazol nitrato, sobrerolo, yodo + yoduro potásico...).
 
 Antes de añadir las recetas y de ampliar los enlaces y las tablas de formas, España → Francia
 estaba en 59 % sin equivalente y España → Reino Unido en 61 %. Lo que queda sin equivalente es,
@@ -235,6 +275,31 @@ o masticar"...) se queda en francés y no se compara.
   isómeros del mentol), las enzimas (amilasa, lipasa, proteasa), y la
   equinácea y el tomillo (extractos de planta, con varias especies posibles).
 
+### Italia: el enlace se comprueba con el ATC de la AIFA
+
+La AIFA da el código ATC de cada producto. Para un producto con **un solo** principio activo ese ATC es el del
+principio activo, y se compara con el que la AEMPS da al nombre español (el maestro de CIMA): dos fuentes
+oficiales distintas que no comparten nombres. Por eso `python curate_ingredient_links.py --country it` no necesita
+Wikidata para casi nada (solo para los ~110 nombres que únicamente salen en combinaciones, donde se usa
+Wikidata por el nombre italiano como en Francia y el Reino Unido). Los candidatos salen de tres sitios:
+- **regla**: el nombre italiano pasado al español (idro- → hidro-, -ene → -eno, -one → -ona, ch → qu...) queda
+  idéntico a uno que ya tenemos;
+- **atc**: la AEMPS da el ATC de la AIFA a un nombre español que no se parece por regla (*ibuprofen*, *sildenafil*,
+  *desametasone* → dexametasona). Para que cuente como confirmado hace falta además que los nombres se parezcan
+  (similitud ≥ 0,75): un mismo ATC con nombres muy distintos queda como `sugerido` para revisarlo a mano (así
+  se descartaron, por ejemplo, *benzalconio cloruro* → carmelosa o *procaina* → benzocaína, que comparten un código ATC
+  genérico);
+- **ester**: el nombre italiano es un éster o profármaco y su base está en España (*fluticasone propionato* →
+  fluticasona): solo de nivel base, y se confirma si el ATC del éster coincide con el de la base.
+`ingredient_links_it.csv` quedó con 799 pares confirmados, 22 aprobados a mano y 2 rechazados a mano; el resto
+(sin confirmar, sugeridos, contradicen) no se usa. Dos ejemplos de lo que el ATC detecta: *delorazepam* no se enlaza
+con lorazepam (se parecen los nombres, son sustancias distintas) y *fluticasone* (el ATC es el del furoato) no se
+enlaza con fluticasona. **Aprobados a mano por Claude, pendientes de visto bueno de María y de un farmacéutico**:
+sales y grafías con el mismo ATC (esomeprazol magnesio, risedronato, lattulosio → lactulosa, iodopovidone →
+povidona iodada...) y tres que se aprobaron como en el Reino Unido: ácido ascórbico, cloruro sódico y bicarbonato
+sódico (la AEMPS solo lista ATC de usos tópicos o nasales). Se rechazó *dimeticone* → simeticona (la simeticona es
+dimeticona activada con sílice).
+
 ### Equivalencias rápidas de octubre de 2026 (plantas, formas parecidas, pares pendientes)
 
 - **Plantas**: el parser francés quita la parte de la planta y el tipo de extracto entre paréntesis
@@ -349,7 +414,7 @@ etiqueta "Ejemplo sin verificar".
 La versión pública es una **web estática**: no necesita el backend de Flask. El catálogo se guarda en dos
 archivos (`frontend/public/equivalences.json` y `config.json`) que genera `export_static.py` con **solo
 medicamentos sin receta y datos de fuentes oficiales** (se excluyen los de receta y los ejemplos manuales
-de Alemania, Italia y Portugal; los selectores solo ofrecen España, Francia y Reino Unido). Una prueba
+de Alemania y Portugal; los selectores solo ofrecen España, Francia, Italia y Reino Unido). Una prueba
 garantiza que esos archivos nunca llevan recetas ni ejemplos. La versión completa, con recetas, sigue
 corriendo solo en local.
 
@@ -491,18 +556,19 @@ medipass.db  ←── backend/app.py (Flask, puerto 5000)  ←── frontend/ 
 - `fetch_cima.py` — sincroniza España desde CIMA (ver abajo)
 - `fetch_bdpm.py` — sincroniza Francia desde la BDPM (ver abajo)
 - `fetch_dmd.py` — sincroniza el Reino Unido desde NHS dm+d (ver abajo)
-- `doses.py` — normaliza la dosis de los tres países y deduce el público (ver «Dosis y público»)
+- `fetch_aifa.py` — sincroniza Italia desde los CSV de la AIFA (ver abajo)
+- `doses.py` — normaliza la dosis de los cuatro países y deduce el público (ver «Dosis y público»)
 - `importers.py` — piezas comunes de los importadores extranjeros (tabla de
   formas, vocabulario español, sincronización de `products`)
 - `ingredients.py` — enlace de principios activos entre idiomas (ver "Enlace
   entre idiomas")
-- `ingredient_links.csv`, `ingredient_links_uk.csv` — tablas de enlaces
+- `ingredient_links.csv`, `ingredient_links_uk.csv`, `ingredient_links_it.csv` — tablas de enlaces
   revisadas (las usan los importadores)
 - `curate_ingredient_links.py` — propone y comprueba enlaces nuevos
-- `form_map_fr.csv`, `form_map_uk.csv` — traducción de formas francesas e
-  inglesas a las de CIMA
+- `form_map_fr.csv`, `form_map_uk.csv`, `form_map_it.csv` — traducción de formas francesas,
+  inglesas e italianas a las de CIMA
 - `.env` — clave de API de NHS TRUD (no se sube a GitHub)
-- `test_ingredients.py`, `test_fetch_bdpm.py`, `test_fetch_dmd.py`, `test_prescription.py`, `test_levels.py`, `test_doses.py` — pruebas
+- `test_ingredients.py`, `test_fetch_bdpm.py`, `test_fetch_dmd.py`, `test_fetch_aifa.py`, `test_prescription.py`, `test_levels.py`, `test_doses.py` — pruebas
 - `medipass.db` — la base ya construida
 - `backend/app.py` — servidor Flask
 - `frontend/` — app Vite + React
@@ -531,9 +597,9 @@ Queda escuchando en `http://localhost:5173`.
 
 Con ambos corriendo, abre **`http://localhost:5173`** en el navegador.
 
-## Actualizar los datos de España, Francia y el Reino Unido
+## Actualizar los datos de España, Francia, Italia y el Reino Unido
 
-Los tres scripts son sincronizaciones: se pueden ejecutar cuando quieras sin
+Los cuatro scripts son sincronizaciones: se pueden ejecutar cuando quieras sin
 duplicar nada. Actualizan lo que existe, añaden lo nuevo, borran lo que ya
 no cumpla el filtro, y quitan los ejemplos manuales de un país en cuanto
 llega un dato real de la misma forma que los sustituye.
@@ -563,6 +629,11 @@ Unido enlazan con los principios activos españoles que ya estén en la base.
 `--debug` enseña cuántos productos se enlazan, cuántas formas se traducen,
 las formas que se quedan sin traducir y cuántas comparaciones con España salen.
 
+Italia no necesita cuenta ni clave: `python fetch_aifa.py` descarga los CSV de la AIFA (unos 90 MB) y sincroniza
+(`--dir CARPETA` usa unos ya descargados). Para volver a enlazar principios activos:
+`python curate_ingredient_links.py --country it`; la primera vez consulta ~1.100 nombres al maestro de ATC de
+la AEMPS (unos 6 minutos) y guarda la respuesta en `aemps_atc_cache.json`, que no se sube a git.
+
 Para el Reino Unido hace falta una cuenta gratuita en
 [NHS TRUD](https://isd.digital.nhs.uk), suscribirse al elemento 24 «NHSBSA
 dm+d» (hay que explicar para qué se quieren los datos) y descargar el ZIP o
@@ -584,6 +655,7 @@ for f in ('schema.sql', 'seed_base.sql', 'seed_manual_non_es.sql'):
 python fetch_cima.py
 python fetch_bdpm.py
 python fetch_dmd.py --zip RUTA_AL_ZIP
+python fetch_aifa.py
 ```
 
 ## Consultar la base directamente
@@ -599,7 +671,11 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 
 ## Límites conocidos
 
-- Los datos de Alemania, Italia y Portugal son ejemplos sin verificar.
+- Los datos de Alemania y Portugal son ejemplos sin verificar.
+- Italia: la AIFA no publica número de versión (se usa la fecha de descarga) y ~43 % de los envases sin receta
+  no traen la cantidad en `PA_confezioni.csv`; la dosis se completa con el texto del envase. Las formas
+  «colluttorio» (colutorio), «soluzione vaginale» y «sospensione rettale» no se traducen porque CIMA no tiene una
+  clase con evidencia para ellas. La importación paralela está excluida (duplicados de marcas ya incluidas).
 - Cada grupo enseña **un** producto por país, el mejor según su público y su dosis (ver «Dosis y
   público»), y un desplegable con todos los demás. **La dosis solo se compara cuando es del mismo tipo** y la
   cantidad puede referirse a la sal; «equivalente» significa mismo principio activo y misma forma, y el
@@ -639,8 +715,9 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 ## Próximos pasos
 
 - Que alguien con conocimiento farmacéutico revise: los 33 pares exactos y 17 de nivel base sin
-  comprobar en `ingredient_links.csv`, los 41 y 8 de `ingredient_links_uk.csv`, y todo lo aprobado
-  a mano (bicarbonato y cloruro sódicos; los 21 ésteres de la sección "Dos niveles")
+  comprobar en `ingredient_links.csv`, los 41 y 8 de `ingredient_links_uk.csv`, los 39 sin confirmar y
+  los 91 sugeridos de `ingredient_links_it.csv`, y todo lo aprobado a mano (bicarbonato y cloruro
+  sódicos; los 21 ésteres de la sección "Dos niveles"; los 22 pares de Italia)
 - Mejorar la elección por dosis y público: corregir la dosis cuando se expresa como sal, deducir lo
   pediátrico por la concentración y la forma (no solo por el nombre) y pedir el detalle de los productos
   con receta de España para tener su composición
@@ -656,12 +733,11 @@ for row in conn.execute(\"SELECT country_code, brand_name, dose, form FROM equiv
 - Conseguir acceso a **BotPlus/BADIS** o **Medipim** para datos reales de
   parafarmacia y productos sanitarios (hoy no hay ninguna fuente real);
   antes, preguntarles si su licencia permite una app para el público
-- **Alemania, Italia y Portugal siguen sin fuente abierta utilizable** (lo que
-  se encontró en octubre de 2026):
+- **Alemania y Portugal siguen sin fuente abierta utilizable** (lo que
+  se encontró en octubre de 2026; Italia sí la tiene, ver arriba, y se integró después):
   - *Alemania*: el BfArM solo publica un ZIP con nombres de sustancias
     (`pnbez-*.zip`), no el catálogo de productos con forma y estatus.
-  - *Italia*: AIFA publica CSV de medicamentos reembolsables (clases A/H),
-    genéricos y faltas de suministro; no el catálogo completo de venta libre.
+  - *Alemania, alternativa*: Swissmedic (Suiza) sí publica datos abiertos y está en alemán.
   - *Portugal*: los datos abiertos de INFARMED son solo ensayos clínicos; el
     catálogo de medicamentos es de pago.
   Hay que volver a mirarlo (o pedir acceso a las agencias) antes de conectarlos.

@@ -190,7 +190,7 @@ class CatalogoPublico(unittest.TestCase):
         self.assertEqual([r for r in rows if r["requires_prescription"]], [])
         self.assertEqual([r for r in rows if r["legal_category"] == "receta"], [])
         self.assertEqual([r for r in rows if r["source"] == "manual_seed"], [])
-        self.assertEqual({r["country_code"] for r in rows}, {"ES", "FR", "UK"})
+        self.assertEqual({r["country_code"] for r in rows}, {"ES", "FR", "IT", "UK"})
         self.assertFalse(config["include_prescription"])
         self.assertTrue(config["data_dates"]["FR"])  # la licencia de la BDPM exige citar la fecha
 

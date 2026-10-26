@@ -1,0 +1,969 @@
+nome_it,nombre_es,estado,nivel,evidencia,productos_it,ejemplos
+idroclorotiazide,hidroclorotiazida,confirmado,exacto,regla + ATC de la AIFA (C03AA03) igual al de la AEMPS/CIMA para «hidroclorotiazida»,170,idroclorotiazide
+ibuprofene,ibuprofeno,confirmado,exacto,"regla + ATC de la AIFA (G02CC01, M01AE01, M02AA13) igual al de la AEMPS/CIMA para «ibuprofeno»",132,ibuprofene | ibuprofene sale di lisina
+paracetamolo,paracetamol,confirmado,exacto,regla + ATC de la AIFA (N02BE01) igual al de la AEMPS/CIMA para «paracetamol»,130,paracetamolo
+amoxicillina,amoxicilina,confirmado,exacto,regla + ATC de la AIFA (J01CA04) igual al de la AEMPS/CIMA para «amoxicilina»,112,amoxicillina | amoxicillina triidrato
+amlodipina,amlodipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA01) igual al de la AEMPS/CIMA para «amlodipino»,96,amlodipina | amlodipina besilato
+colecalciferolo,colecalciferol,confirmado,exacto,regla + ATC de la AIFA (A11CC05) igual al de la AEMPS/CIMA para «colecalciferol»,94,colecalciferolo
+metformina,metformina,confirmado,exacto,regla + ATC de la AIFA (A10BA02) igual al de la AEMPS/CIMA para «metformina»,93,metformina cloridrato | metformina
+diclofenac,diclofenaco,confirmado,exacto,"ATC + ATC de la AIFA (D11AX18, M01AB05, M02AA15, S01BC03) igual al de la AEMPS/CIMA para «diclofenaco»",82,diclofenac sodico | diclofenac potassico
+etinilestradiolo,etinilestradiol,confirmado,exacto,"regla + Wikidata (Q415563, nombre italiano «etinilestradiolo»): mismo ATC que la AEMPS/CIMA (G03CA01, L02AA03)",81,etinilestradiolo
+ezetimibe,ezetimiba,confirmado,exacto,ATC + ATC de la AIFA (C10AX09) igual al de la AEMPS/CIMA para «ezetimiba»,80,ezetimibe
+timololo,timolol,confirmado,exacto,"regla + ATC de la AIFA (C07AA06, S01ED01) igual al de la AEMPS/CIMA para «timolol»",80,timololo maleato | timololo
+rosuvastatina,rosuvastatina,confirmado,exacto,regla + ATC de la AIFA (C10AA07) igual al de la AEMPS/CIMA para «rosuvastatina»,68,rosuvastatina sale di calcio | rosuvastatina
+acido clavulanico,ácido clavulánico,confirmado,exacto,"regla + Wikidata (Q415709, nombre italiano «acido clavulanico»): el mismo elemento tiene el nombre español «ácido clavulánico»",64,acido clavulanico
+valsartan,valsartán,confirmado,exacto,regla + ATC de la AIFA (C09CA03) igual al de la AEMPS/CIMA para «valsartán»,64,valsartan | valsartan disodico
+ramipril,ramipril,confirmado,exacto,regla + ATC de la AIFA (C09AA05) igual al de la AEMPS/CIMA para «ramipril»,63,ramipril
+betametasone,betametasona,confirmado,exacto,"regla + ATC de la AIFA (D07AC01, D07XC01, H02AB01, S01CB04) igual al de la AEMPS/CIMA para «betametasona»",60,betametasone
+flurbiprofene,flurbiprofeno,confirmado,exacto,"regla + ATC de la AIFA (M01AE09, M02AA19, R02AX01, S01BC04) igual al de la AEMPS/CIMA para «flurbiprofeno»",59,flurbiprofene | flurbiprofene sodico
+ketoprofene,ketoprofeno,confirmado,exacto,"regla + ATC de la AIFA (M01AE03, M02AA10) igual al de la AEMPS/CIMA para «ketoprofeno»",59,ketoprofene | ketoprofene sale di lisina
+aciclovir,aciclovir,confirmado,exacto,"regla + ATC de la AIFA (D06BB03, J05AB01, S01AD03) igual al de la AEMPS/CIMA para «aciclovir»",58,aciclovir
+desametasone,dexametasona,confirmado,exacto,"ATC + ATC de la AIFA (H02AB02, S01BA01, S03BA01) igual al de la AEMPS/CIMA para «dexametasona»",57,desametasone
+simvastatina,simvastatina,confirmado,exacto,regla + ATC de la AIFA (C10AA01) igual al de la AEMPS/CIMA para «simvastatina»,53,simvastatina
+sitagliptin,sitagliptina,confirmado,exacto,ATC + ATC de la AIFA (A10BH01) igual al de la AEMPS/CIMA para «sitagliptina»,53,sitagliptin fosfato monoidrato | sitagliptin
+formoterolo,formoterol,confirmado,exacto,regla + ATC de la AIFA (R03AC13) igual al de la AEMPS/CIMA para «formoterol»,52,formoterolo fumarato diidrato | formoterolo fumarato
+acido acetilsalicilico,ácido acetilsalicílico,confirmado,exacto,"regla + ATC de la AIFA (B01AC06, N02BA01) igual al de la AEMPS/CIMA para «ácido acetilsalicílico»",50,acido acetilsalicilico
+fluticasone propionato,fluticasona,confirmado,base,"éster + ATC de la AIFA (D07AC17, R01AD08, R03BA05) igual al de la AEMPS/CIMA para «fluticasona»",49,fluticasone propionato
+budesonide,budesonida,confirmado,exacto,"regla + ATC de la AIFA (A07EA06, D07AC09, R01AD05, R03BA02) igual al de la AEMPS/CIMA para «budesonida»",48,budesonide
+cetirizina,cetirizina,confirmado,exacto,regla + ATC de la AIFA (R06AE07) igual al de la AEMPS/CIMA para «cetirizina»,48,cetirizina dicloridrato
+mesalazina,mesalazina,confirmado,exacto,regla + ATC de la AIFA (A07EC02) igual al de la AEMPS/CIMA para «mesalazina»,45,mesalazina
+montelukast,montelukast,confirmado,exacto,regla + ATC de la AIFA (R03DC03) igual al de la AEMPS/CIMA para «montelukast»,45,montelukast sodico | montelukast
+sildenafil,sildenafilo,confirmado,exacto,ATC + ATC de la AIFA (G04BE03) igual al de la AEMPS/CIMA para «sildenafilo»,44,sildenafil | sildenafil citrato
+atorvastatina,atorvastatina,confirmado,exacto,regla + ATC de la AIFA (C10AA05) igual al de la AEMPS/CIMA para «atorvastatina»,41,atorvastatina
+azitromicina,azitromicina,confirmado,exacto,"regla + ATC de la AIFA (J01FA10, S01AA26) igual al de la AEMPS/CIMA para «azitromicina»",41,azitromicina diidrato | azitromicina
+escitalopram,escitalopram,confirmado,exacto,regla + ATC de la AIFA (N06AB10) igual al de la AEMPS/CIMA para «escitalopram»,41,escitalopram | escitalopram ossalato
+finasteride,finasterida,confirmado,exacto,"regla + ATC de la AIFA (D11AX10, G04CB01) igual al de la AEMPS/CIMA para «finasterida»",41,finasteride
+losartan,losartán,confirmado,exacto,regla + ATC de la AIFA (C09CA01) igual al de la AEMPS/CIMA para «losartán»,41,losartan potassico | losartan
+ambroxolo,ambroxol,confirmado,exacto,"regla + ATC de la AIFA (R02AD05, R05CB06) igual al de la AEMPS/CIMA para «ambroxol»",40,ambroxolo cloridrato | ambroxolo
+enalapril,enalapril,confirmado,exacto,regla + ATC de la AIFA (C09AA02) igual al de la AEMPS/CIMA para «enalapril»,40,enalapril maleato | enalapril
+irbesartan,irbesartán,confirmado,exacto,regla + ATC de la AIFA (C09CA04) igual al de la AEMPS/CIMA para «irbesartán»,40,irbesartan
+latanoprost,latanoprost,confirmado,exacto,regla + ATC de la AIFA (S01EE01) igual al de la AEMPS/CIMA para «latanoprost»,40,latanoprost
+omeprazolo,omeprazol,confirmado,exacto,regla + ATC de la AIFA (A02BC01) igual al de la AEMPS/CIMA para «omeprazol»,40,omeprazolo
+citalopram,citalopram,confirmado,exacto,regla + ATC de la AIFA (N06AB04) igual al de la AEMPS/CIMA para «citalopram»,39,citalopram bromidrato | citalopram cloridrato
+fluconazolo,fluconazol,confirmado,exacto,regla + ATC de la AIFA (J02AC01) igual al de la AEMPS/CIMA para «fluconazol»,39,fluconazolo
+levofloxacina,levofloxacino,confirmado,exacto,"ATC + ATC de la AIFA (J01MA12, S01AE05) igual al de la AEMPS/CIMA para «levofloxacino»",39,levofloxacina emiidrato | levofloxacina
+ciprofloxacina,ciprofloxacino,confirmado,exacto,"ATC + ATC de la AIFA (J01MA02, S01AE03, S02AA15) igual al de la AEMPS/CIMA para «ciprofloxacino»",38,ciprofloxacina cloridrato monoidrato | ciprofloxacina cloridrato
+apixaban,apixabán,confirmado,exacto,regla + ATC de la AIFA (B01AF02) igual al de la AEMPS/CIMA para «apixabán»,37,apixaban
+tadalafil,tadalafilo,confirmado,exacto,ATC + ATC de la AIFA (G04BE08) igual al de la AEMPS/CIMA para «tadalafilo»,37,tadalafil
+acido alendronico,ácido alendrónico,confirmado,exacto,regla + ATC de la AIFA (M05BA04) igual al de la AEMPS/CIMA para «ácido alendrónico»,36,acido alendronico
+glicerolo,glicerol,confirmado,exacto,"regla + ATC de la AIFA (A06AG04, A06AX01) igual al de la AEMPS/CIMA para «glicerol»",36,glicerolo
+lansoprazolo,lansoprazol,confirmado,exacto,regla + ATC de la AIFA (A02BC03) igual al de la AEMPS/CIMA para «lansoprazol»,35,lansoprazolo
+levetiracetam,levetiracetam,confirmado,exacto,regla + ATC de la AIFA (N03AX14) igual al de la AEMPS/CIMA para «levetiracetam»,35,levetiracetam
+rivaroxaban,rivaroxabán,confirmado,exacto,"regla + Wikidata (Q420262, nombre italiano «rivaroxaban»): el mismo elemento tiene el nombre español «rivaroxabán»",35,rivaroxaban
+beclometasone dipropionato,beclometasona,confirmado,base,"éster + ATC de la AIFA (A07EA07, D07AC15, R03BA01) igual al de la AEMPS/CIMA para «beclometasona»",34,beclometasone dipropionato | beclometasone dipropionato anidro
+indapamide,indapamida,confirmado,exacto,regla + ATC de la AIFA (C03BA11) igual al de la AEMPS/CIMA para «indapamida»,33,indapamide
+dimetilfumarato,dimetilfumarato,confirmado,exacto,"regla + Wikidata (Q418123, nombre italiano «dimetilfumarato»): el mismo elemento tiene el nombre español «dimetilfumarato»",32,dimetilfumarato
+alprazolam,alprazolam,confirmado,exacto,regla + ATC de la AIFA (N05BA12) igual al de la AEMPS/CIMA para «alprazolam»,31,alprazolam
+atorvastatina calcio,atorvastatina,confirmado,exacto,ATC + ATC de la AIFA (C10AA05) igual al de la AEMPS/CIMA para «atorvastatina»,31,atorvastatina calcio triidrato | atorvastatina calcio
+lidocaina,lidocaína,confirmado,exacto,"regla + ATC de la AIFA (D04AB01, N01BB02) igual al de la AEMPS/CIMA para «lidocaína»",31,lidocaina | lidocaina cloridrato
+paroxetina,paroxetina,confirmado,exacto,regla + ATC de la AIFA (N06AB05) igual al de la AEMPS/CIMA para «paroxetina»,31,paroxetina | paroxetina mesilato
+tramadolo,tramadol,confirmado,exacto,regla + ATC de la AIFA (N02AX02) igual al de la AEMPS/CIMA para «tramadol»,31,tramadolo cloridrato
+acetilcisteina,acetilcisteína,confirmado,exacto,"regla + ATC de la AIFA (R05CB01, S01XA08) igual al de la AEMPS/CIMA para «acetilcisteína»",30,acetilcisteina
+carbocisteina,carbocisteína,confirmado,exacto,regla + ATC de la AIFA (R05CB03) igual al de la AEMPS/CIMA para «carbocisteína»,30,carbocisteina | carbocisteina sale di lisina
+pregabalin,pregabalina,confirmado,exacto,"ATC + ATC de la AIFA (N02BF02, N03AX16) igual al de la AEMPS/CIMA para «pregabalina»",30,pregabalin
+tamsulosina,tamsulosina,confirmado,exacto,regla + ATC de la AIFA (G04CA02) igual al de la AEMPS/CIMA para «tamsulosina»,30,tamsulosina cloridrato | tamsulosina
+bisoprololo,bisoprolol,confirmado,exacto,regla + ATC de la AIFA (C07AB07) igual al de la AEMPS/CIMA para «bisoprolol»,29,bisoprololo fumarato | bisoprololo emifumarato
+desloratadina,desloratadina,confirmado,exacto,regla + ATC de la AIFA (R06AX27) igual al de la AEMPS/CIMA para «desloratadina»,29,desloratadina
+destrometorfano,dextrometorfano,confirmado,exacto,regla + ATC de la AIFA (R05DA09) igual al de la AEMPS/CIMA para «dextrometorfano»,29,destrometorfano | destrometorfano bromidrato
+drospirenone,drospirenona,confirmado,exacto,regla + ATC de la AIFA (G03AC10) igual al de la AEMPS/CIMA para «drospirenona»,29,drospirenone
+dutasteride,dutasterida,confirmado,exacto,regla + ATC de la AIFA (G04CB02) igual al de la AEMPS/CIMA para «dutasterida»,29,dutasteride
+lorazepam,lorazepam,confirmado,exacto,regla + ATC de la AIFA (N05BA06) igual al de la AEMPS/CIMA para «lorazepam»,29,lorazepam
+nebivololo,nebivolol,confirmado,exacto,regla + ATC de la AIFA (C07AB12) igual al de la AEMPS/CIMA para «nebivolol»,29,nebivololo cloridrato | nebivololo
+olanzapina,olanzapina,confirmado,exacto,regla + ATC de la AIFA (N05AH03) igual al de la AEMPS/CIMA para «olanzapina»,29,olanzapina
+salmeterolo,salmeterol,confirmado,exacto,regla + ATC de la AIFA (R03AC12) igual al de la AEMPS/CIMA para «salmeterol»,29,salmeterolo xinafoato | salmeterolo
+candesartan cilexetil,candesartán,confirmado,base,éster + ATC de la AIFA (C09CA06) igual al de la AEMPS/CIMA para «candesartán»,27,candesartan cilexetil
+mometasone furoato,mometasona,confirmado,base,"éster + ATC de la AIFA (D07AC13, R01AD09, R03BA07) igual al de la AEMPS/CIMA para «mometasona»",27,mometasone furoato | mometasone furoato monoidrato
+quetiapina,quetiapina,confirmado,exacto,regla + ATC de la AIFA (N05AH04) igual al de la AEMPS/CIMA para «quetiapina»,27,quetiapina fumarato | quetiapina
+bimatoprost,bimatoprost,confirmado,exacto,regla + ATC de la AIFA (S01EE03) igual al de la AEMPS/CIMA para «bimatoprost»,26,bimatoprost
+claritromicina,claritromicina,confirmado,exacto,regla + ATC de la AIFA (J01FA09) igual al de la AEMPS/CIMA para «claritromicina»,26,claritromicina
+lercanidipina,lercanidipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA13) igual al de la AEMPS/CIMA para «lercanidipino»,26,lercanidipina cloridrato | lercanidipina
+letrozolo,letrozol,confirmado,exacto,regla + ATC de la AIFA (L02BG04) igual al de la AEMPS/CIMA para «letrozol»,26,letrozolo
+perindopril,perindopril,confirmado,exacto,regla + ATC de la AIFA (C09AA04) igual al de la AEMPS/CIMA para «perindopril»,26,perindopril arginina | perindopril erbumina
+atenololo,atenolol,confirmado,exacto,regla + ATC de la AIFA (C07AB03) igual al de la AEMPS/CIMA para «atenolol»,25,atenololo
+gentamicina,gentamicina,confirmado,exacto,"regla + ATC de la AIFA (D06AX07, S01AA11) igual al de la AEMPS/CIMA para «gentamicina»",25,gentamicina solfato | gentamicina
+vildagliptin,vildagliptina,confirmado,exacto,ATC + ATC de la AIFA (A10BH02) igual al de la AEMPS/CIMA para «vildagliptina»,25,vildagliptin
+dienogest,dienogest,confirmado,exacto,regla + ATC de la AIFA (G03DB08) igual al de la AEMPS/CIMA para «dienogest»,24,dienogest
+doxazosina,doxazosina,confirmado,exacto,regla + ATC de la AIFA (C02CA04) igual al de la AEMPS/CIMA para «doxazosina»,24,doxazosina | doxazosina mesilato
+telmisartan,telmisartán,confirmado,exacto,regla + ATC de la AIFA (C09CA07) igual al de la AEMPS/CIMA para «telmisartán»,24,telmisartan
+ticagrelor,ticagrelor,confirmado,exacto,regla + ATC de la AIFA (B01AC24) igual al de la AEMPS/CIMA para «ticagrelor»,24,ticagrelor
+aripiprazolo,aripiprazol,confirmado,exacto,regla + ATC de la AIFA (N05AX12) igual al de la AEMPS/CIMA para «aripiprazol»,23,aripiprazolo
+bilastina,bilastina,confirmado,exacto,"regla + ATC de la AIFA (R06AX29, S01GX13) igual al de la AEMPS/CIMA para «bilastina»",23,bilastina
+diazepam,diazepam,confirmado,exacto,regla + ATC de la AIFA (N05BA01) igual al de la AEMPS/CIMA para «diazepam»,23,diazepam
+diosmina,diosmina,confirmado,exacto,regla + ATC de la AIFA (C05CA03) igual al de la AEMPS/CIMA para «diosmina»,23,diosmina
+lormetazepam,lormetazepam,confirmado,exacto,regla + ATC de la AIFA (N05CD06) igual al de la AEMPS/CIMA para «lormetazepam»,23,lormetazepam
+pseudoefedrina,pseudoefedrina,confirmado,exacto,"regla + Wikidata (Q263958, nombre italiano «pseudoefedrina»): mismo ATC que la AEMPS/CIMA (R01BA02)",23,pseudoefedrina cloridrato | pseudoefedrina
+clotrimazolo,clotrimazol,confirmado,exacto,"regla + ATC de la AIFA (D01AC01, G01AF02) igual al de la AEMPS/CIMA para «clotrimazol»",22,clotrimazolo
+dorzolamide,dorzolamida,confirmado,exacto,regla + ATC de la AIFA (S01EC03) igual al de la AEMPS/CIMA para «dorzolamida»,22,dorzolamide cloridrato | dorzolamide
+lacosamide,lacosamida,confirmado,exacto,regla + ATC de la AIFA (N03AX18) igual al de la AEMPS/CIMA para «lacosamida»,22,lacosamide
+travoprost,travoprost,confirmado,exacto,regla + ATC de la AIFA (S01EE04) igual al de la AEMPS/CIMA para «travoprost»,22,travoprost
+lamivudina,lamivudina,confirmado,exacto,regla + ATC de la AIFA (J05AF05) igual al de la AEMPS/CIMA para «lamivudina»,21,lamivudina
+lisinopril,lisinopril,confirmado,exacto,regla + ATC de la AIFA (C09AA03) igual al de la AEMPS/CIMA para «lisinopril»,21,lisinopril | lisinopril diidrato
+sertralina,sertralina,confirmado,exacto,regla + ATC de la AIFA (N06AB06) igual al de la AEMPS/CIMA para «sertralina»,21,sertralina cloridrato | sertralina
+tobramicina,tobramicina,confirmado,exacto,"regla + ATC de la AIFA (J01GB01, S01AA12) igual al de la AEMPS/CIMA para «tobramicina»",21,tobramicina
+azelastina,azelastina,confirmado,exacto,"regla + ATC de la AIFA (R01AC03, R06AX19, S01GX07) igual al de la AEMPS/CIMA para «azelastina»",20,azelastina cloridrato | azelastina
+clopidogrel,clopidogrel,confirmado,exacto,regla + ATC de la AIFA (B01AC04) igual al de la AEMPS/CIMA para «clopidogrel»,20,clopidogrel besilato | clopidogrel
+duloxetina,duloxetina,confirmado,exacto,regla + ATC de la AIFA (N06AX21) igual al de la AEMPS/CIMA para «duloxetina»,20,duloxetina cloridrato | duloxetina
+linagliptin,linagliptina,confirmado,exacto,ATC + ATC de la AIFA (A10BH05) igual al de la AEMPS/CIMA para «linagliptina»,20,linagliptin
+miconazolo,miconazol,confirmado,exacto,"regla + ATC de la AIFA (A01AB09, D01AC02, G01AF04, J02AB01) igual al de la AEMPS/CIMA para «miconazol»",20,miconazolo nitrato | miconazolo
+naproxene,naproxeno,confirmado,exacto,"regla + ATC de la AIFA (M01AE02, M02AA12) igual al de la AEMPS/CIMA para «naproxeno»",20,naproxene | naproxene sodico
+nitroglicerina,nitroglicerina,confirmado,exacto,"regla + Wikidata (Q162867, nombre italiano «nitroglicerina»): el mismo elemento tiene el nombre español «nitroglicerina»",20,nitroglicerina
+zolpidem,zolpidem,confirmado,exacto,regla + ATC de la AIFA (N05CF02) igual al de la AEMPS/CIMA para «zolpidem»,20,zolpidem tartrato
+anastrozolo,anastrozol,confirmado,exacto,regla + ATC de la AIFA (L02BG03) igual al de la AEMPS/CIMA para «anastrozol»,19,anastrozolo
+benzidamina,bencidamina,confirmado,exacto,"ATC + ATC de la AIFA (A01AD02, G02CC03, M02AA05, R02AX03) igual al de la AEMPS/CIMA para «bencidamina»",19,benzidamina cloridrato | benzidamina
+ciclopirox,ciclopirox,confirmado,exacto,"regla + ATC de la AIFA (D01AE14, G01AX12) igual al de la AEMPS/CIMA para «ciclopirox»",19,ciclopirox sale di olamina | ciclopirox
+diltiazem,diltiazem,confirmado,exacto,regla + ATC de la AIFA (C08DB01) igual al de la AEMPS/CIMA para «diltiazem»,19,diltiazem cloridrato
+fluoxetina,fluoxetina,confirmado,exacto,regla + ATC de la AIFA (N06AB03) igual al de la AEMPS/CIMA para «fluoxetina»,19,fluoxetina cloridrato | fluoxetina
+gliclazide,gliclazida,confirmado,exacto,regla + ATC de la AIFA (A10BB09) igual al de la AEMPS/CIMA para «gliclazida»,19,gliclazide
+mirtazapina,mirtazapina,confirmado,exacto,regla + ATC de la AIFA (N06AX11) igual al de la AEMPS/CIMA para «mirtazapina»,19,mirtazapina
+pantoprazolo,pantoprazol,confirmado,exacto,regla + ATC de la AIFA (A02BC02) igual al de la AEMPS/CIMA para «pantoprazol»,19,pantoprazolo
+salbutamolo,salbutamol,confirmado,exacto,"regla + ATC de la AIFA (R03AC02, R03CC02) igual al de la AEMPS/CIMA para «salbutamol»",19,salbutamolo solfato | salbutamolo
+apremilast,apremilast,confirmado,exacto,regla + ATC de la AIFA (L04AA32) igual al de la AEMPS/CIMA para «apremilast»,18,apremilast
+carvedilolo,carvedilol,confirmado,exacto,regla + ATC de la AIFA (C07AG02) igual al de la AEMPS/CIMA para «carvedilol»,18,carvedilolo
+dexketoprofene,dexketoprofeno,confirmado,exacto,regla + ATC de la AIFA (M01AE17) igual al de la AEMPS/CIMA para «dexketoprofeno»,18,dexketoprofene trometamolo | dexketoprofene sale di trometamolo
+estradiolo,estradiol,confirmado,exacto,regla + ATC de la AIFA (G03CA03) igual al de la AEMPS/CIMA para «estradiol»,18,estradiolo | estradiolo emiidrato
+fentanil,fentanilo,confirmado,exacto,ATC + ATC de la AIFA (N02AB03) igual al de la AEMPS/CIMA para «fentanilo»,18,fentanil | fentanil citrato
+fenticonazolo,fenticonazol,confirmado,exacto,"regla + ATC de la AIFA (D01AC12, G01AF12) igual al de la AEMPS/CIMA para «fenticonazol»",18,fenticonazolo nitrato
+ketotifene,ketotifeno,confirmado,exacto,"regla + ATC de la AIFA (R06AX17, S01GX08) igual al de la AEMPS/CIMA para «ketotifeno»",18,ketotifene
+levodopa,levodopa,confirmado,exacto,regla + ATC de la AIFA (N04BA01) igual al de la AEMPS/CIMA para «levodopa»,18,levodopa
+neomicina,neomicina,confirmado,exacto,"regla + Wikidata (Q423098, nombre italiano «neomicina»): mismo ATC que la AEMPS/CIMA (A01AB08, A07AA01, B05CA09, D06AX04, J01GB05, R02AB01, S01AA03, S02AA07, S03AA01)",18,neomicina | neomicina solfato
+piroxicam,piroxicam,confirmado,exacto,"regla + ATC de la AIFA (M01AC01, M02AA07, S01BC06) igual al de la AEMPS/CIMA para «piroxicam»",18,piroxicam
+solifenacina,solifenacina,confirmado,exacto,regla + ATC de la AIFA (G04BD08) igual al de la AEMPS/CIMA para «solifenacina»,18,solifenacina succinato
+abiraterone acetato,abiraterona,confirmado,base,éster + ATC de la AIFA (L02BX03) igual al de la AEMPS/CIMA para «abiraterona»,17,abiraterone acetato
+alfuzosina,alfuzosina,confirmado,exacto,regla + ATC de la AIFA (G04CA01) igual al de la AEMPS/CIMA para «alfuzosina»,17,alfuzosina cloridrato
+celecoxib,celecoxib,confirmado,exacto,regla + ATC de la AIFA (M01AH01) igual al de la AEMPS/CIMA para «celecoxib»,17,celecoxib
+codeina,codeína,confirmado,exacto,"regla + Wikidata (Q174723, nombre italiano «codeina»): mismo ATC que la AEMPS/CIMA (R05DA04)",17,codeina bromidrato | codeina fosfato
+donepezil,donepezilo,confirmado,exacto,ATC + ATC de la AIFA (N06DA02) igual al de la AEMPS/CIMA para «donepezilo»,17,donepezil cloridrato
+esomeprazolo,esomeprazol,confirmado,exacto,regla + ATC de la AIFA (A02BC05) igual al de la AEMPS/CIMA para «esomeprazol»,17,esomeprazolo | esomeprazolo sodico
+febuxostat,febuxostat,confirmado,exacto,regla + ATC de la AIFA (M04AA03) igual al de la AEMPS/CIMA para «febuxostat»,17,febuxostat
+levonorgestrel,levonorgestrel,confirmado,exacto,regla + ATC de la AIFA (G03AD01) igual al de la AEMPS/CIMA para «levonorgestrel»,17,levonorgestrel
+memantina,memantina,confirmado,exacto,regla + ATC de la AIFA (N06DX01) igual al de la AEMPS/CIMA para «memantina»,17,memantina cloridrato
+pramipexolo,pramipexol,confirmado,exacto,regla + ATC de la AIFA (N04BC05) igual al de la AEMPS/CIMA para «pramipexol»,17,pramipexolo dicloridrato monoidrato | pramipexolo
+brimonidina,brimonidina,confirmado,exacto,"regla + ATC de la AIFA (D11AX21, S01EA05, S01GA07) igual al de la AEMPS/CIMA para «brimonidina»",16,brimonidina tartrato
+brinzolamide,brinzolamida,confirmado,exacto,regla + ATC de la AIFA (S01EC04) igual al de la AEMPS/CIMA para «brinzolamida»,16,brinzolamide
+clorexidina,clorhexidina,confirmado,exacto,"ATC + ATC de la AIFA (A01AB03, D08AC02) igual al de la AEMPS/CIMA para «clorhexidina»",16,clorexidina gluconato | clorexidina
+emtricitabina,emtricitabina,confirmado,exacto,regla + ATC de la AIFA (J05AF09) igual al de la AEMPS/CIMA para «emtricitabina»,16,emtricitabina
+etoricoxib,etoricoxib,confirmado,exacto,regla + ATC de la AIFA (M01AH05) igual al de la AEMPS/CIMA para «etoricoxib»,16,etoricoxib
+fosfomicina,fosfomicina,confirmado,exacto,regla + ATC de la AIFA (J01XX01) igual al de la AEMPS/CIMA para «fosfomicina»,16,fosfomicina trometamolo | fosfomicina
+levodropropizina,levodropropizina,confirmado,exacto,regla + ATC de la AIFA (R05DB27) igual al de la AEMPS/CIMA para «levodropropizina»,16,levodropropizina
+metronidazolo,metronidazol,confirmado,exacto,"regla + ATC de la AIFA (D06BX01, G01AF01, P01AB01) igual al de la AEMPS/CIMA para «metronidazol»",16,metronidazolo
+nafazolina,nafazolina,confirmado,exacto,"regla + ATC de la AIFA (R01AA08, S01GA01) igual al de la AEMPS/CIMA para «nafazolina»",16,nafazolina nitrato | nafazolina
+naloxone,naloxona,confirmado,exacto,regla + ATC de la AIFA (V03AB15) igual al de la AEMPS/CIMA para «naloxona»,16,naloxone cloridrato | naloxone cloridrato diidrato
+acido folico,ácido fólico,confirmado,exacto,regla + ATC de la AIFA (B03BB01) igual al de la AEMPS/CIMA para «ácido fólico»,15,acido folico
+calcio carbonato,calcio carbonato,confirmado,exacto,regla + ATC de la AIFA (A12AA04) igual al de la AEMPS/CIMA para «calcio carbonato»,15,calcio carbonato
+fenofibrato,fenofibrato,confirmado,exacto,regla + ATC de la AIFA (C10AB05) igual al de la AEMPS/CIMA para «fenofibrato»,15,fenofibrato
+furosemide,furosemida,confirmado,exacto,regla + ATC de la AIFA (C03CA01) igual al de la AEMPS/CIMA para «furosemida»,15,furosemide
+loperamide,loperamida,confirmado,exacto,regla + ATC de la AIFA (A07DA03) igual al de la AEMPS/CIMA para «loperamida»,15,loperamide cloridrato | loperamide
+melatonina,melatonina,confirmado,exacto,regla + ATC de la AIFA (N05CH01) igual al de la AEMPS/CIMA para «melatonina»,15,melatonina
+nifedipina,nifedipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA05) igual al de la AEMPS/CIMA para «nifedipino»,15,nifedipina
+pioglitazone,pioglitazona,confirmado,exacto,regla + ATC de la AIFA (A10BG03) igual al de la AEMPS/CIMA para «pioglitazona»,15,pioglitazone | pioglitazone cloridrato
+prednisone,prednisona,confirmado,exacto,regla + ATC de la AIFA (H02AB07) igual al de la AEMPS/CIMA para «prednisona»,15,prednisone
+rasagilina,rasagilina,confirmado,exacto,regla + ATC de la AIFA (N04BD02) igual al de la AEMPS/CIMA para «rasagilina»,15,rasagilina mesilato | rasagilina
+vardenafil,vardenafilo,confirmado,exacto,ATC + ATC de la AIFA (G04BE09) igual al de la AEMPS/CIMA para «vardenafilo»,15,vardenafil | vardenafil cloridrato triidrato
+venlafaxina,venlafaxina,confirmado,exacto,regla + ATC de la AIFA (N06AX16) igual al de la AEMPS/CIMA para «venlafaxina»,15,venlafaxina | venlafaxina cloridrato
+alfacalcidolo,alfacalcidol,confirmado,exacto,regla + ATC de la AIFA (A11CC03) igual al de la AEMPS/CIMA para «alfacalcidol»,14,alfacalcidolo
+beclometasone,beclometasona,confirmado,exacto,"regla + ATC de la AIFA (R01AD01, R03BA01) igual al de la AEMPS/CIMA para «beclometasona»",14,beclometasone
+bicalutamide,bicalutamida,confirmado,exacto,regla + ATC de la AIFA (L02BB03) igual al de la AEMPS/CIMA para «bicalutamida»,14,bicalutamide
+buprenorfina,buprenorfina,confirmado,exacto,"regla + ATC de la AIFA (N02AE01, N07BC01) igual al de la AEMPS/CIMA para «buprenorfina»",14,buprenorfina cloridrato | buprenorfina
+caffeina,cafeína,confirmado,exacto,"regla + Wikidata (Q60235, nombre italiano «caffeina»): mismo ATC que la AEMPS/CIMA (N06BC01)",14,caffeina
+cefixima,cefixima,confirmado,exacto,regla + ATC de la AIFA (J01DD08) igual al de la AEMPS/CIMA para «cefixima»,14,cefixima
+exemestano,exemestano,confirmado,exacto,regla + ATC de la AIFA (L02BG06) igual al de la AEMPS/CIMA para «exemestano»,14,exemestano
+manidipina,manidipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA11) igual al de la AEMPS/CIMA para «manidipino»,14,manidipina cloridrato
+pravastatina sodica,pravastatina,confirmado,exacto,ATC + ATC de la AIFA (C10AA03) igual al de la AEMPS/CIMA para «pravastatina»,14,pravastatina sodica
+repaglinide,repaglinida,confirmado,exacto,regla + ATC de la AIFA (A10BX02) igual al de la AEMPS/CIMA para «repaglinida»,14,repaglinide
+rivastigmina,rivastigmina,confirmado,exacto,regla + ATC de la AIFA (N06DA03) igual al de la AEMPS/CIMA para «rivastigmina»,14,rivastigmina
+acido salicilico,ácido salicílico,confirmado,exacto,regla + ATC de la AIFA (S01BC08) igual al de la AEMPS/CIMA para «ácido salicílico»,13,acido salicilico
+candesartan,candesartán,confirmado,exacto,regla + ATC de la AIFA (C09CA06) igual al de la AEMPS/CIMA para «candesartán»,13,candesartan
+dapagliflozin,dapagliflozina,confirmado,exacto,ATC + ATC de la AIFA (A10BK01) igual al de la AEMPS/CIMA para «dapagliflozina»,13,dapagliflozin
+deferasirox,deferasirox,confirmado,exacto,regla + ATC de la AIFA (V03AC03) igual al de la AEMPS/CIMA para «deferasirox»,13,deferasirox
+desogestrel,desogestrel,confirmado,exacto,regla + ATC de la AIFA (G03AC09) igual al de la AEMPS/CIMA para «desogestrel»,13,desogestrel
+domperidone,domperidona,confirmado,exacto,regla + ATC de la AIFA (A03FA03) igual al de la AEMPS/CIMA para «domperidona»,13,domperidone
+ebastina,ebastina,confirmado,exacto,regla + ATC de la AIFA (R06AX22) igual al de la AEMPS/CIMA para «ebastina»,13,ebastina
+fenilefrina,fenilefrina,confirmado,exacto,regla + ATC de la AIFA (R01AA04) igual al de la AEMPS/CIMA para «fenilefrina»,13,fenilefrina cloridrato | fenilefrina
+gabapentina,gabapentina,confirmado,exacto,regla + ATC de la AIFA (N02BF01) igual al de la AEMPS/CIMA para «gabapentina»,13,gabapentina
+ranolazina,ranolazina,confirmado,exacto,regla + ATC de la AIFA (C01EB18) igual al de la AEMPS/CIMA para «ranolazina»,13,ranolazina
+rizatriptan,rizatriptán,confirmado,exacto,regla + ATC de la AIFA (N02CC04) igual al de la AEMPS/CIMA para «rizatriptán»,13,rizatriptan benzoato | rizatriptan
+silodosina,silodosina,confirmado,exacto,regla + ATC de la AIFA (G04CA04) igual al de la AEMPS/CIMA para «silodosina»,13,silodosina
+tapentadolo,tapentadol,confirmado,exacto,regla + ATC de la AIFA (N02AX06) igual al de la AEMPS/CIMA para «tapentadol»,13,tapentadolo cloridrato | tapentadolo
+betaistina,betahistina,confirmado,exacto,ATC + ATC de la AIFA (N07CA01) igual al de la AEMPS/CIMA para «betahistina»,12,betaistina dicloridrato | betaistina cloridrato
+carbidopa,carbidopa,confirmado,exacto,"regla + Wikidata (Q414225, nombre italiano «carbidopa»): el mismo elemento tiene el nombre español «carbidopa»",12,carbidopa | carbidopa monoidrato
+clindamicina,clindamicina,confirmado,exacto,"regla + ATC de la AIFA (D10AF01, G01AA10, J01FF01) igual al de la AEMPS/CIMA para «clindamicina»",12,clindamicina cloridrato | clindamicina fosfato
+enzalutamide,enzalutamida,confirmado,exacto,regla + ATC de la AIFA (L02BB04) igual al de la AEMPS/CIMA para «enzalutamida»,12,enzalutamide
+gestodene,gestodeno,confirmado,exacto,"regla + Wikidata (Q408289, nombre italiano «gestodene»): el mismo elemento tiene el nombre español «gestodeno»",12,gestodene
+indacaterolo,indacaterol,confirmado,base,éster + ATC de la AIFA (R03AC18) igual al de la AEMPS/CIMA para «indacaterol»,12,indacaterolo | indacaterolo acetato
+ivabradina,ivabradina,confirmado,exacto,regla + ATC de la AIFA (C01EB17) igual al de la AEMPS/CIMA para «ivabradina»,12,ivabradina cloridrato | ivabradina
+micofenolato mofetile,ácido micofenólico,confirmado,base,éster + ATC de la AIFA (L04AA06) igual al de la AEMPS/CIMA para «ácido micofenólico»,12,micofenolato mofetile
+sumatriptan,sumatriptán,confirmado,exacto,regla + ATC de la AIFA (N02CC01) igual al de la AEMPS/CIMA para «sumatriptán»,12,sumatriptan succinato | sumatriptan
+ticlopidina,ticlopidina,confirmado,exacto,regla + ATC de la AIFA (B01AC05) igual al de la AEMPS/CIMA para «ticlopidina»,12,ticlopidina cloridrato
+aceclofenac,aceclofenaco,confirmado,exacto,"ATC + ATC de la AIFA (M01AB16, M02AA25) igual al de la AEMPS/CIMA para «aceclofenaco»",11,aceclofenac
+cinnarizina,cinarizina,confirmado,exacto,ATC + ATC de la AIFA (N07CA02) igual al de la AEMPS/CIMA para «cinarizina»,11,cinnarizina
+cloramfenicolo,cloranfenicol,confirmado,exacto,"ATC + ATC de la AIFA (G01AA05, S01AA01) igual al de la AEMPS/CIMA para «cloranfenicol»",11,cloramfenicolo
+clorfenamina,clorfenamina,confirmado,exacto,"regla + Wikidata (Q420133, nombre italiano «clorfenamina»): mismo ATC que la AEMPS/CIMA (R06AB04)",11,clorfenamina maleato | clorfenamina
+clortalidone,clortalidona,confirmado,exacto,regla + ATC de la AIFA (C03BA04) igual al de la AEMPS/CIMA para «clortalidona»,11,clortalidone
+idrocortisone,hidrocortisona,confirmado,exacto,"regla + ATC de la AIFA (D07AA02, H02AB09) igual al de la AEMPS/CIMA para «hidrocortisona»",11,idrocortisone
+levosulpiride,levosulpirida,confirmado,exacto,regla + ATC de la AIFA (N05AL07) igual al de la AEMPS/CIMA para «levosulpirida»,11,levosulpiride
+minoxidil,minoxidil,confirmado,exacto,"regla + ATC de la AIFA (C02DC01, D11AX01) igual al de la AEMPS/CIMA para «minoxidil»",11,minoxidil
+moxifloxacina,moxifloxacino,confirmado,exacto,"ATC + ATC de la AIFA (J01MA14, S01AE07) igual al de la AEMPS/CIMA para «moxifloxacino»",11,moxifloxacina | moxifloxacina cloridrato
+ossicodone,oxicodona,confirmado,exacto,regla + ATC de la AIFA (N02AA05) igual al de la AEMPS/CIMA para «oxicodona»,11,ossicodone cloridrato
+rabeprazolo,rabeprazol,confirmado,exacto,regla + ATC de la AIFA (A02BC04) igual al de la AEMPS/CIMA para «rabeprazol»,11,rabeprazolo sodico | rabeprazolo sodico monoidrato
+risperidone,risperidona,confirmado,exacto,regla + ATC de la AIFA (N05AX08) igual al de la AEMPS/CIMA para «risperidona»,11,risperidone
+terbinafina,terbinafina,confirmado,exacto,"regla + ATC de la AIFA (D01AE15, D01BA02) igual al de la AEMPS/CIMA para «terbinafina»",11,terbinafina cloridrato | terbinafina
+abacavir,abacavir,confirmado,exacto,regla + ATC de la AIFA (J05AF06) igual al de la AEMPS/CIMA para «abacavir»,10,abacavir solfato | abacavir
+amisulpride,amisulprida,confirmado,exacto,regla + ATC de la AIFA (N05AL05) igual al de la AEMPS/CIMA para «amisulprida»,10,amisulpride
+brivaracetam,brivaracetam,confirmado,exacto,regla + ATC de la AIFA (N03AX23) igual al de la AEMPS/CIMA para «brivaracetam»,10,brivaracetam
+dasatinib,dasatinib,confirmado,exacto,"regla + ATC de la AIFA (L01EA02, L01XE06) igual al de la AEMPS/CIMA para «dasatinib»",10,dasatinib | dasatinib monoidrato
+dimenidrinato,dimenhidrinato,confirmado,exacto,"ATC + ATC de la AIFA (R06AA02, R06AA11) igual al de la AEMPS/CIMA para «dimenhidrinato»",10,dimenidrinato
+everolimus,everolimus,confirmado,exacto,"regla + ATC de la AIFA (L01EG02, L01XE10, L04AH02) igual al de la AEMPS/CIMA para «everolimus»",10,everolimus
+itraconazolo,itraconazol,confirmado,exacto,regla + ATC de la AIFA (J02AC02) igual al de la AEMPS/CIMA para «itraconazol»,10,itraconazolo
+ketorolac,ketorolaco,confirmado,exacto,"ATC + ATC de la AIFA (M01AB15, S01BC05) igual al de la AEMPS/CIMA para «ketorolaco»",10,ketorolac trometamolo | ketorolac trometamina
+levocetirizina,levocetirizina,confirmado,exacto,regla + ATC de la AIFA (R06AE09) igual al de la AEMPS/CIMA para «levocetirizina»,10,levocetirizina dicloridrato
+magaldrato,magaldrato,confirmado,exacto,regla + ATC de la AIFA (A02AD02) igual al de la AEMPS/CIMA para «magaldrato»,10,magaldrato
+metoprololo,metoprolol,confirmado,exacto,regla + ATC de la AIFA (C07AB02) igual al de la AEMPS/CIMA para «metoprolol»,10,metoprololo tartrato | metoprololo
+pazopanib,pazopanib,confirmado,exacto,"regla + ATC de la AIFA (L01EX03, L01XE11) igual al de la AEMPS/CIMA para «pazopanib»",10,pazopanib | pazopanib cloridrato
+prometazina,prometazina,confirmado,exacto,"regla + ATC de la AIFA (D04AA10, R06AD02) igual al de la AEMPS/CIMA para «prometazina»",10,prometazina | prometazina cloridrato
+ropinirolo,ropinirol,confirmado,exacto,regla + ATC de la AIFA (N04BC04) igual al de la AEMPS/CIMA para «ropinirol»,10,ropinirolo | ropinirolo cloridrato
+sevelamer,sevelámero,confirmado,exacto,ATC + ATC de la AIFA (V03AE02) igual al de la AEMPS/CIMA para «sevelámero»,10,sevelamer
+tacrolimus,tacrolimus,confirmado,exacto,"regla + ATC de la AIFA (D11AH01, L04AD02) igual al de la AEMPS/CIMA para «tacrolimus»",10,tacrolimus monoidrato | tacrolimus
+terazosina,terazosina,confirmado,exacto,regla + ATC de la AIFA (G04CA03) igual al de la AEMPS/CIMA para «terazosina»,10,terazosina cloridrato | terazosina
+abiraterone,abiraterona,confirmado,exacto,regla + ATC de la AIFA (L02BX03) igual al de la AEMPS/CIMA para «abiraterona»,9,abiraterone
+adapalene,adapaleno,confirmado,exacto,regla + ATC de la AIFA (D10AD03) igual al de la AEMPS/CIMA para «adapaleno»,9,adapalene
+allopurinolo,alopurinol,confirmado,exacto,regla + ATC de la AIFA (M04AA01) igual al de la AEMPS/CIMA para «alopurinol»,9,allopurinolo
+amiodarone,amiodarona,confirmado,exacto,regla + ATC de la AIFA (C01BD01) igual al de la AEMPS/CIMA para «amiodarona»,9,amiodarone cloridrato | amiodarone
+amitriptilina,amitriptilina,confirmado,exacto,regla + ATC de la AIFA (N06AA09) igual al de la AEMPS/CIMA para «amitriptilina»,9,amitriptilina cloridrato | amitriptilina
+bromfenac,bromfenaco,confirmado,exacto,ATC + ATC de la AIFA (S01BC11) igual al de la AEMPS/CIMA para «bromfenaco»,9,bromfenac | bromfenac sodico
+bupropione,bupropión,confirmado,exacto,ATC + ATC de la AIFA (N06AX12) igual al de la AEMPS/CIMA para «bupropión»,9,bupropione cloridrato | bupropione
+ciclosporina,ciclosporina,confirmado,exacto,"regla + ATC de la AIFA (L04AD01, S01XA18) igual al de la AEMPS/CIMA para «ciclosporina»",9,ciclosporina
+deflazacort,deflazacort,confirmado,exacto,regla + ATC de la AIFA (H02AB13) igual al de la AEMPS/CIMA para «deflazacort»,9,deflazacort
+desmopressina,desmopresina,confirmado,exacto,ATC + ATC de la AIFA (H01BA02) igual al de la AEMPS/CIMA para «desmopresina»,9,desmopressina acetato | desmopressina acetato idrato
+diflucortolone valerato,diflucortolona,confirmado,base,éster + ATC de la AIFA (D07AC06) igual al de la AEMPS/CIMA para «diflucortolona»,9,diflucortolone valerato
+flecainide,flecainida,confirmado,base,éster + ATC de la AIFA (C01BC04) igual al de la AEMPS/CIMA para «flecainida»,9,flecainide acetato
+idrocortisone acetato,hidrocortisona,confirmado,base,éster + ATC de la AIFA (D07AA02) igual al de la AEMPS/CIMA para «hidrocortisona»,9,idrocortisone acetato
+isotretinoina,isotretinoína,confirmado,exacto,"regla + ATC de la AIFA (D10AD04, D10BA01) igual al de la AEMPS/CIMA para «isotretinoína»",9,isotretinoina
+lacidipina,lacidipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA09) igual al de la AEMPS/CIMA para «lacidipino»,9,lacidipina
+nimodipina,nimodipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA06) igual al de la AEMPS/CIMA para «nimodipino»,9,nimodipina
+perampanel,perampanel,confirmado,exacto,regla + ATC de la AIFA (N03AX22) igual al de la AEMPS/CIMA para «perampanel»,9,perampanel
+piridossina,piridoxina,confirmado,exacto,regla + ATC de la AIFA (A11HA02) igual al de la AEMPS/CIMA para «piridoxina»,9,piridossina cloridrato | piridossina
+triazolam,triazolam,confirmado,exacto,regla + ATC de la AIFA (N05CD05) igual al de la AEMPS/CIMA para «triazolam»,9,triazolam
+xilometazolina,xilometazolina,confirmado,exacto,regla + ATC de la AIFA (R01AA07) igual al de la AEMPS/CIMA para «xilometazolina»,9,xilometazolina cloridrato | xilometazolina
+zolmitriptan,zolmitriptán,confirmado,exacto,regla + ATC de la AIFA (N02CC03) igual al de la AEMPS/CIMA para «zolmitriptán»,9,zolmitriptan
+amorolfina,amorolfina,confirmado,exacto,regla + ATC de la AIFA (D01AE16) igual al de la AEMPS/CIMA para «amorolfina»,8,amorolfina cloridrato | amorolfina
+bisacodile,bisacodilo,confirmado,exacto,regla + ATC de la AIFA (A06AB02) igual al de la AEMPS/CIMA para «bisacodilo»,8,bisacodile
+bromexina,bromhexina,confirmado,exacto,ATC + ATC de la AIFA (R05CB02) igual al de la AEMPS/CIMA para «bromhexina»,8,bromexina cloridrato | bromexina
+capecitabina,capecitabina,confirmado,exacto,regla + ATC de la AIFA (L01BC06) igual al de la AEMPS/CIMA para «capecitabina»,8,capecitabina
+clozapina,clozapina,confirmado,exacto,regla + ATC de la AIFA (N05AH02) igual al de la AEMPS/CIMA para «clozapina»,8,clozapina
+edoxaban,edoxabán,confirmado,exacto,regla + ATC de la AIFA (B01AF03) igual al de la AEMPS/CIMA para «edoxabán»,8,edoxaban | edoxaban tosilato
+escina,escina,confirmado,exacto,"regla + Wikidata (Q381866, Q72289699, nombre italiano «escina»): el mismo elemento tiene el nombre español «escina»",8,escina
+fexofenadina,fexofenadina,confirmado,exacto,regla + ATC de la AIFA (R06AX26) igual al de la AEMPS/CIMA para «fexofenadina»,8,fexofenadina cloridrato
+fosinopril,fosinopril,confirmado,exacto,regla + ATC de la AIFA (C09AA09) igual al de la AEMPS/CIMA para «fosinopril»,8,fosinopril sodico
+imatinib,imatinib,confirmado,exacto,regla + ATC de la AIFA (L01EA01) igual al de la AEMPS/CIMA para «imatinib»,8,imatinib | imatinib mesilato
+lamotrigina,lamotrigina,confirmado,exacto,regla + ATC de la AIFA (N03AX09) igual al de la AEMPS/CIMA para «lamotrigina»,8,lamotrigina
+rifaximina,rifaximina,confirmado,exacto,regla + ATC de la AIFA (A07AA11) igual al de la AEMPS/CIMA para «rifaximina»,8,rifaximina
+ritonavir,ritonavir,confirmado,exacto,regla + ATC de la AIFA (J05AE03) igual al de la AEMPS/CIMA para «ritonavir»,8,ritonavir
+rupatadina,rupatadina,confirmado,exacto,regla + ATC de la AIFA (R06AX28) igual al de la AEMPS/CIMA para «rupatadina»,8,rupatadina fumarato
+spironolattone,espironolactona,confirmado,exacto,ATC + ATC de la AIFA (C03DA01) igual al de la AEMPS/CIMA para «espironolactona»,8,spironolattone
+sunitinib,sunitinib,confirmado,exacto,regla + ATC de la AIFA (L01EX01) igual al de la AEMPS/CIMA para «sunitinib»,8,sunitinib malato | sunitinib
+tenofovir alafenamide,tenofovir alafenamida,confirmado,exacto,regla + ATC de la AIFA (J05AF13) igual al de la AEMPS/CIMA para «tenofovir alafenamida»,8,tenofovir alafenamide
+topiramato,topiramato,confirmado,exacto,regla + ATC de la AIFA (N03AX11) igual al de la AEMPS/CIMA para «topiramato»,8,topiramato
+torasemide,torasemida,confirmado,exacto,regla + ATC de la AIFA (C03CA04) igual al de la AEMPS/CIMA para «torasemida»,8,torasemide
+acido ibandronico,ácido ibandrónico,confirmado,exacto,regla + ATC de la AIFA (M05BA06) igual al de la AEMPS/CIMA para «ácido ibandrónico»,7,acido ibandronico
+benzocaina,benzocaína,confirmado,exacto,"regla + Wikidata (Q422745, nombre italiano «benzocaina»): mismo ATC que la AEMPS/CIMA (C05AD03, D04AB04, N01BA05, R02AD01)",7,benzocaina
+calcipotriolo,calcipotriol,confirmado,exacto,regla + ATC de la AIFA (D05AX02) igual al de la AEMPS/CIMA para «calcipotriol»,7,calcipotriolo | calcipotriolo idrato
+cianocobalamina,cianocobalamina,confirmado,exacto,regla + ATC de la AIFA (B03BA01) igual al de la AEMPS/CIMA para «cianocobalamina»,7,cianocobalamina
+clobetasolo propionato,clobetasol,confirmado,base,éster + ATC de la AIFA (D07AD01) igual al de la AEMPS/CIMA para «clobetasol»,7,clobetasolo propionato
+darunavir,darunavir,confirmado,exacto,regla + ATC de la AIFA (J05AE10) igual al de la AEMPS/CIMA para «darunavir»,7,darunavir
+eletriptan,eletriptán,confirmado,exacto,regla + ATC de la AIFA (N02CC06) igual al de la AEMPS/CIMA para «eletriptán»,7,eletriptan | eletriptan bromidrato
+entacapone,entacapona,confirmado,exacto,regla + ATC de la AIFA (N04BX02) igual al de la AEMPS/CIMA para «entacapona»,7,entacapone
+estradiolo valerato,estradiol,confirmado,base,éster + ATC de la AIFA (G03CA03) igual al de la AEMPS/CIMA para «estradiol»,7,estradiolo valerato
+etonogestrel,etonogestrel,confirmado,exacto,"regla + Wikidata (Q3733839, nombre italiano «etonogestrel»): mismo ATC que la AEMPS/CIMA (G03AC08)",7,etonogestrel
+famciclovir,famciclovir,confirmado,exacto,regla + ATC de la AIFA (J05AB09) igual al de la AEMPS/CIMA para «famciclovir»,7,famciclovir
+felodipina,felodipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA02) igual al de la AEMPS/CIMA para «felodipino»,7,felodipina
+glicopirronio,glicopirronio,confirmado,exacto,regla + ATC de la AIFA (D11AA01) igual al de la AEMPS/CIMA para «glicopirronio»,7,glicopirronio
+lactobacillus plantarum,lactobacillus plantarum,confirmado,exacto,regla + ATC de la AIFA (G01AX14) igual al de la AEMPS/CIMA para «lactobacillus plantarum»,7,lactobacillus plantarum
+leflunomide,leflunomida,confirmado,exacto,regla + ATC de la AIFA (L04AK01) igual al de la AEMPS/CIMA para «leflunomida»,7,leflunomide
+lovastatina,lovastatina,confirmado,exacto,regla + ATC de la AIFA (C10AA02) igual al de la AEMPS/CIMA para «lovastatina»,7,lovastatina
+magnesio idrossido,magnesio hidróxido,confirmado,exacto,regla + ATC de la AIFA (A02AA04) igual al de la AEMPS/CIMA para «magnesio hidróxido»,7,magnesio idrossido
+mentolo,mentol,confirmado,exacto,"regla + Wikidata (Q407418, nombre italiano «mentolo»): el mismo elemento tiene el nombre español «mentol»",7,mentolo
+nilotinib,nilotinib,confirmado,exacto,regla + ATC de la AIFA (L01EA03) igual al de la AEMPS/CIMA para «nilotinib»,7,nilotinib | nilotinib dicloridrato diidrato
+ofloxacina,ofloxacino,confirmado,exacto,ATC + ATC de la AIFA (S01AE01) igual al de la AEMPS/CIMA para «ofloxacino»,7,ofloxacina
+progesterone,progesterona,confirmado,exacto,regla + ATC de la AIFA (G03DA04) igual al de la AEMPS/CIMA para «progesterona»,7,progesterone
+propafenone,propafenona,confirmado,exacto,regla + ATC de la AIFA (C01BC03) igual al de la AEMPS/CIMA para «propafenona»,7,propafenone cloridrato
+simeticone,simeticona,confirmado,exacto,regla + ATC de la AIFA (A03AX13) igual al de la AEMPS/CIMA para «simeticona»,7,simeticone
+sorafenib,sorafenib,confirmado,exacto,regla + ATC de la AIFA (L01EX02) igual al de la AEMPS/CIMA para «sorafenib»,7,sorafenib tosilato | sorafenib
+tafluprost,tafluprost,confirmado,exacto,regla + ATC de la AIFA (S01EE05) igual al de la AEMPS/CIMA para «tafluprost»,7,tafluprost
+tamoxifene,tamoxifeno,confirmado,exacto,regla + ATC de la AIFA (L02BA01) igual al de la AEMPS/CIMA para «tamoxifeno»,7,tamoxifene citrato | tamoxifene
+tetrizolina,tetrizolina,confirmado,exacto,regla + ATC de la AIFA (S01GA02) igual al de la AEMPS/CIMA para «tetrizolina»,7,tetrizolina cloridrato | tetrizolina
+tioconazolo,tioconazol,confirmado,exacto,regla + ATC de la AIFA (D01AC07) igual al de la AEMPS/CIMA para «tioconazol»,7,tioconazolo
+valganciclovir,valganciclovir,confirmado,exacto,regla + ATC de la AIFA (J05AB14) igual al de la AEMPS/CIMA para «valganciclovir»,7,valganciclovir | valganciclovir cloridrato
+verapamil,verapamilo,confirmado,exacto,ATC + ATC de la AIFA (C08DA01) igual al de la AEMPS/CIMA para «verapamilo»,7,verapamil cloridrato
+zidovudina,zidovudina,confirmado,exacto,regla + ATC de la AIFA (J05AF01) igual al de la AEMPS/CIMA para «zidovudina»,7,zidovudina
+betametasone dipropionato,betametasona,confirmado,base,éster + ATC de la AIFA (D07AC01) igual al de la AEMPS/CIMA para «betametasona»,6,betametasone dipropionato
+cabergolina,cabergolina,confirmado,exacto,"regla + ATC de la AIFA (G02CB03, N04BC06) igual al de la AEMPS/CIMA para «cabergolina»",6,cabergolina
+calcifediolo,calcifediol,confirmado,exacto,regla + ATC de la AIFA (A11CC06) igual al de la AEMPS/CIMA para «calcifediol»,6,calcifediolo
+calcitriolo,calcitriol,confirmado,exacto,"regla + ATC de la AIFA (A11CC04, D05AX03) igual al de la AEMPS/CIMA para «calcitriol»",6,calcitriolo
+carbamazepina,carbamazepina,confirmado,exacto,regla + ATC de la AIFA (N03AF01) igual al de la AEMPS/CIMA para «carbamazepina»,6,carbamazepina
+cefuroxima,cefuroxima,confirmado,exacto,regla + ATC de la AIFA (J01DC02) igual al de la AEMPS/CIMA para «cefuroxima»,6,cefuroxima
+dimetindene,dimetindeno,confirmado,exacto,"regla + ATC de la AIFA (D04AA13, R06AB03) igual al de la AEMPS/CIMA para «dimetindeno»",6,dimetindene maleato | dimetindene
+dolutegravir,dolutegravir,confirmado,exacto,regla + ATC de la AIFA (J05AJ03) igual al de la AEMPS/CIMA para «dolutegravir»,6,dolutegravir
+eplerenone,eplerenona,confirmado,exacto,regla + ATC de la AIFA (C03DA04) igual al de la AEMPS/CIMA para «eplerenona»,6,eplerenone
+glimepiride,glimepirida,confirmado,exacto,regla + ATC de la AIFA (A10BB12) igual al de la AEMPS/CIMA para «glimepirida»,6,glimepiride
+glucosamina,glucosamina,confirmado,exacto,"regla + Wikidata (Q327506, nombre italiano «glucosamina»): mismo ATC que la AEMPS/CIMA (M01AX05)",6,glucosamina solfato
+guaifenesina,guaifenesina,confirmado,exacto,regla + ATC de la AIFA (R05CA03) igual al de la AEMPS/CIMA para «guaifenesina»,6,guaifenesina
+indometacina,indometacina,confirmado,exacto,"regla + ATC de la AIFA (M01AB01, S01BC01) igual al de la AEMPS/CIMA para «indometacina»",6,indometacina
+ivermectina,ivermectina,confirmado,exacto,"regla + ATC de la AIFA (D11AX22, P02CF01) igual al de la AEMPS/CIMA para «ivermectina»",6,ivermectina
+ketoconazolo,ketoconazol,confirmado,exacto,regla + ATC de la AIFA (D01AC08) igual al de la AEMPS/CIMA para «ketoconazol»,6,ketoconazolo
+loratadina,loratadina,confirmado,exacto,regla + ATC de la AIFA (R06AX13) igual al de la AEMPS/CIMA para «loratadina»,6,loratadina
+metilfenidato,metilfenidato,confirmado,exacto,regla + ATC de la AIFA (N06BA04) igual al de la AEMPS/CIMA para «metilfenidato»,6,metilfenidato cloridrato | metilfenidato
+metoclopramide,metoclopramida,confirmado,exacto,regla + ATC de la AIFA (A03FA01) igual al de la AEMPS/CIMA para «metoclopramida»,6,metoclopramide cloridrato | metoclopramide
+nicotina,nicotina,confirmado,exacto,regla + ATC de la AIFA (N07BA01) igual al de la AEMPS/CIMA para «nicotina»,6,nicotina
+olopatadina,olopatadina,confirmado,exacto,regla + ATC de la AIFA (S01GX09) igual al de la AEMPS/CIMA para «olopatadina»,6,olopatadina | olopatadina cloridrato
+ondansetrone,ondansetrón,confirmado,exacto,ATC + ATC de la AIFA (A04AA01) igual al de la AEMPS/CIMA para «ondansetrón»,6,ondansetrone
+sofosbuvir,sofosbuvir,confirmado,exacto,regla + ATC de la AIFA (J05AP08) igual al de la AEMPS/CIMA para «sofosbuvir»,6,sofosbuvir
+tamsulosin,tamsulosina,confirmado,exacto,ATC + ATC de la AIFA (G04CA02) igual al de la AEMPS/CIMA para «tamsulosina»,6,tamsulosin cloridrato | tamsulosin
+tiocolchicoside,tiocolchicósido,confirmado,exacto,ATC + ATC de la AIFA (M03BX05) igual al de la AEMPS/CIMA para «tiocolchicósido»,6,tiocolchicoside
+valaciclovir,valaciclovir,confirmado,exacto,regla + ATC de la AIFA (J05AB11) igual al de la AEMPS/CIMA para «valaciclovir»,6,valaciclovir cloridrato | valaciclovir
+acarbosio,acarbosa,confirmado,exacto,ATC + ATC de la AIFA (A10BF01) igual al de la AEMPS/CIMA para «acarbosa»,5,acarbosio
+acido citrico,ácido cítrico,confirmado,exacto,"regla + Wikidata (Q159683, nombre italiano «acido citrico»): mismo ATC que la AEMPS/CIMA (A09AB04)",5,acido citrico anidro | acido citrico
+acido fusidico,ácido fusídico,confirmado,exacto,"regla + ATC de la AIFA (D06AX01, S01AA13) igual al de la AEMPS/CIMA para «ácido fusídico»",5,acido fusidico sale sodico | acido fusidico
+aloperidolo,haloperidol,confirmado,exacto,ATC + ATC de la AIFA (N05AD01) igual al de la AEMPS/CIMA para «haloperidol»,5,aloperidolo
+betametasone valerato,betametasona,confirmado,base,éster + ATC de la AIFA (D07AC01) igual al de la AEMPS/CIMA para «betametasona»,5,betametasone valerato
+bifonazolo,bifonazol,confirmado,exacto,regla + ATC de la AIFA (D01AC10) igual al de la AEMPS/CIMA para «bifonazol»,5,bifonazolo
+carteololo,carteolol,confirmado,exacto,regla + ATC de la AIFA (S01ED05) igual al de la AEMPS/CIMA para «carteolol»,5,carteololo cloridrato
+cilostazolo,cilostazol,confirmado,exacto,regla + ATC de la AIFA (B01AC23) igual al de la AEMPS/CIMA para «cilostazol»,5,cilostazolo
+condroitin sodio solfato,condroitín sulfato,confirmado,exacto,ATC + ATC de la AIFA (M01AX25) igual al de la AEMPS/CIMA para «condroitín sulfato»,5,condroitin sodio solfato
+delapril,delapril,confirmado,exacto,"regla + Wikidata (Q1164067, nombre italiano «delapril»): mismo ATC que la AEMPS/CIMA (C09AA12)",5,delapril | delapril cloridrato
+dexibuprofene,dexibuprofeno,confirmado,exacto,regla + ATC de la AIFA (M01AE14) igual al de la AEMPS/CIMA para «dexibuprofeno»,5,dexibuprofene
+efavirenz,efavirenz,confirmado,exacto,regla + ATC de la AIFA (J05AG03) igual al de la AEMPS/CIMA para «efavirenz»,5,efavirenz
+eslicarbazepina acetato,eslicarbazepina,confirmado,base,éster + ATC de la AIFA (N03AF04) igual al de la AEMPS/CIMA para «eslicarbazepina»,5,eslicarbazepina acetato
+flunarizina,flunarizina,confirmado,exacto,regla + ATC de la AIFA (N07CA03) igual al de la AEMPS/CIMA para «flunarizina»,5,flunarizina dicloridrato
+fluvastatina sodica,fluvastatina,confirmado,exacto,ATC + ATC de la AIFA (C10AA04) igual al de la AEMPS/CIMA para «fluvastatina»,5,fluvastatina sodica
+granisetron,granisetrón,confirmado,exacto,regla + ATC de la AIFA (A04AA02) igual al de la AEMPS/CIMA para «granisetrón»,5,granisetron cloridrato | granisetron
+lenvatinib,lenvatinib,confirmado,exacto,regla + ATC de la AIFA (L01EX08) igual al de la AEMPS/CIMA para «lenvatinib»,5,lenvatinib | lenvatinib mesilato
+lurasidone,lurasidona,confirmado,exacto,regla + ATC de la AIFA (N05AE05) igual al de la AEMPS/CIMA para «lurasidona»,5,lurasidone cloridrato | lurasidone
+magnesio pidolato,magnesio pidolato,confirmado,exacto,regla + ATC de la AIFA (A12CC08) igual al de la AEMPS/CIMA para «magnesio pidolato»,5,magnesio pidolato
+megestrolo acetato,megestrol,confirmado,base,éster + ATC de la AIFA (L02AB01) igual al de la AEMPS/CIMA para «megestrol»,5,megestrolo acetato
+naltrexone,naltrexona,confirmado,exacto,regla + ATC de la AIFA (N07BB04) igual al de la AEMPS/CIMA para «naltrexona»,5,naltrexone cloridrato | naltrexone
+nevirapina,nevirapina,confirmado,exacto,regla + ATC de la AIFA (J05AG01) igual al de la AEMPS/CIMA para «nevirapina»,5,nevirapina
+nintedanib,nintedanib,confirmado,exacto,"regla + ATC de la AIFA (L01EX09, L01XE31) igual al de la AEMPS/CIMA para «nintedanib»",5,nintedanib
+nistatina,nistatina,confirmado,exacto,regla + ATC de la AIFA (A07AA02) igual al de la AEMPS/CIMA para «nistatina»,5,nistatina
+oseltamivir,oseltamivir,confirmado,exacto,regla + ATC de la AIFA (J05AH02) igual al de la AEMPS/CIMA para «oseltamivir»,5,oseltamivir | oseltamivir fosfato
+oximetazolina,oximetazolina,confirmado,exacto,regla + ATC de la AIFA (R01AA05) igual al de la AEMPS/CIMA para «oximetazolina»,5,oximetazolina cloridrato
+prasugrel,prasugrel,confirmado,exacto,regla + ATC de la AIFA (B01AC22) igual al de la AEMPS/CIMA para «prasugrel»,5,prasugrel
+propifenazone,propifenazona,confirmado,exacto,"regla + Wikidata (Q425111, nombre italiano «propifenazone»): mismo ATC que la AEMPS/CIMA (N02BB04)",5,propifenazone
+quinapril,quinapril,confirmado,exacto,regla + ATC de la AIFA (C09AA06) igual al de la AEMPS/CIMA para «quinapril»,5,quinapril | quinapril cloridrato
+raltegravir,raltegravir,confirmado,exacto,regla + ATC de la AIFA (J05AJ01) igual al de la AEMPS/CIMA para «raltegravir»,5,raltegravir
+rifampicina,rifampicina,confirmado,exacto,regla + ATC de la AIFA (J04AB02) igual al de la AEMPS/CIMA para «rifampicina»,5,rifampicina
+rilpivirina,rilpivirina,confirmado,exacto,regla + ATC de la AIFA (J05AG05) igual al de la AEMPS/CIMA para «rilpivirina»,5,rilpivirina
+ruxolitinib,ruxolitinib,confirmado,exacto,"regla + ATC de la AIFA (D11AH09, L01EJ01) igual al de la AEMPS/CIMA para «ruxolitinib»",5,ruxolitinib
+scopolamina butilbromuro,butilescopolamina bromuro,confirmado,exacto,ATC + ATC de la AIFA (A03BB01) igual al de la AEMPS/CIMA para «butilescopolamina bromuro»,5,scopolamina butilbromuro
+sotalolo,sotalol,confirmado,exacto,regla + ATC de la AIFA (C07AA07) igual al de la AEMPS/CIMA para «sotalol»,5,sotalolo cloridrato
+sulfadiazina argentica,sulfadiazina argéntica,confirmado,exacto,regla + ATC de la AIFA (D06BA01) igual al de la AEMPS/CIMA para «sulfadiazina argéntica»,5,sulfadiazina argentica
+temozolomide,temozolomida,confirmado,exacto,regla + ATC de la AIFA (L01AX03) igual al de la AEMPS/CIMA para «temozolomida»,5,temozolomide
+tetraciclina,tetraciclina,confirmado,exacto,regla + ATC de la AIFA (J01AA07) igual al de la AEMPS/CIMA para «tetraciclina»,5,tetraciclina | tetraciclina cloridrato
+tiamina,tiamina,confirmado,exacto,regla + ATC de la AIFA (A11DA01) igual al de la AEMPS/CIMA para «tiamina»,5,tiamina cloridrato | tiamina nitrato
+tibolone,tibolona,confirmado,exacto,regla + ATC de la AIFA (G03CX01) igual al de la AEMPS/CIMA para «tibolona»,5,tibolone
+tolvaptan,tolvaptán,confirmado,exacto,regla + ATC de la AIFA (C03XA01) igual al de la AEMPS/CIMA para «tolvaptán»,5,tolvaptan
+tropicamide,tropicamida,confirmado,exacto,regla + ATC de la AIFA (S01FA06) igual al de la AEMPS/CIMA para «tropicamida»,5,tropicamide
+vareniclina,vareniclina,confirmado,exacto,regla + ATC de la AIFA (N07BA03) igual al de la AEMPS/CIMA para «vareniclina»,5,vareniclina tartrato
+vortioxetina,vortioxetina,confirmado,exacto,regla + ATC de la AIFA (N06AX26) igual al de la AEMPS/CIMA para «vortioxetina»,5,vortioxetina bromidrato | vortioxetina
+zopiclone,zopiclona,confirmado,exacto,regla + ATC de la AIFA (N05CF01) igual al de la AEMPS/CIMA para «zopiclona»,5,zopiclone
+acido tranexamico,ácido tranexámico,confirmado,exacto,regla + ATC de la AIFA (B02AA02) igual al de la AEMPS/CIMA para «ácido tranexámico»,4,acido tranexamico
+azatioprina,azatioprina,confirmado,exacto,regla + ATC de la AIFA (L04AX01) igual al de la AEMPS/CIMA para «azatioprina»,4,azatioprina
+benserazide,benserazida,confirmado,exacto,"regla + Wikidata (Q818165, nombre italiano «benserazide»): el mismo elemento tiene el nombre español «benserazida»",4,benserazide
+biotina,biotina,confirmado,exacto,regla + ATC de la AIFA (A11HA05) igual al de la AEMPS/CIMA para «biotina»,4,biotina
+brivudina,brivudina,confirmado,exacto,regla + ATC de la AIFA (J05AB15) igual al de la AEMPS/CIMA para «brivudina»,4,brivudina
+brotizolam,brotizolam,confirmado,exacto,regla + ATC de la AIFA (N05CD09) igual al de la AEMPS/CIMA para «brotizolam»,4,brotizolam
+captopril,captopril,confirmado,exacto,regla + ATC de la AIFA (C09AA01) igual al de la AEMPS/CIMA para «captopril»,4,captopril
+carbomer,carbomero,confirmado,exacto,ATC + ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carbomero»,4,carbomer
+ciproterone acetato,ciproterona,confirmado,base,éster + ATC de la AIFA (G03HA01) igual al de la AEMPS/CIMA para «ciproterona»,4,ciproterone acetato
+doxiciclina,doxiciclina,confirmado,exacto,regla + ATC de la AIFA (J01AA02) igual al de la AEMPS/CIMA para «doxiciclina»,4,doxiciclina cloridrato | doxiciclina
+doxilamina,doxilamina,confirmado,exacto,"regla + Wikidata (Q423390, nombre italiano «doxilamina»): mismo ATC que la AEMPS/CIMA (R06AA09)",4,doxilamina succinato | doxilamina
+empagliflozin,empagliflozina,confirmado,exacto,ATC + ATC de la AIFA (A10BK03) igual al de la AEMPS/CIMA para «empagliflozina»,4,empagliflozin
+erlotinib,erlotinib,confirmado,exacto,regla + ATC de la AIFA (L01EB02) igual al de la AEMPS/CIMA para «erlotinib»,4,erlotinib cloridrato | erlotinib
+estriolo,estriol,confirmado,exacto,regla + ATC de la AIFA (G03CA04) igual al de la AEMPS/CIMA para «estriol»,4,estriolo
+etofenamato,etofenamato,confirmado,exacto,regla + ATC de la AIFA (M02AA06) igual al de la AEMPS/CIMA para «etofenamato»,4,etofenamato
+famotidina,famotidina,confirmado,exacto,regla + ATC de la AIFA (A02BA03) igual al de la AEMPS/CIMA para «famotidina»,4,famotidina
+fluvoxamina,fluvoxamina,confirmado,exacto,regla + ATC de la AIFA (N06AB08) igual al de la AEMPS/CIMA para «fluvoxamina»,4,fluvoxamina maleato
+lattitolo,lactitol,confirmado,exacto,ATC + ATC de la AIFA (A06AD12) igual al de la AEMPS/CIMA para «lactitol»,4,lattitolo | lattitolo monoidrato
+mirabegron,mirabegrón,confirmado,exacto,regla + ATC de la AIFA (G04BD12) igual al de la AEMPS/CIMA para «mirabegrón»,4,mirabegron
+morfina,morfina,confirmado,exacto,regla + ATC de la AIFA (N02AA01) igual al de la AEMPS/CIMA para «morfina»,4,morfina solfato
+norfloxacina,norfloxacino,confirmado,exacto,"ATC + ATC de la AIFA (J01MA06, S01AE02) igual al de la AEMPS/CIMA para «norfloxacino»",4,norfloxacina
+otilonio bromuro,otilonio bromuro,confirmado,exacto,"regla + Wikidata (Q920900, nombre italiano «otilonio bromuro»): el mismo elemento tiene el nombre español «otilonio bromuro»",4,otilonio bromuro
+oxibutinina,oxibutinina,confirmado,exacto,regla + ATC de la AIFA (G04BD04) igual al de la AEMPS/CIMA para «oxibutinina»,4,oxibutinina cloridrato
+paliperidone,paliperidona,confirmado,exacto,regla + ATC de la AIFA (N05AX13) igual al de la AEMPS/CIMA para «paliperidona»,4,paliperidone
+permetrina,permetrina,confirmado,exacto,regla + ATC de la AIFA (P03AC04) igual al de la AEMPS/CIMA para «permetrina»,4,permetrina
+pilocarpina,pilocarpina,confirmado,exacto,"regla + ATC de la AIFA (N07AX01, S01EB01) igual al de la AEMPS/CIMA para «pilocarpina»",4,pilocarpina cloridrato | pilocarpina nitrato
+racecadotril,racecadotrilo,confirmado,exacto,ATC + ATC de la AIFA (A07XA04) igual al de la AEMPS/CIMA para «racecadotrilo»,4,racecadotril
+sertaconazolo,sertaconazol,confirmado,exacto,"regla + ATC de la AIFA (D01AC14, G01AF19) igual al de la AEMPS/CIMA para «sertaconazol»",4,sertaconazolo nitrato
+sulodexide,sulodexida,confirmado,exacto,regla + ATC de la AIFA (B01AB11) igual al de la AEMPS/CIMA para «sulodexida»,4,sulodexide
+testosterone,testosterona,confirmado,exacto,regla + ATC de la AIFA (G03BA03) igual al de la AEMPS/CIMA para «testosterona»,4,testosterone
+tirotricina,tirotricina,confirmado,exacto,regla + ATC de la AIFA (R02AB02) igual al de la AEMPS/CIMA para «tirotricina»,4,tirotricina
+tizanidina,tizanidina,confirmado,exacto,regla + ATC de la AIFA (M03BX02) igual al de la AEMPS/CIMA para «tizanidina»,4,tizanidina cloridrato | tizanidina
+tolterodina,tolterodina,confirmado,exacto,regla + ATC de la AIFA (G04BD07) igual al de la AEMPS/CIMA para «tolterodina»,4,tolterodina tartrato
+trazodone,trazodona,confirmado,exacto,regla + ATC de la AIFA (N06AX05) igual al de la AEMPS/CIMA para «trazodona»,4,trazodone cloridrato | trazodone
+trientina,trientina,confirmado,exacto,regla + ATC de la AIFA (A16AX12) igual al de la AEMPS/CIMA para «trientina»,4,trientina
+trimebutina,trimebutina,confirmado,exacto,regla + ATC de la AIFA (A03AA05) igual al de la AEMPS/CIMA para «trimebutina»,4,trimebutina maleato | trimebutina
+triprolidina,triprolidina,confirmado,exacto,"regla + Wikidata (Q417654, nombre italiano «triprolidina»): mismo ATC que la AEMPS/CIMA (R06AX07)",4,triprolidina cloridrato | triprolidina
+ulipristal acetato,ulipristal,confirmado,base,"éster + ATC de la AIFA (G03AD02, G03XB02) igual al de la AEMPS/CIMA para «ulipristal»",4,ulipristal acetato
+vigabatrin,vigabatrina,confirmado,exacto,ATC + ATC de la AIFA (N03AG04) igual al de la AEMPS/CIMA para «vigabatrina»,4,vigabatrin
+acido valproico,ácido valproico,confirmado,exacto,"regla + Wikidata (Q240642, nombre italiano «acido valproico»): mismo ATC que la AEMPS/CIMA (N03AG01)",3,acido valproico
+alogliptin,alogliptina,confirmado,exacto,ATC + ATC de la AIFA (A10BH04) igual al de la AEMPS/CIMA para «alogliptina»,3,alogliptin
+alpelisib,alpelisib,confirmado,exacto,regla + ATC de la AIFA (L01EM03) igual al de la AEMPS/CIMA para «alpelisib»,3,alpelisib
+anagrelide,anagrelida,confirmado,exacto,regla + ATC de la AIFA (L01XX35) igual al de la AEMPS/CIMA para «anagrelida»,3,anagrelide cloridrato
+atazanavir,atazanavir,confirmado,exacto,regla + ATC de la AIFA (J05AE08) igual al de la AEMPS/CIMA para «atazanavir»,3,atazanavir solfato
+azacitidina,azacitidina,confirmado,exacto,regla + ATC de la AIFA (L01BC07) igual al de la AEMPS/CIMA para «azacitidina»,3,azacitidina
+baclofene,baclofeno,confirmado,exacto,regla + ATC de la AIFA (M03BX01) igual al de la AEMPS/CIMA para «baclofeno»,3,baclofene
+baloxavir marboxil,baloxavir marboxil,confirmado,exacto,regla + ATC de la AIFA (J05AX25) igual al de la AEMPS/CIMA para «baloxavir marboxil»,3,baloxavir marboxil
+barnidipina,barnidipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA12) igual al de la AEMPS/CIMA para «barnidipino»,3,barnidipina cloridrato
+cabozantinib,cabozantinib,confirmado,exacto,regla + ATC de la AIFA (L01EX07) igual al de la AEMPS/CIMA para «cabozantinib»,3,cabozantinib
+cefalexina,cefalexina,confirmado,exacto,regla + ATC de la AIFA (J01DB01) igual al de la AEMPS/CIMA para «cefalexina»,3,cefalexina
+citisina,citisiniclina,confirmado,exacto,ATC + ATC de la AIFA (N07BA04) igual al de la AEMPS/CIMA para «citisiniclina»,3,citisina
+clonazepam,clonazepam,confirmado,exacto,regla + ATC de la AIFA (N03AE01) igual al de la AEMPS/CIMA para «clonazepam»,3,clonazepam
+difenidramina,difenhidramina,confirmado,exacto,ATC + ATC de la AIFA (D04AA32) igual al de la AEMPS/CIMA para «difenhidramina»,3,difenidramina cloridrato
+dronedarone,dronedarona,confirmado,exacto,regla + ATC de la AIFA (C01BD07) igual al de la AEMPS/CIMA para «dronedarona»,3,dronedarone
+ergotamina,ergotamina,confirmado,exacto,"regla + Wikidata (Q419186, nombre italiano «ergotamina»): mismo ATC que la AEMPS/CIMA (N02CA02)",3,ergotamina
+etosuccimide,etosuximida,confirmado,exacto,ATC + ATC de la AIFA (N03AD01) igual al de la AEMPS/CIMA para «etosuximida»,3,etosuccimide
+fampridina,fampridina,confirmado,exacto,regla + ATC de la AIFA (N07XX07) igual al de la AEMPS/CIMA para «fampridina»,3,fampridina
+fenobarbitale,fenobarbital,confirmado,exacto,regla + ATC de la AIFA (N03AA02) igual al de la AEMPS/CIMA para «fenobarbital»,3,fenobarbitale
+fesoterodina,fesoterodina,confirmado,exacto,regla + ATC de la AIFA (G04BD11) igual al de la AEMPS/CIMA para «fesoterodina»,3,fesoterodina | fesoterodina fumarato
+fluconazole,fluconazol,confirmado,exacto,ATC + ATC de la AIFA (J02AC01) igual al de la AEMPS/CIMA para «fluconazol»,3,fluconazole
+fluocinonide,fluocinonida,confirmado,exacto,regla + ATC de la AIFA (D07AC08) igual al de la AEMPS/CIMA para «fluocinonida»,3,fluocinonide
+fluorometolone,fluorometolona,confirmado,exacto,regla + ATC de la AIFA (S01BA07) igual al de la AEMPS/CIMA para «fluorometolona»,3,fluorometolone
+gabapentin,gabapentina,confirmado,exacto,ATC + ATC de la AIFA (N02BF01) igual al de la AEMPS/CIMA para «gabapentina»,3,gabapentin
+gemfibrozil,gemfibrozilo,confirmado,exacto,ATC + ATC de la AIFA (C10AB04) igual al de la AEMPS/CIMA para «gemfibrozilo»,3,gemfibrozil
+idrossiclorochina,hidroxicloroquina,confirmado,exacto,regla + ATC de la AIFA (P01BA02) igual al de la AEMPS/CIMA para «hidroxicloroquina»,3,idrossiclorochina solfato | idrossiclorochina
+imiquimod,imiquimod,confirmado,exacto,regla + ATC de la AIFA (D06BB10) igual al de la AEMPS/CIMA para «imiquimod»,3,imiquimod
+isoniazide,isoniazida,confirmado,exacto,regla + ATC de la AIFA (J04AC01) igual al de la AEMPS/CIMA para «isoniazida»,3,isoniazide
+lactobacillus acidophilus,lactobacillus acidophilus,confirmado,exacto,"regla + Wikidata (Q132644, nombre italiano «lactobacillus acidophilus»): el mismo elemento tiene el nombre español «lactobacillus acidophilus»",3,lactobacillus acidophilus
+levofloxacin,levofloxacino,confirmado,exacto,ATC + ATC de la AIFA (S01AE05) igual al de la AEMPS/CIMA para «levofloxacino»,3,levofloxacin
+lopinavir,lopinavir,confirmado,exacto,"regla + Wikidata (Q422585, nombre italiano «lopinavir»): el mismo elemento tiene el nombre español «lopinavir»",3,lopinavir
+maraviroc,maraviroc,confirmado,exacto,regla + ATC de la AIFA (J05AX09) igual al de la AEMPS/CIMA para «maraviroc»,3,maraviroc
+medrossiprogesterone acetato,medroxiprogesterona,confirmado,base,"éster + ATC de la AIFA (G03DA02, L02AB02) igual al de la AEMPS/CIMA para «medroxiprogesterona»",3,medrossiprogesterone acetato
+meloxicam,meloxicam,confirmado,exacto,regla + ATC de la AIFA (M01AC06) igual al de la AEMPS/CIMA para «meloxicam»,3,meloxicam
+metamizolo,metamizol,confirmado,exacto,"regla + Wikidata (Q422761, nombre italiano «metamizolo»): el mismo elemento tiene el nombre español «metamizol»",3,metamizolo sodico
+metilprednisolone,metilprednisolona,confirmado,exacto,regla + ATC de la AIFA (H02AB04) igual al de la AEMPS/CIMA para «metilprednisolona»,3,metilprednisolone
+metotrexato,metotrexato,confirmado,exacto,regla + ATC de la AIFA (L04AX03) igual al de la AEMPS/CIMA para «metotrexato»,3,metotrexato sodico | metotrexato
+midazolam,midazolam,confirmado,exacto,regla + ATC de la AIFA (N05CD08) igual al de la AEMPS/CIMA para «midazolam»,3,midazolam cloridrato | midazolam maleato
+misoprostolo,misoprostol,confirmado,exacto,regla + ATC de la AIFA (A02BB01) igual al de la AEMPS/CIMA para «misoprostol»,3,misoprostolo
+mometasone,mometasona,confirmado,exacto,regla + ATC de la AIFA (R01AD09) igual al de la AEMPS/CIMA para «mometasona»,3,mometasone
+moxonidina,moxonidina,confirmado,exacto,regla + ATC de la AIFA (C02AC05) igual al de la AEMPS/CIMA para «moxonidina»,3,moxonidina
+naprossene,naproxeno,confirmado,exacto,ATC + ATC de la AIFA (M01AE02) igual al de la AEMPS/CIMA para «naproxeno»,3,naprossene | naprossene sodico
+netilmicina,netilmicina,confirmado,exacto,regla + ATC de la AIFA (S01AA23) igual al de la AEMPS/CIMA para «netilmicina»,3,netilmicina solfato | netilmicina
+niraparib,niraparib,confirmado,exacto,regla + ATC de la AIFA (L01XK02) igual al de la AEMPS/CIMA para «niraparib»,3,niraparib
+nomegestrolo acetato,nomegestrol,confirmado,base,éster + ATC de la AIFA (G03DB04) igual al de la AEMPS/CIMA para «nomegestrol»,3,nomegestrolo acetato
+noretisterone acetato,noretisterona,confirmado,base,éster + ATC de la AIFA (G03DC02) igual al de la AEMPS/CIMA para «noretisterona»,3,noretisterone acetato
+nortriptilina,nortriptilina,confirmado,exacto,regla + ATC de la AIFA (N06AA10) igual al de la AEMPS/CIMA para «nortriptilina»,3,nortriptilina | nortriptilina cloridrato
+ofloxacin,ofloxacino,confirmado,exacto,ATC + ATC de la AIFA (S01AE01) igual al de la AEMPS/CIMA para «ofloxacino»,3,ofloxacin
+orlistat,orlistat,confirmado,exacto,regla + ATC de la AIFA (A08AB01) igual al de la AEMPS/CIMA para «orlistat»,3,orlistat
+ossibutinina,oxibutinina,confirmado,exacto,regla + ATC de la AIFA (G04BD04) igual al de la AEMPS/CIMA para «oxibutinina»,3,ossibutinina cloridrato
+oxcarbazepina,oxcarbazepina,confirmado,exacto,regla + ATC de la AIFA (N03AF02) igual al de la AEMPS/CIMA para «oxcarbazepina»,3,oxcarbazepina
+oxicodone,oxicodona,confirmado,exacto,regla + ATC de la AIFA (N02AA05) igual al de la AEMPS/CIMA para «oxicodona»,3,oxicodone cloridrato
+paraffina liquida,parafina líquida,confirmado,exacto,regla + ATC de la AIFA (A06AA01) igual al de la AEMPS/CIMA para «parafina líquida»,3,paraffina liquida
+pentosano polisolfato,pentosano polisulfato de sodio,confirmado,exacto,ATC + ATC de la AIFA (C05BA04) igual al de la AEMPS/CIMA para «pentosano polisulfato de sodio»,3,pentosano polisolfato sodico
+piracetam,piracetam,confirmado,exacto,regla + ATC de la AIFA (N06BX03) igual al de la AEMPS/CIMA para «piracetam»,3,piracetam
+prilocaina,prilocaína,confirmado,exacto,"regla + Wikidata (Q413598, nombre italiano «prilocaina»): mismo ATC que la AEMPS/CIMA (N01BB04)",3,prilocaina
+rotigotina,rotigotina,confirmado,exacto,regla + ATC de la AIFA (N04BC09) igual al de la AEMPS/CIMA para «rotigotina»,3,rotigotina
+saccharomyces boulardii,saccharomyces boulardii,confirmado,exacto,regla + ATC de la AIFA (A07FA02) igual al de la AEMPS/CIMA para «saccharomyces boulardii»,3,saccharomyces boulardii
+sirolimus,sirolimus,confirmado,exacto,regla + ATC de la AIFA (L04AH01) igual al de la AEMPS/CIMA para «sirolimus»,3,sirolimus
+tetrabenazina,tetrabenazina,confirmado,exacto,regla + ATC de la AIFA (N07XX06) igual al de la AEMPS/CIMA para «tetrabenazina»,3,tetrabenazina
+tofacitinib,tofacitinib,confirmado,exacto,regla + ATC de la AIFA (L04AF01) igual al de la AEMPS/CIMA para «tofacitinib»,3,tofacitinib
+tretinoina,tretinoína,confirmado,exacto,"regla + ATC de la AIFA (D10AD01, L01XF01) igual al de la AEMPS/CIMA para «tretinoína»",3,tretinoina
+troxerutina,troxerutina,confirmado,exacto,regla + ATC de la AIFA (C05CA04) igual al de la AEMPS/CIMA para «troxerutina»,3,troxerutina
+vancomicina,vancomicina,confirmado,exacto,"regla + ATC de la AIFA (A07AA09, J01XA01) igual al de la AEMPS/CIMA para «vancomicina»",3,vancomicina cloridrato
+zonisamide,zonisamida,confirmado,exacto,regla + ATC de la AIFA (N03AX15) igual al de la AEMPS/CIMA para «zonisamida»,3,zonisamide
+acalabrutinib,acalabrutinib,confirmado,exacto,regla + ATC de la AIFA (L01EL02) igual al de la AEMPS/CIMA para «acalabrutinib»,2,acalabrutinib
+acetazolamide,acetazolamida,confirmado,exacto,regla + ATC de la AIFA (S01EC01) igual al de la AEMPS/CIMA para «acetazolamida»,2,acetazolamide
+acido azelaico,ácido azelaico,confirmado,exacto,regla + ATC de la AIFA (D10AX03) igual al de la AEMPS/CIMA para «ácido azelaico»,2,acido azelaico
+acido bempedoico,ácido bempedoico,confirmado,exacto,regla + ATC de la AIFA (C10AX15) igual al de la AEMPS/CIMA para «ácido bempedoico»,2,acido bempedoico
+acido micofenolico,ácido micofenólico,confirmado,exacto,regla + ATC de la AIFA (L04AA06) igual al de la AEMPS/CIMA para «ácido micofenólico»,2,acido micofenolico
+acido risedronico,ácido risedrónico,confirmado,exacto,regla + ATC de la AIFA (M05BA07) igual al de la AEMPS/CIMA para «ácido risedrónico»,2,acido risedronico
+acido spaglumico,ácido espaglúmico,confirmado,exacto,ATC + ATC de la AIFA (S01GX03) igual al de la AEMPS/CIMA para «ácido espaglúmico»,2,acido spaglumico sale sodico
+acitretina,acitretina,confirmado,exacto,regla + ATC de la AIFA (D05BB02) igual al de la AEMPS/CIMA para «acitretina»,2,acitretina
+alitretinoina,alitretinoína,confirmado,exacto,regla + ATC de la AIFA (D11AH04) igual al de la AEMPS/CIMA para «alitretinoína»,2,alitretinoina
+amiloride,amilorida,confirmado,exacto,"regla + Wikidata (Q419995, nombre italiano «amiloride»): mismo ATC que la AEMPS/CIMA (C03DB01)",2,amiloride cloridrato
+atovaquone,atovacuona,confirmado,exacto,"sugerencia + Wikidata (Q418179, nombre italiano «atovaquone»): mismo ATC que la AEMPS/CIMA (P01AX06)",2,atovaquone
+bacitracina,bacitracina,confirmado,exacto,"regla + Wikidata (Q12887800, Q424319, nombre italiano «bacitracina»): mismo ATC que la AEMPS/CIMA (D06AX05, J01XX10, R02AB04)",2,bacitracina
+baricitinib,baricitinib,confirmado,exacto,regla + ATC de la AIFA (L04AF02) igual al de la AEMPS/CIMA para «baricitinib»,2,baricitinib
+bazedoxifene acetato,bazedoxifeno,confirmado,base,éster + ATC de la AIFA (G03XC02) igual al de la AEMPS/CIMA para «bazedoxifeno»,2,bazedoxifene acetato
+betaxololo,betaxolol,confirmado,exacto,"regla + ATC de la AIFA (C07AB05, S01ED02) igual al de la AEMPS/CIMA para «betaxolol»",2,betaxololo cloridrato
+bexarotene,bexaroteno,confirmado,exacto,regla + ATC de la AIFA (L01XF03) igual al de la AEMPS/CIMA para «bexaroteno»,2,bexarotene
+bezafibrato,bezafibrato,confirmado,exacto,regla + ATC de la AIFA (C10AB02) igual al de la AEMPS/CIMA para «bezafibrato»,2,bezafibrato
+biperidene,biperideno,confirmado,exacto,regla + ATC de la AIFA (N04AA02) igual al de la AEMPS/CIMA para «biperideno»,2,biperidene
+bromocriptina,bromocriptina,confirmado,exacto,"regla + ATC de la AIFA (G02CB01, N04BC01) igual al de la AEMPS/CIMA para «bromocriptina»",2,bromocriptina
+cabotegravir,cabotegravir,confirmado,exacto,regla + ATC de la AIFA (J05AJ04) igual al de la AEMPS/CIMA para «cabotegravir»,2,cabotegravir
+canagliflozin,canagliflozina,confirmado,exacto,ATC + ATC de la AIFA (A10BK02) igual al de la AEMPS/CIMA para «canagliflozina»,2,canagliflozin
+cariprazina,cariprazina,confirmado,exacto,regla + ATC de la AIFA (N05AX15) igual al de la AEMPS/CIMA para «cariprazina»,2,cariprazina cloridrato
+cefditoren pivoxil,cefditoreno,confirmado,base,éster + ATC de la AIFA (J01DD16) igual al de la AEMPS/CIMA para «cefditoreno»,2,cefditoren pivoxil
+ceritinib,ceritinib,confirmado,exacto,regla + ATC de la AIFA (L01ED02) igual al de la AEMPS/CIMA para «ceritinib»,2,ceritinib
+ciclesonide,ciclesonida,confirmado,exacto,regla + ATC de la AIFA (R03BA08) igual al de la AEMPS/CIMA para «ciclesonida»,2,ciclesonide
+ciclopentolato,ciclopentolato,confirmado,exacto,regla + ATC de la AIFA (S01FA04) igual al de la AEMPS/CIMA para «ciclopentolato»,2,ciclopentolato cloridrato
+cilazapril,cilazapril,confirmado,exacto,regla + ATC de la AIFA (C09AA08) igual al de la AEMPS/CIMA para «cilazapril»,2,cilazapril monoidrato | cilazapril
+ciproeptadina,ciproheptadina,confirmado,exacto,ATC + ATC de la AIFA (R06AX02) igual al de la AEMPS/CIMA para «ciproheptadina»,2,ciproeptadina cloridrato
+clobazam,clobazam,confirmado,exacto,regla + ATC de la AIFA (N05BA09) igual al de la AEMPS/CIMA para «clobazam»,2,clobazam
+clomipramina,clomipramina,confirmado,exacto,regla + ATC de la AIFA (N06AA04) igual al de la AEMPS/CIMA para «clomipramina»,2,clomipramina cloridrato
+clordiazepossido,clordiazepóxido,confirmado,exacto,regla + ATC de la AIFA (N05BA02) igual al de la AEMPS/CIMA para «clordiazepóxido»,2,clordiazepossido cloridrato | clordiazepossido
+clortetraciclina,clortetraciclina,confirmado,exacto,regla + ATC de la AIFA (D06AA02) igual al de la AEMPS/CIMA para «clortetraciclina»,2,clortetraciclina cloridrato
+clotiapina,clotiapina,confirmado,exacto,regla + ATC de la AIFA (N05AH06) igual al de la AEMPS/CIMA para «clotiapina»,2,clotiapina
+colchicina,colchicina,confirmado,exacto,regla + ATC de la AIFA (M04AC01) igual al de la AEMPS/CIMA para «colchicina»,2,colchicina
+crizotinib,crizotinib,confirmado,exacto,regla + ATC de la AIFA (L01ED01) igual al de la AEMPS/CIMA para «crizotinib»,2,crizotinib
+dabrafenib,dabrafenib,confirmado,exacto,regla + ATC de la AIFA (L01EC02) igual al de la AEMPS/CIMA para «dabrafenib»,2,dabrafenib
+desclorfeniramina,dexclorfeniramina,confirmado,exacto,ATC + ATC de la AIFA (R06AB02) igual al de la AEMPS/CIMA para «dexclorfeniramina»,2,desclorfeniramina maleato
+digossina,digoxina,confirmado,exacto,regla + ATC de la AIFA (C01AA05) igual al de la AEMPS/CIMA para «digoxina»,2,digossina
+dipiridamolo,dipiridamol,confirmado,exacto,regla + ATC de la AIFA (B01AC07) igual al de la AEMPS/CIMA para «dipiridamol»,2,dipiridamolo
+disopiramide,disopiramida,confirmado,exacto,regla + ATC de la AIFA (C01BA03) igual al de la AEMPS/CIMA para «disopiramida»,2,disopiramide | disopiramide fosfato
+disulfiram,disulfiram,confirmado,exacto,regla + ATC de la AIFA (N07BB01) igual al de la AEMPS/CIMA para «disulfiram»,2,disulfiram
+efedrina,efedrina,confirmado,exacto,regla + ATC de la AIFA (R01AB05) igual al de la AEMPS/CIMA para «efedrina»,2,efedrina cloridrato
+entrectinib,entrectinib,confirmado,exacto,regla + ATC de la AIFA (L01EX14) igual al de la AEMPS/CIMA para «entrectinib»,2,entrectinib
+eritromicina,eritromicina,confirmado,exacto,regla + ATC de la AIFA (D10AF02) igual al de la AEMPS/CIMA para «eritromicina»,2,eritromicina
+estetrolo,estetrol,confirmado,exacto,regla + ATC de la AIFA (G03CA10) igual al de la AEMPS/CIMA para «estetrol»,2,estetrolo
+etambutolo,etambutol,confirmado,exacto,regla + ATC de la AIFA (J04AK02) igual al de la AEMPS/CIMA para «etambutol»,2,etambutolo cloridrato
+exemestane,exemestano,confirmado,exacto,ATC + ATC de la AIFA (L02BG06) igual al de la AEMPS/CIMA para «exemestano»,2,exemestane
+flavoxato,flavoxato,confirmado,exacto,regla + ATC de la AIFA (G04BD02) igual al de la AEMPS/CIMA para «flavoxato»,2,flavoxato cloridrato | flavoxato
+fluorouracile,fluorouracilo,confirmado,exacto,regla + ATC de la AIFA (L01BC02) igual al de la AEMPS/CIMA para «fluorouracilo»,2,fluorouracile
+galantamina,galantamina,confirmado,exacto,regla + ATC de la AIFA (N06DA04) igual al de la AEMPS/CIMA para «galantamina»,2,galantamina bromidrato
+gefitinib,gefitinib,confirmado,exacto,regla + ATC de la AIFA (L01EB01) igual al de la AEMPS/CIMA para «gefitinib»,2,gefitinib
+ibrutinib,ibrutinib,confirmado,exacto,regla + ATC de la AIFA (L01EL01) igual al de la AEMPS/CIMA para «ibrutinib»,2,ibrutinib
+ibuprofen,ibuprofeno,confirmado,exacto,ATC + ATC de la AIFA (M01AE01) igual al de la AEMPS/CIMA para «ibuprofeno»,2,ibuprofen
+idromorfone,hidromorfona,confirmado,exacto,regla + ATC de la AIFA (N02AA03) igual al de la AEMPS/CIMA para «hidromorfona»,2,idromorfone | idromorfone cloridrato
+idroxicarbamide,hidroxicarbamida,confirmado,exacto,regla + ATC de la AIFA (L01XX05) igual al de la AEMPS/CIMA para «hidroxicarbamida»,2,idroxicarbamide
+idroxizina,hidroxizina,confirmado,exacto,regla + ATC de la AIFA (N05BB01) igual al de la AEMPS/CIMA para «hidroxizina»,2,idroxizina dicloridrato
+ledipasvir,ledipasvir,confirmado,exacto,"regla + Wikidata (Q15409409, nombre italiano «ledipasvir»): el mismo elemento tiene el nombre español «ledipasvir»",2,ledipasvir
+lenacapavir,lenacapavir,confirmado,exacto,regla + ATC de la AIFA (J05AX31) igual al de la AEMPS/CIMA para «lenacapavir»,2,lenacapavir
+levocabastina,levocabastina,confirmado,exacto,"regla + ATC de la AIFA (R01AC02, S01GX02) igual al de la AEMPS/CIMA para «levocabastina»",2,levocabastina cloridrato
+levotiroxina,levotiroxina,confirmado,exacto,"regla + Wikidata (Q773449, nombre italiano «levotiroxina»): el mismo elemento tiene el nombre español «levotiroxina»",2,levotiroxina
+mebendazolo,mebendazol,confirmado,exacto,regla + ATC de la AIFA (P02CA01) igual al de la AEMPS/CIMA para «mebendazol»,2,mebendazolo
+mercaptopurina,mercaptopurina,confirmado,exacto,regla + ATC de la AIFA (L01BB02) igual al de la AEMPS/CIMA para «mercaptopurina»,2,mercaptopurina
+metadone,metadona,confirmado,exacto,regla + ATC de la AIFA (N07BC02) igual al de la AEMPS/CIMA para «metadona»,2,metadone cloridrato
+methylprednisolone,metilprednisolona,confirmado,exacto,regla + ATC de la AIFA (H02AB04) igual al de la AEMPS/CIMA para «metilprednisolona»,2,methylprednisolone
+midodrina,midodrina,confirmado,exacto,regla + ATC de la AIFA (C01CA17) igual al de la AEMPS/CIMA para «midodrina»,2,midodrina cloridrato
+mupirocina,mupirocina,confirmado,exacto,"regla + ATC de la AIFA (D06AX09, R01AX06) igual al de la AEMPS/CIMA para «mupirocina»",2,mupirocina
+nabumetone,nabumetona,confirmado,exacto,regla + ATC de la AIFA (M01AX01) igual al de la AEMPS/CIMA para «nabumetona»,2,nabumetone
+netarsudil,netarsudil,confirmado,exacto,regla + ATC de la AIFA (S01EX05) igual al de la AEMPS/CIMA para «netarsudil»,2,netarsudil
+nitrofurantoina,nitrofurantoína,confirmado,exacto,regla + ATC de la AIFA (J01XE01) igual al de la AEMPS/CIMA para «nitrofurantoína»,2,nitrofurantoina
+olodaterolo,olodaterol,confirmado,exacto,regla + ATC de la AIFA (R03AC19) igual al de la AEMPS/CIMA para «olodaterol»,2,olodaterolo
+ondansetron,ondansetrón,confirmado,exacto,regla + ATC de la AIFA (A04AA01) igual al de la AEMPS/CIMA para «ondansetrón»,2,ondansetron cloridrato diidrato
+opicapone,opicapona,confirmado,exacto,regla + ATC de la AIFA (N04BX04) igual al de la AEMPS/CIMA para «opicapona»,2,opicapone
+ossi-idrossido sucroferrico,oxihidróxido sucroférrico,confirmado,exacto,ATC + ATC de la AIFA (V03AE05) igual al de la AEMPS/CIMA para «oxihidróxido sucroférrico»,2,ossi-idrossido sucroferrico
+oxibuprocaina,oxibuprocaína,confirmado,exacto,regla + ATC de la AIFA (S01HA02) igual al de la AEMPS/CIMA para «oxibuprocaína»,2,oxibuprocaina cloridrato
+palbociclib,palbociclib,confirmado,exacto,regla + ATC de la AIFA (L01EF01) igual al de la AEMPS/CIMA para «palbociclib»,2,palbociclib
+paracalcitolo,paricalcitol,confirmado,exacto,ATC + ATC de la AIFA (H05BX02) igual al de la AEMPS/CIMA para «paricalcitol»,2,paracalcitolo
+paromomicina,paromomicina,confirmado,exacto,regla + ATC de la AIFA (A07AA06) igual al de la AEMPS/CIMA para «paromomicina»,2,paromomicina solfato | paromomicina
+penciclovir,penciclovir,confirmado,exacto,regla + ATC de la AIFA (D06BB06) igual al de la AEMPS/CIMA para «penciclovir»,2,penciclovir
+perfenazina,perfenazina,confirmado,exacto,regla + ATC de la AIFA (N05AB03) igual al de la AEMPS/CIMA para «perfenazina»,2,perfenazina
+periciazina,periciazina,confirmado,exacto,regla + ATC de la AIFA (N05AC01) igual al de la AEMPS/CIMA para «periciazina»,2,periciazina
+piridostigmina bromuro,piridostigmina,confirmado,exacto,ATC + ATC de la AIFA (N07AA02) igual al de la AEMPS/CIMA para «piridostigmina»,2,piridostigmina bromuro
+pitolisant,pitolisant,confirmado,exacto,regla + ATC de la AIFA (N07XX11) igual al de la AEMPS/CIMA para «pitolisant»,2,pitolisant
+prednisolone,prednisolona,confirmado,exacto,regla + ATC de la AIFA (H02AB06) igual al de la AEMPS/CIMA para «prednisolona»,2,prednisolone
+promestriene,promestrieno,confirmado,exacto,regla + ATC de la AIFA (G03CA09) igual al de la AEMPS/CIMA para «promestrieno»,2,promestriene
+propiverina,propiverina,confirmado,exacto,regla + ATC de la AIFA (G04BD06) igual al de la AEMPS/CIMA para «propiverina»,2,propiverina cloridrato
+propranololo,propranolol,confirmado,exacto,regla + ATC de la AIFA (C07AA05) igual al de la AEMPS/CIMA para «propranolol»,2,propranololo cloridrato | propranololo
+raloxifene,raloxifeno,confirmado,exacto,regla + ATC de la AIFA (G03XC01) igual al de la AEMPS/CIMA para «raloxifeno»,2,raloxifene cloridrato
+relugolix,relugolix,confirmado,exacto,regla + ATC de la AIFA (L02BX04) igual al de la AEMPS/CIMA para «relugolix»,2,relugolix
+retinolo,retinol,confirmado,exacto,"regla + Wikidata (Q424976, nombre italiano «retinolo»): mismo ATC que la AEMPS/CIMA (D10AD02, R01AX02, S01XA02)",2,retinolo
+risdiplam,risdiplam,confirmado,exacto,regla + ATC de la AIFA (M09AX10) igual al de la AEMPS/CIMA para «risdiplam»,2,risdiplam
+roflumilast,roflumilast,confirmado,exacto,regla + ATC de la AIFA (R03DX07) igual al de la AEMPS/CIMA para «roflumilast»,2,roflumilast
+roxitromicina,roxitromicina,confirmado,exacto,regla + ATC de la AIFA (J01FA06) igual al de la AEMPS/CIMA para «roxitromicina»,2,roxitromicina
+rufinamide,rufinamida,confirmado,exacto,regla + ATC de la AIFA (N03AF03) igual al de la AEMPS/CIMA para «rufinamida»,2,rufinamide
+saxagliptin,saxagliptina,confirmado,exacto,ATC + ATC de la AIFA (A10BH03) igual al de la AEMPS/CIMA para «saxagliptina»,2,saxagliptin
+selegilina,selegilina,confirmado,exacto,regla + ATC de la AIFA (N04BD01) igual al de la AEMPS/CIMA para «selegilina»,2,selegilina cloridrato
+selpercatinib,selpercatinib,confirmado,exacto,regla + ATC de la AIFA (L01EX22) igual al de la AEMPS/CIMA para «selpercatinib»,2,selpercatinib
+selumetinib,selumetinib,confirmado,exacto,regla + ATC de la AIFA (L01EE04) igual al de la AEMPS/CIMA para «selumetinib»,2,selumetinib
+semaglutide,semaglutida,confirmado,exacto,regla + ATC de la AIFA (A10BJ06) igual al de la AEMPS/CIMA para «semaglutida»,2,semaglutide
+sitagliptin malato,sitagliptina,confirmado,exacto,ATC + ATC de la AIFA (A10BH01) igual al de la AEMPS/CIMA para «sitagliptina»,2,sitagliptin malato
+stiripentolo,estiripentol,confirmado,exacto,ATC + ATC de la AIFA (N03AX17) igual al de la AEMPS/CIMA para «estiripentol»,2,stiripentolo
+sulfametossazolo,sulfametoxazol,confirmado,exacto,"sugerencia + Wikidata (Q415843, nombre italiano «sulfametossazolo»): mismo ATC que la AEMPS/CIMA (J01EC01)",2,sulfametossazolo
+tetracaina,tetracaína,confirmado,exacto,"regla + Wikidata (Q419608, nombre italiano «tetracaina»): mismo ATC que la AEMPS/CIMA (C05AD02, D04AB06, N01BA03, S01HA03)",2,tetracaina cloridrato | tetracaina
+tiapride,tiaprida,confirmado,exacto,regla + ATC de la AIFA (N05AL03) igual al de la AEMPS/CIMA para «tiaprida»,2,tiapride cloridrato
+tioconazole,tioconazol,confirmado,exacto,ATC + ATC de la AIFA (D01AC07) igual al de la AEMPS/CIMA para «tioconazol»,2,tioconazole
+tramazolina,tramazolina,confirmado,exacto,regla + ATC de la AIFA (R01AA09) igual al de la AEMPS/CIMA para «tramazolina»,2,tramazolina cloridrato | tramazolina
+trametinib,trametinib,confirmado,exacto,regla + ATC de la AIFA (L01EE01) igual al de la AEMPS/CIMA para «trametinib»,2,trametinib
+trandolapril,trandolapril,confirmado,exacto,regla + ATC de la AIFA (C09AA10) igual al de la AEMPS/CIMA para «trandolapril»,2,trandolapril
+trimetoprim,trimetoprima,confirmado,exacto,"sugerencia + Wikidata (Q422665, nombre italiano «trimetoprim»): mismo ATC que la AEMPS/CIMA (J01EA01)",2,trimetoprim
+ulipristal,ulipristal,confirmado,exacto,regla + ATC de la AIFA (G03AD02) igual al de la AEMPS/CIMA para «ulipristal»,2,ulipristal
+zanubrutinib,zanubrutinib,confirmado,exacto,regla + ATC de la AIFA (L01EL03) igual al de la AEMPS/CIMA para «zanubrutinib»,2,zanubrutinib
+ziprasidone,ziprasidona,confirmado,exacto,regla + ATC de la AIFA (N05AE04) igual al de la AEMPS/CIMA para «ziprasidona»,2,ziprasidone
+zuclopentixolo,zuclopentixol,confirmado,exacto,regla + ATC de la AIFA (N05AF05) igual al de la AEMPS/CIMA para «zuclopentixol»,2,zuclopentixolo dicloridrato
+abemaciclib,abemaciclib,confirmado,exacto,regla + ATC de la AIFA (L01EF03) igual al de la AEMPS/CIMA para «abemaciclib»,1,abemaciclib
+abrocitinib,abrocitinib,confirmado,exacto,regla + ATC de la AIFA (D11AH08) igual al de la AEMPS/CIMA para «abrocitinib»,1,abrocitinib
+acamprosato,acamprosato,confirmado,exacto,regla + ATC de la AIFA (N07BB03) igual al de la AEMPS/CIMA para «acamprosato»,1,acamprosato
+acenocumarolo,acenocumarol,confirmado,exacto,regla + ATC de la AIFA (B01AA07) igual al de la AEMPS/CIMA para «acenocumarol»,1,acenocumarolo
+acetylcysteine,acetilcisteína,confirmado,exacto,ATC + ATC de la AIFA (R05CB01) igual al de la AEMPS/CIMA para «acetilcisteína»,1,acetylcysteine
+acido chenodesossicolico,ácido quenodesoxicólico,confirmado,exacto,regla + ATC de la AIFA (A05AA01) igual al de la AEMPS/CIMA para «ácido quenodesoxicólico»,1,acido chenodesossicolico
+acido folinico,ácido folínico,confirmado,exacto,"regla + Wikidata (Q192464, Q45435667, nombre italiano «acido folinico»): el mismo elemento tiene el nombre español «ácido folínico»",1,acido folinico
+acido niflumico,ácido niflúmico,confirmado,exacto,regla + ATC de la AIFA (M01AX02) igual al de la AEMPS/CIMA para «ácido niflúmico»,1,acido niflumico
+acido tartarico,ácido tartárico,confirmado,exacto,"regla + Wikidata (Q194322, nombre italiano «acido tartarico»): el mismo elemento tiene el nombre español «ácido tartárico»",1,acido tartarico
+afatinib,afatinib,confirmado,exacto,regla + ATC de la AIFA (L01EB03) igual al de la AEMPS/CIMA para «afatinib»,1,afatinib
+agomelatina,agomelatina,confirmado,exacto,regla + ATC de la AIFA (N06AX22) igual al de la AEMPS/CIMA para «agomelatina»,1,agomelatina
+albendazolo,albendazol,confirmado,exacto,regla + ATC de la AIFA (P02CA03) igual al de la AEMPS/CIMA para «albendazol»,1,albendazolo
+alectinib,alectinib,confirmado,exacto,regla + ATC de la AIFA (L01ED03) igual al de la AEMPS/CIMA para «alectinib»,1,alectinib
+aliskiren,aliskireno,confirmado,exacto,ATC + ATC de la AIFA (C09XA02) igual al de la AEMPS/CIMA para «aliskireno»,1,aliskiren
+alprostadil,alprostadil,confirmado,exacto,regla + ATC de la AIFA (G04BE01) igual al de la AEMPS/CIMA para «alprostadil»,1,alprostadil
+amantadina,amantadina,confirmado,exacto,regla + ATC de la AIFA (N04BB01) igual al de la AEMPS/CIMA para «amantadina»,1,amantadina
+amorolfine,amorolfina,confirmado,exacto,ATC + ATC de la AIFA (D01AE16) igual al de la AEMPS/CIMA para «amorolfina»,1,amorolfine
+ampicillina,ampicilina,confirmado,exacto,"regla + Wikidata (Q244150, nombre italiano «ampicillina»): mismo ATC que la AEMPS/CIMA (J01CA01, S01AA19)",1,ampicillina
+apalutamide,apalutamida,confirmado,exacto,regla + ATC de la AIFA (L02BB05) igual al de la AEMPS/CIMA para «apalutamida»,1,apalutamide
+apomorfina,apomorfina,confirmado,exacto,regla + ATC de la AIFA (N04BC07) igual al de la AEMPS/CIMA para «apomorfina»,1,apomorfina cloridrato
+apraclonidina,apraclonidina,confirmado,exacto,regla + ATC de la AIFA (S01EA03) igual al de la AEMPS/CIMA para «apraclonidina»,1,apraclonidina cloridrato
+arnica montana,arnica montana,confirmado,exacto,"regla + Wikidata (Q207848, nombre italiano «arnica montana»): el mismo elemento tiene el nombre español «arnica montana»",1,arnica montana
+asciminib,asciminib,confirmado,exacto,regla + ATC de la AIFA (L01EA06) igual al de la AEMPS/CIMA para «asciminib»,1,asciminib
+asenapina,asenapina,confirmado,exacto,regla + ATC de la AIFA (N05AH05) igual al de la AEMPS/CIMA para «asenapina»,1,asenapina maleato
+atogepant,atogepant,confirmado,exacto,regla + ATC de la AIFA (N02CD07) igual al de la AEMPS/CIMA para «atogepant»,1,atogepant
+avanafil,avanafilo,confirmado,exacto,ATC + ATC de la AIFA (G04BE10) igual al de la AEMPS/CIMA para «avanafilo»,1,avanafil
+avapritinib,avapritinib,confirmado,exacto,regla + ATC de la AIFA (L01EX18) igual al de la AEMPS/CIMA para «avapritinib»,1,avapritinib
+avatrombopag,avatrombopag,confirmado,exacto,regla + ATC de la AIFA (B02BX08) igual al de la AEMPS/CIMA para «avatrombopag»,1,avatrombopag
+azathioprine,azatioprina,confirmado,exacto,ATC + ATC de la AIFA (L04AX01) igual al de la AEMPS/CIMA para «azatioprina»,1,azathioprine
+baclofen,baclofeno,confirmado,exacto,ATC + ATC de la AIFA (M03BX01) igual al de la AEMPS/CIMA para «baclofeno»,1,baclofen
+belzutifan,belzutifán,confirmado,exacto,regla + ATC de la AIFA (L01XX74) igual al de la AEMPS/CIMA para «belzutifán»,1,belzutifan
+berotralstat,berotralstat,confirmado,exacto,regla + ATC de la AIFA (B06AC06) igual al de la AEMPS/CIMA para «berotralstat»,1,berotralstat
+betametasone valero acetato,betametasona,confirmado,base,éster + ATC de la AIFA (D07AC01) igual al de la AEMPS/CIMA para «betametasona»,1,betametasone valero acetato
+bibrocathol,bibrocatol,confirmado,exacto,regla + ATC de la AIFA (S01AX05) igual al de la AEMPS/CIMA para «bibrocatol»,1,bibrocathol
+binimetinib,binimetinib,confirmado,exacto,regla + ATC de la AIFA (L01EE03) igual al de la AEMPS/CIMA para «binimetinib»,1,binimetinib
+brexpiprazolo,brexpiprazol,confirmado,exacto,regla + ATC de la AIFA (N05AX16) igual al de la AEMPS/CIMA para «brexpiprazol»,1,brexpiprazolo
+brigatinib,brigatinib,confirmado,exacto,regla + ATC de la AIFA (L01ED04) igual al de la AEMPS/CIMA para «brigatinib»,1,brigatinib
+busulfano,busulfano,confirmado,exacto,regla + ATC de la AIFA (L01AB01) igual al de la AEMPS/CIMA para «busulfano»,1,busulfano
+calcifediol,calcifediol,confirmado,exacto,regla + ATC de la AIFA (A11CC06) igual al de la AEMPS/CIMA para «calcifediol»,1,calcifediol
+capmatinib,capmatinib,confirmado,exacto,regla + ATC de la AIFA (L01EX17) igual al de la AEMPS/CIMA para «capmatinib»,1,capmatinib
+capsaicina,capsaicina,confirmado,exacto,regla + ATC de la AIFA (M02AB01) igual al de la AEMPS/CIMA para «capsaicina»,1,capsaicina
+cassia angustifolia,cassia angustifolia,confirmado,exacto,"regla + Wikidata (Q132675, Q50838910, nombre italiano «cassia angustifolia»): el mismo elemento tiene el nombre español «cassia angustifolia»",1,cassia angustifolia
+cefixime,cefixima,confirmado,exacto,ATC + ATC de la AIFA (J01DD08) igual al de la AEMPS/CIMA para «cefixima»,1,cefixime triidrato
+cenobamato,cenobamato,confirmado,exacto,regla + ATC de la AIFA (N03AX25) igual al de la AEMPS/CIMA para «cenobamato»,1,cenobamato
+ciclobenzaprina,ciclobenzaprina,confirmado,exacto,regla + ATC de la AIFA (M03BX08) igual al de la AEMPS/CIMA para «ciclobenzaprina»,1,ciclobenzaprina cloridrato
+ciclofosfamide,ciclofosfamida,confirmado,exacto,regla + ATC de la AIFA (L01AA01) igual al de la AEMPS/CIMA para «ciclofosfamida»,1,ciclofosfamide
+cincocaina,cincocaína,confirmado,exacto,"regla + Wikidata (Q417603, nombre italiano «cincocaina»): mismo ATC que la AEMPS/CIMA (C05AD04, D04AB02, N01BB06, S01HA06, S02DA04)",1,cincocaina cloridrato
+citicolina,citicolina,confirmado,exacto,regla + ATC de la AIFA (N06BX06) igual al de la AEMPS/CIMA para «citicolina»,1,citicolina
+cladribina,cladribina,confirmado,exacto,regla + ATC de la AIFA (L04AA40) igual al de la AEMPS/CIMA para «cladribina»,1,cladribina
+clascoterone,clascoterona,confirmado,exacto,regla + ATC de la AIFA (D10AX06) igual al de la AEMPS/CIMA para «clascoterona»,1,clascoterone
+clomifene,clomifeno,confirmado,exacto,regla + ATC de la AIFA (G03GB02) igual al de la AEMPS/CIMA para «clomifeno»,1,clomifene citrato
+clonidina,clonidina,confirmado,exacto,regla + ATC de la AIFA (C02AC01) igual al de la AEMPS/CIMA para «clonidina»,1,clonidina
+cloperastina,cloperastina,confirmado,exacto,regla + ATC de la AIFA (R05DB21) igual al de la AEMPS/CIMA para «cloperastina»,1,cloperastina cloridrato
+clorambucile,clorambucilo,confirmado,exacto,regla + ATC de la AIFA (L01AA02) igual al de la AEMPS/CIMA para «clorambucilo»,1,clorambucile
+clorpromazina,clorpromazina,confirmado,exacto,regla + ATC de la AIFA (N05AA01) igual al de la AEMPS/CIMA para «clorpromazina»,1,clorpromazina
+cobimetinib,cobimetinib,confirmado,exacto,regla + ATC de la AIFA (L01EE02) igual al de la AEMPS/CIMA para «cobimetinib»,1,cobimetinib
+colestiramina,colestiramina,confirmado,exacto,regla + ATC de la AIFA (C10AC01) igual al de la AEMPS/CIMA para «colestiramina»,1,colestiramina cloridrato
+dacomitinib,dacomitinib,confirmado,exacto,regla + ATC de la AIFA (L01EB07) igual al de la AEMPS/CIMA para «dacomitinib»,1,dacomitinib
+danazolo,danazol,confirmado,exacto,regla + ATC de la AIFA (G03XA01) igual al de la AEMPS/CIMA para «danazol»,1,danazolo
+danicopan,danicopán,confirmado,exacto,regla + ATC de la AIFA (L04AJ09) igual al de la AEMPS/CIMA para «danicopán»,1,danicopan
+dapoxetina,dapoxetina,confirmado,exacto,regla + ATC de la AIFA (G04BX14) igual al de la AEMPS/CIMA para «dapoxetina»,1,dapoxetina
+daridorexant,daridorexant,confirmado,exacto,regla + ATC de la AIFA (N05CJ03) igual al de la AEMPS/CIMA para «daridorexant»,1,daridorexant
+darolutamide,darolutamida,confirmado,exacto,regla + ATC de la AIFA (L02BB06) igual al de la AEMPS/CIMA para «darolutamida»,1,darolutamide
+delgocitinib,delgocitinib,confirmado,exacto,regla + ATC de la AIFA (D11AH11) igual al de la AEMPS/CIMA para «delgocitinib»,1,delgocitinib
+desvenlafaxina,desvenlafaxina,confirmado,exacto,regla + ATC de la AIFA (N06AX23) igual al de la AEMPS/CIMA para «desvenlafaxina»,1,desvenlafaxina
+deucravacitinib,deucravacitinib,confirmado,exacto,regla + ATC de la AIFA (L04AF07) igual al de la AEMPS/CIMA para «deucravacitinib»,1,deucravacitinib
+dexamfetamina,dexanfetamina,confirmado,exacto,ATC + ATC de la AIFA (N06BA02) igual al de la AEMPS/CIMA para «dexanfetamina»,1,dexamfetamina solfato
+diflunisal,diflunisal,confirmado,exacto,regla + ATC de la AIFA (N02BA11) igual al de la AEMPS/CIMA para «diflunisal»,1,diflunisal
+diidrochinidina,hidroquinidina,confirmado,exacto,ATC + ATC de la AIFA (C01BA13) igual al de la AEMPS/CIMA para «hidroquinidina»,1,diidrochinidina cloridrato
+diidrocodeina,dihidrocodeina,confirmado,exacto,"regla + Wikidata (Q377270, nombre italiano «diidrocodeina»): mismo ATC que la AEMPS/CIMA (N02AA08)",1,diidrocodeina
+doravirina,doravirina,confirmado,exacto,regla + ATC de la AIFA (J05AG06) igual al de la AEMPS/CIMA para «doravirina»,1,doravirina
+doxiciclina iclato,doxiciclina,confirmado,exacto,ATC + ATC de la AIFA (J01AA02) igual al de la AEMPS/CIMA para «doxiciclina»,1,doxiciclina iclato
+eflornitina,eflornitina,confirmado,exacto,regla + ATC de la AIFA (D11AX16) igual al de la AEMPS/CIMA para «eflornitina»,1,eflornitina
+elacestrant,elacestrant,confirmado,exacto,regla + ATC de la AIFA (L02BA04) igual al de la AEMPS/CIMA para «elacestrant»,1,elacestrant dicloridrato
+elafibranor,elafibranor,confirmado,exacto,regla + ATC de la AIFA (A05AX06) igual al de la AEMPS/CIMA para «elafibranor»,1,elafibranor
+encorafenib,encorafenib,confirmado,exacto,regla + ATC de la AIFA (L01EC03) igual al de la AEMPS/CIMA para «encorafenib»,1,encorafenib
+erdafitinib,erdafitinib,confirmado,exacto,regla + ATC de la AIFA (L01EN01) igual al de la AEMPS/CIMA para «erdafitinib»,1,erdafitinib
+esketamina,esketamina,confirmado,exacto,regla + ATC de la AIFA (N06AX27) igual al de la AEMPS/CIMA para «esketamina»,1,esketamina
+etoposide,etoposido,confirmado,exacto,ATC + ATC de la AIFA (L01CB01) igual al de la AEMPS/CIMA para «etoposido»,1,etoposide
+etrasimod,etrasimod,confirmado,exacto,regla + ATC de la AIFA (L04AE05) igual al de la AEMPS/CIMA para «etrasimod»,1,etrasimod
+etravirine,etravirina,confirmado,exacto,ATC + ATC de la AIFA (J05AG04) igual al de la AEMPS/CIMA para «etravirina»,1,etravirine
+fedratinib,fedratinib,confirmado,exacto,regla + ATC de la AIFA (L01EJ02) igual al de la AEMPS/CIMA para «fedratinib»,1,fedratinib
+fenfluramina,fenfluramina,confirmado,exacto,regla + ATC de la AIFA (N03AX26) igual al de la AEMPS/CIMA para «fenfluramina»,1,fenfluramina
+fentanyl,fentanilo,confirmado,exacto,ATC + ATC de la AIFA (N02AB03) igual al de la AEMPS/CIMA para «fentanilo»,1,fentanyl
+fezolinetant,fezolinetant,confirmado,exacto,regla + ATC de la AIFA (G02CX06) igual al de la AEMPS/CIMA para «fezolinetant»,1,fezolinetant
+filgotinib,filgotinib,confirmado,exacto,regla + ATC de la AIFA (L04AF04) igual al de la AEMPS/CIMA para «filgotinib»,1,filgotinib
+finerenone,finerenona,confirmado,exacto,regla + ATC de la AIFA (C03DA05) igual al de la AEMPS/CIMA para «finerenona»,1,finerenone
+fludarabina,fludarabina,confirmado,exacto,regla + ATC de la AIFA (L01BB05) igual al de la AEMPS/CIMA para «fludarabina»,1,fludarabina fosfato
+fluorometolone acetato,fluorometolona,confirmado,base,éster + ATC de la AIFA (S01BA07) igual al de la AEMPS/CIMA para «fluorometolona»,1,fluorometolone acetato
+flutamide,flutamida,confirmado,exacto,regla + ATC de la AIFA (L02BB01) igual al de la AEMPS/CIMA para «flutamida»,1,flutamide
+fluvastatina,fluvastatina,confirmado,exacto,regla + ATC de la AIFA (C10AA04) igual al de la AEMPS/CIMA para «fluvastatina»,1,fluvastatina
+fostemsavir,fostemsavir,confirmado,exacto,regla + ATC de la AIFA (J05AX29) igual al de la AEMPS/CIMA para «fostemsavir»,1,fostemsavir
+fruquintinib,fruquintinib,confirmado,exacto,regla + ATC de la AIFA (L01EK04) igual al de la AEMPS/CIMA para «fruquintinib»,1,fruquintinib
+ganciclovir,ganciclovir,confirmado,exacto,regla + ATC de la AIFA (S01AD09) igual al de la AEMPS/CIMA para «ganciclovir»,1,ganciclovir
+gefapixant,gefapixant,confirmado,exacto,regla + ATC de la AIFA (R05DB29) igual al de la AEMPS/CIMA para «gefapixant»,1,gefapixant citrato
+gilteritinib,gilteritinib,confirmado,exacto,regla + ATC de la AIFA (L01EX13) igual al de la AEMPS/CIMA para «gilteritinib»,1,gilteritinib
+givinostat,givinostat,confirmado,exacto,regla + ATC de la AIFA (M09AX14) igual al de la AEMPS/CIMA para «givinostat»,1,givinostat
+glipizide,glipizida,confirmado,exacto,regla + ATC de la AIFA (A10BB07) igual al de la AEMPS/CIMA para «glipizida»,1,glipizide
+glucagone,glucagón,confirmado,exacto,ATC + ATC de la AIFA (H04AA01) igual al de la AEMPS/CIMA para «glucagón»,1,glucagone
+glucosio,glucosa,confirmado,exacto,ATC + ATC de la AIFA (V04CA02) igual al de la AEMPS/CIMA para «glucosa»,1,glucosio
+granisetrone,granisetrón,confirmado,exacto,ATC + ATC de la AIFA (A04AA02) igual al de la AEMPS/CIMA para «granisetrón»,1,granisetrone cloridrato
+guanfacina,guanfacina,confirmado,exacto,regla + ATC de la AIFA (C02AC02) igual al de la AEMPS/CIMA para «guanfacina»,1,guanfacina
+idelalisib,idelalisib,confirmado,exacto,regla + ATC de la AIFA (L01EM01) igual al de la AEMPS/CIMA para «idelalisib»,1,idelalisib
+idrossicarbamide,hidroxicarbamida,confirmado,exacto,regla + ATC de la AIFA (L01XX05) igual al de la AEMPS/CIMA para «hidroxicarbamida»,1,idrossicarbamide
+iptacopan,iptacopán,confirmado,exacto,regla + ATC de la AIFA (L04AJ08) igual al de la AEMPS/CIMA para «iptacopán»,1,iptacopan
+ivosidenib,ivosidenib,confirmado,exacto,regla + ATC de la AIFA (L01XM02) igual al de la AEMPS/CIMA para «ivosidenib»,1,ivosidenib
+ketazolam,ketazolam,confirmado,exacto,regla + ATC de la AIFA (N05BA10) igual al de la AEMPS/CIMA para «ketazolam»,1,ketazolam
+labetalolo,labetalol,confirmado,exacto,regla + ATC de la AIFA (C07AG01) igual al de la AEMPS/CIMA para «labetalol»,1,labetalolo cloridrato
+lacidipine,lacidipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA09) igual al de la AEMPS/CIMA para «lacidipino»,1,lacidipine
+lactobacillus gasseri,lactobacillus gasseri,confirmado,exacto,"regla + Wikidata (Q1975869, nombre italiano «lactobacillus gasseri»): el mismo elemento tiene el nombre español «lactobacillus gasseri»",1,lactobacillus gasseri
+lactobacillus rhamnosus,lactobacillus rhamnosus,confirmado,exacto,"regla + Wikidata (Q1607640, nombre italiano «lactobacillus rhamnosus»): el mismo elemento tiene el nombre español «lactobacillus rhamnosus»",1,lactobacillus rhamnosus
+lapatinib,lapatinib,confirmado,exacto,regla + ATC de la AIFA (L01EH01) igual al de la AEMPS/CIMA para «lapatinib»,1,lapatinib
+lasmiditan,lasmiditán,confirmado,exacto,regla + ATC de la AIFA (N02CC08) igual al de la AEMPS/CIMA para «lasmiditán»,1,lasmiditan
+lazertinib,lazertinib,confirmado,exacto,regla + ATC de la AIFA (L01EB09) igual al de la AEMPS/CIMA para «lazertinib»,1,lazertinib
+levocetirizine,levocetirizina,confirmado,exacto,ATC + ATC de la AIFA (R06AE09) igual al de la AEMPS/CIMA para «levocetirizina»,1,levocetirizine
+levomepromazina,levomepromazina,confirmado,exacto,regla + ATC de la AIFA (N05AA02) igual al de la AEMPS/CIMA para «levomepromazina»,1,levomepromazina
+lidocaine,lidocaína,confirmado,exacto,ATC + ATC de la AIFA (N01BB02) igual al de la AEMPS/CIMA para «lidocaína»,1,lidocaine
+linaclotide,linaclotida,confirmado,exacto,regla + ATC de la AIFA (A06AX04) igual al de la AEMPS/CIMA para «linaclotida»,1,linaclotide
+lisdexamfetamine,lisdexanfetamina,confirmado,exacto,ATC + ATC de la AIFA (N06BA12) igual al de la AEMPS/CIMA para «lisdexanfetamina»,1,lisdexamfetamine
+lomitapide,lomitapida,confirmado,exacto,regla + ATC de la AIFA (C10AX12) igual al de la AEMPS/CIMA para «lomitapida»,1,lomitapide
+lorlatinib,lorlatinib,confirmado,exacto,regla + ATC de la AIFA (L01ED05) igual al de la AEMPS/CIMA para «lorlatinib»,1,lorlatinib
+maribavir,maribavir,confirmado,exacto,regla + ATC de la AIFA (J05AX10) igual al de la AEMPS/CIMA para «maribavir»,1,maribavir
+mavacamten,mavacamten,confirmado,exacto,regla + ATC de la AIFA (C01EB24) igual al de la AEMPS/CIMA para «mavacamten»,1,mavacamten
+mebeverina,mebeverina,confirmado,exacto,regla + ATC de la AIFA (A03AA04) igual al de la AEMPS/CIMA para «mebeverina»,1,mebeverina cloridrato
+medazepam,medazepam,confirmado,exacto,"regla + Wikidata (Q572796, nombre italiano «medazepam»): mismo ATC que la AEMPS/CIMA (N05BA03)",1,medazepam
+melfalan,melfalán,confirmado,exacto,regla + ATC de la AIFA (L01AA03) igual al de la AEMPS/CIMA para «melfalán»,1,melfalan
+metirapone,metirapona,confirmado,exacto,regla + ATC de la AIFA (V04CD01) igual al de la AEMPS/CIMA para «metirapona»,1,metirapone
+mexiletina,mexiletina,confirmado,exacto,regla + ATC de la AIFA (C01BB02) igual al de la AEMPS/CIMA para «mexiletina»,1,mexiletina cloridrato
+mianserina,mianserina,confirmado,exacto,regla + ATC de la AIFA (N06AX03) igual al de la AEMPS/CIMA para «mianserina»,1,mianserina cloridrato
+midostaurina,midostaurina,confirmado,exacto,regla + ATC de la AIFA (L01EX10) igual al de la AEMPS/CIMA para «midostaurina»,1,midostaurina
+migalastat,migalastat,confirmado,exacto,regla + ATC de la AIFA (A16AX14) igual al de la AEMPS/CIMA para «migalastat»,1,migalastat
+minociclina,minociclina,confirmado,exacto,regla + ATC de la AIFA (J01AA08) igual al de la AEMPS/CIMA para «minociclina»,1,minociclina dicloridrato
+mitotano,mitotano,confirmado,exacto,regla + ATC de la AIFA (L01XX23) igual al de la AEMPS/CIMA para «mitotano»,1,mitotano
+modafinil,modafinilo,confirmado,exacto,ATC + ATC de la AIFA (N06BA07) igual al de la AEMPS/CIMA para «modafinilo»,1,modafinil
+momelotinib,momelotinib,confirmado,exacto,regla + ATC de la AIFA (L01EJ04) igual al de la AEMPS/CIMA para «momelotinib»,1,momelotinib
+nadifloxacina,nadifloxacino,confirmado,exacto,ATC + ATC de la AIFA (D10AF05) igual al de la AEMPS/CIMA para «nadifloxacino»,1,nadifloxacina
+naldemedina,naldemedina,confirmado,exacto,regla + ATC de la AIFA (A06AH05) igual al de la AEMPS/CIMA para «naldemedina»,1,naldemedina
+nalmefene,nalmefeno,confirmado,exacto,regla + ATC de la AIFA (N07BB05) igual al de la AEMPS/CIMA para «nalmefeno»,1,nalmefene
+naloxegol,naloxegol,confirmado,exacto,regla + ATC de la AIFA (A06AH03) igual al de la AEMPS/CIMA para «naloxegol»,1,naloxegol
+nepafenac,nepafenaco,confirmado,exacto,ATC + ATC de la AIFA (S01BC10) igual al de la AEMPS/CIMA para «nepafenaco»,1,nepafenac
+neratinib,neratinib,confirmado,exacto,regla + ATC de la AIFA (L01EH02) igual al de la AEMPS/CIMA para «neratinib»,1,neratinib
+nicardipina,nicardipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA04) igual al de la AEMPS/CIMA para «nicardipino»,1,nicardipina cloridrato
+nitrendipina,nitrendipino,confirmado,exacto,ATC + ATC de la AIFA (C08CA08) igual al de la AEMPS/CIMA para «nitrendipino»,1,nitrendipina
+olaparib,olaparib,confirmado,exacto,regla + ATC de la AIFA (L01XK01) igual al de la AEMPS/CIMA para «olaparib»,1,olaparib
+osilodrostat,osilodrostat,confirmado,exacto,regla + ATC de la AIFA (H02CA02) igual al de la AEMPS/CIMA para «osilodrostat»,1,osilodrostat
+osimertinib,osimertinib,confirmado,exacto,regla + ATC de la AIFA (L01EB04) igual al de la AEMPS/CIMA para «osimertinib»,1,osimertinib
+ospemifene,ospemifeno,confirmado,exacto,regla + ATC de la AIFA (G03XC05) igual al de la AEMPS/CIMA para «ospemifeno»,1,ospemifene
+ozanimod,ozanimod,confirmado,exacto,regla + ATC de la AIFA (L04AE02) igual al de la AEMPS/CIMA para «ozanimod»,1,ozanimod cloridrato
+ozenoxacina,ozenoxacino,confirmado,exacto,ATC + ATC de la AIFA (D06AX14) igual al de la AEMPS/CIMA para «ozenoxacino»,1,ozenoxacina
+pentoxifillina,pentoxifilina,confirmado,exacto,regla + ATC de la AIFA (C04AD03) igual al de la AEMPS/CIMA para «pentoxifilina»,1,pentoxifillina
+perossido di idrogeno,peróxido de hidrógeno,confirmado,exacto,ATC + ATC de la AIFA (D08AX01) igual al de la AEMPS/CIMA para «peróxido de hidrógeno»,1,perossido di idrogeno
+pimecrolimus,pimecrolimus,confirmado,exacto,regla + ATC de la AIFA (D11AH02) igual al de la AEMPS/CIMA para «pimecrolimus»,1,pimecrolimus
+pimozide,pimozida,confirmado,exacto,regla + ATC de la AIFA (N05AG02) igual al de la AEMPS/CIMA para «pimozida»,1,pimozide
+pirazinamide,pirazinamida,confirmado,exacto,"regla + Wikidata (Q417571, nombre italiano «pirazinamide»): mismo ATC que la AEMPS/CIMA (J04AK01)",1,pirazinamide
+pirtobrutinib,pirtobrutinib,confirmado,exacto,regla + ATC de la AIFA (L01EL05) igual al de la AEMPS/CIMA para «pirtobrutinib»,1,pirtobrutinib
+pitavastatina calcica,pitavastatina,confirmado,exacto,ATC + ATC de la AIFA (C10AA08) igual al de la AEMPS/CIMA para «pitavastatina»,1,pitavastatina calcica
+pivmecillina,pivmecilinam,confirmado,exacto,ATC + ATC de la AIFA (J01CA08) igual al de la AEMPS/CIMA para «pivmecilinam»,1,pivmecillina cloridrato
+podofillotossina,podofilotoxina,confirmado,exacto,regla + ATC de la AIFA (D06BB04) igual al de la AEMPS/CIMA para «podofilotoxina»,1,podofillotossina
+poliesanide,polihexanida,confirmado,exacto,ATC + ATC de la AIFA (S01AX24) igual al de la AEMPS/CIMA para «polihexanida»,1,poliesanide
+ponesimod,ponesimod,confirmado,exacto,regla + ATC de la AIFA (L04AE04) igual al de la AEMPS/CIMA para «ponesimod»,1,ponesimod
+prasterone,prasterona,confirmado,exacto,regla + ATC de la AIFA (G03XX01) igual al de la AEMPS/CIMA para «prasterona»,1,prasterone
+pravastatina,pravastatina,confirmado,exacto,"regla + Wikidata (Q1240093, nombre italiano «pravastatina»): mismo ATC que la AEMPS/CIMA (C10AA03)",1,pravastatina
+primidone,primidona,confirmado,exacto,regla + ATC de la AIFA (N03AA03) igual al de la AEMPS/CIMA para «primidona»,1,primidone
+procarbazina,procarbazina,confirmado,exacto,regla + ATC de la AIFA (L01XB01) igual al de la AEMPS/CIMA para «procarbazina»,1,procarbazina
+prucalopride,prucaloprida,confirmado,exacto,regla + ATC de la AIFA (A06AX05) igual al de la AEMPS/CIMA para «prucaloprida»,1,prucalopride
+quetiapine,quetiapina,confirmado,exacto,ATC + ATC de la AIFA (N05AH04) igual al de la AEMPS/CIMA para «quetiapina»,1,quetiapine
+quizartinib,quizartinib,confirmado,exacto,regla + ATC de la AIFA (L01EX11) igual al de la AEMPS/CIMA para «quizartinib»,1,quizartinib
+reboxetina,reboxetina,confirmado,exacto,regla + ATC de la AIFA (N06AX18) igual al de la AEMPS/CIMA para «reboxetina»,1,reboxetina
+regorafenib,regorafenib,confirmado,exacto,regla + ATC de la AIFA (L01EX05) igual al de la AEMPS/CIMA para «regorafenib»,1,regorafenib
+ribavirina,ribavirina,confirmado,exacto,regla + ATC de la AIFA (J05AP01) igual al de la AEMPS/CIMA para «ribavirina»,1,ribavirina
+ribociclib,ribociclib,confirmado,exacto,regla + ATC de la AIFA (L01EF02) igual al de la AEMPS/CIMA para «ribociclib»,1,ribociclib
+rifabutina,rifabutina,confirmado,exacto,regla + ATC de la AIFA (J04AB04) igual al de la AEMPS/CIMA para «rifabutina»,1,rifabutina
+rimegepant,rimegepant,confirmado,exacto,regla + ATC de la AIFA (N02CD06) igual al de la AEMPS/CIMA para «rimegepant»,1,rimegepant
+ripretinib,ripretinib,confirmado,exacto,regla + ATC de la AIFA (L01EX19) igual al de la AEMPS/CIMA para «ripretinib»,1,ripretinib
+ritlecitinib,ritlecitinib,confirmado,exacto,regla + ATC de la AIFA (L04AF08) igual al de la AEMPS/CIMA para «ritlecitinib»,1,ritlecitinib tosilato
+roxadustat,roxadustat,confirmado,exacto,regla + ATC de la AIFA (B03XA05) igual al de la AEMPS/CIMA para «roxadustat»,1,roxadustat
+rucaparib,rucaparib,confirmado,exacto,regla + ATC de la AIFA (L01XK03) igual al de la AEMPS/CIMA para «rucaparib»,1,rucaparib
+rupatadine,rupatadina,confirmado,exacto,ATC + ATC de la AIFA (R06AX28) igual al de la AEMPS/CIMA para «rupatadina»,1,rupatadine
+seladelpar,seladelpar,confirmado,exacto,regla + ATC de la AIFA (A05AX07) igual al de la AEMPS/CIMA para «seladelpar»,1,seladelpar
+silodosin,silodosina,confirmado,exacto,ATC + ATC de la AIFA (G04CA04) igual al de la AEMPS/CIMA para «silodosina»,1,silodosin
+siponimod,siponimod,confirmado,exacto,regla + ATC de la AIFA (L04AE03) igual al de la AEMPS/CIMA para «siponimod»,1,siponimod
+sonidegib,sonidegib,confirmado,exacto,regla + ATC de la AIFA (L01XJ02) igual al de la AEMPS/CIMA para «sonidegib»,1,sonidegib
+sotorasib,sotorasib,confirmado,exacto,regla + ATC de la AIFA (L01XX73) igual al de la AEMPS/CIMA para «sotorasib»,1,sotorasib
+sparsentan,esparsentán,confirmado,exacto,ATC + ATC de la AIFA (C09XX01) igual al de la AEMPS/CIMA para «esparsentán»,1,sparsentan
+spiramicina,espiramicina,confirmado,exacto,ATC + ATC de la AIFA (J01FA02) igual al de la AEMPS/CIMA para «espiramicina»,1,spiramicina
+sulfasalazina,sulfasalazina,confirmado,exacto,regla + ATC de la AIFA (A07EC01) igual al de la AEMPS/CIMA para «sulfasalazina»,1,sulfasalazina
+sulpiride,sulpirida,confirmado,exacto,regla + ATC de la AIFA (N05AL01) igual al de la AEMPS/CIMA para «sulpirida»,1,sulpiride
+talazoparib,talazoparib,confirmado,exacto,regla + ATC de la AIFA (L01XK04) igual al de la AEMPS/CIMA para «talazoparib»,1,talazoparib
+tegafur,tegafur,confirmado,exacto,"regla + Wikidata (Q413370, nombre italiano «tegafur»): mismo ATC que la AEMPS/CIMA (L01BC03)",1,tegafur
+telotristat,telotristat,confirmado,exacto,regla + ATC de la AIFA (A16AX15) igual al de la AEMPS/CIMA para «telotristat»,1,telotristat
+tenoxicam,tenoxicam,confirmado,exacto,regla + ATC de la AIFA (M01AC02) igual al de la AEMPS/CIMA para «tenoxicam»,1,tenoxicam
+tepotinib,tepotinib,confirmado,exacto,regla + ATC de la AIFA (L01EX21) igual al de la AEMPS/CIMA para «tepotinib»,1,tepotinib
+tiagabina,tiagabina,confirmado,exacto,regla + ATC de la AIFA (N03AG06) igual al de la AEMPS/CIMA para «tiagabina»,1,tiagabina
+tiamazolo,tiamazol,confirmado,exacto,regla + ATC de la AIFA (H03BB02) igual al de la AEMPS/CIMA para «tiamazol»,1,tiamazolo
+tinidazolo,tinidazol,confirmado,exacto,regla + ATC de la AIFA (P01AB02) igual al de la AEMPS/CIMA para «tinidazol»,1,tinidazolo
+tioguanina,tioguanina,confirmado,exacto,regla + ATC de la AIFA (L01BB03) igual al de la AEMPS/CIMA para «tioguanina»,1,tioguanina
+tirbanibulina,tirbanibulina,confirmado,exacto,regla + ATC de la AIFA (D06BX03) igual al de la AEMPS/CIMA para «tirbanibulina»,1,tirbanibulina
+tivozanib,tivozanib,confirmado,exacto,regla + ATC de la AIFA (L01EK03) igual al de la AEMPS/CIMA para «tivozanib»,1,tivozanib
+tocoferolo,tocoferol,confirmado,exacto,"regla + Wikidata (Q910277, nombre italiano «tocoferolo»): el mismo elemento tiene el nombre español «tocoferol»",1,tocoferolo
+tolcapone,tolcapona,confirmado,exacto,regla + ATC de la AIFA (N04BX01) igual al de la AEMPS/CIMA para «tolcapona»,1,tolcapone
+triamterene,triamtereno,confirmado,exacto,"regla + Wikidata (Q221520, nombre italiano «triamterene»): mismo ATC que la AEMPS/CIMA (C03DB02)",1,triamterene
+triesifenidile,trihexifenidilo,confirmado,exacto,ATC + ATC de la AIFA (N04AA01) igual al de la AEMPS/CIMA para «trihexifenidilo»,1,triesifenidile cloridrato
+trifarotene,trifaroteno,confirmado,exacto,regla + ATC de la AIFA (D10AD06) igual al de la AEMPS/CIMA para «trifaroteno»,1,trifarotene
+trifluridina,trifluridina,confirmado,exacto,"regla + Wikidata (Q2359590, nombre italiano «trifluridina»): mismo ATC que la AEMPS/CIMA (S01AD02)",1,trifluridina
+trimetazidina,trimetazidina,confirmado,exacto,regla + ATC de la AIFA (C01EB15) igual al de la AEMPS/CIMA para «trimetazidina»,1,trimetazidina dicloridrato
+trimipramina,trimipramina,confirmado,exacto,regla + ATC de la AIFA (N06AA06) igual al de la AEMPS/CIMA para «trimipramina»,1,trimipramina
+tucatinib,tucatinib,confirmado,exacto,regla + ATC de la AIFA (L01EH03) igual al de la AEMPS/CIMA para «tucatinib»,1,tucatinib
+upadacitinib,upadacitinib,confirmado,exacto,regla + ATC de la AIFA (L04AF03) igual al de la AEMPS/CIMA para «upadacitinib»,1,upadacitinib
+vandetanib,vandetanib,confirmado,exacto,regla + ATC de la AIFA (L01EX04) igual al de la AEMPS/CIMA para «vandetanib»,1,vandetanib
+vemurafenib,vemurafenib,confirmado,exacto,regla + ATC de la AIFA (L01EC01) igual al de la AEMPS/CIMA para «vemurafenib»,1,vemurafenib
+venetoclax,venetoclax,confirmado,exacto,regla + ATC de la AIFA (L01XX52) igual al de la AEMPS/CIMA para «venetoclax»,1,venetoclax
+vericiguat,vericiguat,confirmado,exacto,regla + ATC de la AIFA (C01DX22) igual al de la AEMPS/CIMA para «vericiguat»,1,vericiguat
+vibegron,vibegrón,confirmado,exacto,regla + ATC de la AIFA (G04BD15) igual al de la AEMPS/CIMA para «vibegrón»,1,vibegron
+vismodegib,vismodegib,confirmado,exacto,regla + ATC de la AIFA (L01XJ01) igual al de la AEMPS/CIMA para «vismodegib»,1,vismodegib
+voclosporina,voclosporina,confirmado,exacto,regla + ATC de la AIFA (L04AD03) igual al de la AEMPS/CIMA para «voclosporina»,1,voclosporina
+warfarin,warfarina,confirmado,exacto,ATC + ATC de la AIFA (B01AA03) igual al de la AEMPS/CIMA para «warfarina»,1,warfarin sodico
+zanamivir,zanamivir,confirmado,exacto,regla + ATC de la AIFA (J05AH01) igual al de la AEMPS/CIMA para «zanamivir»,1,zanamivir
+sodio cloruro,sodio cloruro,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): es la misma sustancia (cloruro sódico). Los ATC difieren solo por el uso (B05BB01 intravenoso frente a R01AX10 nasal). Igual que el enlace del Reino Unido.,34,sodio cloruro
+acido ascorbico,ácido ascórbico,aprobado,exacto,"Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): mismo compuesto; el ATC de la AIFA es A11GA01 (vitamina C oral) y la AEMPS solo lista códigos tópicos (G01AD03, S01XA15). Igual que el enlace del Reino Unido.",32,acido ascorbico
+bromazepam,bromacepam,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): es la misma sustancia (bromazepam); la AEMPS no tiene ATC para esa grafía. Igual que en Francia.,30,bromazepam
+esomeprazolo magnesio,esomeprazol,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): esomeprazol en forma de sal de magnesio; mismo ATC (A02BC05).,26,esomeprazolo magnesio triidrato | esomeprazolo magnesio diidrato
+pantoprazolo sodico sesquidrato,pantoprazol,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): pantoprazol en forma de sal sódica hidratada; mismo ATC (A02BC02).,25,pantoprazolo sodico sesquidrato
+lattulosio,lactulosa,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): grafía italiana de lactulosa; mismo ATC (A06AD11).,22,lattulosio
+perindopril tert-butilamina,perindopril,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): perindopril en forma de sal de terc-butilamina (erbumina); mismo ATC (C09AA04).,20,perindopril tert-butilamina
+sodio bicarbonato,sodio bicarbonato,aprobado,exacto,"Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): es la misma sustancia (bicarbonato sódico); en la AIFA solo aparece en combinaciones, sin ATC propio. Igual que el enlace del Reino Unido.",17,sodio bicarbonato
+isosorbide mononitrato,mononitrato de isosorbida,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): mismo nombre con el orden invertido; mismo ATC (C01DA14).,16,isosorbide mononitrato
+iodopovidone,povidona iodada,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): mismo nombre en italiano; mismo ATC (D08AG02).,14,iodopovidone
+risedronato,ácido risedrónico,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): risedronato es la sal del ácido risedrónico; mismo ATC (M05BA07).,14,risedronato sodico
+sacubitril,sacubitrilo,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): mismo nombre sin la «o» final.,13,sacubitril | sacubitril sodico
+nintedanib esilato,nintedanib,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): nintedanib en forma de sal (esilato); mismo ATC (L01EX09).,11,nintedanib esilato
+esperidina,hesperidina,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): grafía italiana de hesperidina (sin h).,9,esperidina
+almotriptan idrogenomalato,almotriptán,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): almotriptán en forma de sal (malato); mismo ATC (N02CC05).,8,almotriptan idrogenomalato
+clopidogrel idrogeno solfato,clopidogrel,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): clopidogrel en forma de sal (hidrogenosulfato); mismo ATC (B01AC04).,8,clopidogrel idrogeno solfato
+risedronate sodium,ácido risedrónico,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): risedronato sódico es la sal del ácido risedrónico; mismo ATC (M05BA07).,7,risedronate sodium
+safinamide metansolfonato,safinamida,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): safinamida en forma de sal (mesilato); mismo ATC (N04BD03).,7,safinamide metansolfonato
+cloperastina fendizoato,cloperastina,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): cloperastina en forma de sal (fendizoato); mismo ATC (R05DB21).,5,cloperastina fendizoato
+diclofenac idrossietilpirrolidina,diclofenaco,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): diclofenaco en forma de sal (epolamina); mismo ATC (M01AB05).,5,diclofenac idrossietilpirrolidina
+ibandronato,ácido ibandrónico,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): ibandronato es la sal del ácido ibandrónico; mismo ATC (M05BA06).,5,ibandronato sodico monoidrato
+sevelamer carbonato,sevelámero,aprobado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): sevelámero en forma de sal (carbonato); mismo ATC (V03AE02).,5,sevelamer carbonato
+olmesartan medoxomil,olmesartán,sin_confirmar,base,el maestro de la AEMPS no tiene ATC para «olmesartán»,60,olmesartan medoxomil
+tenofovir disoproxil,tenofovir,sin_confirmar,base,el maestro de la AEMPS no tiene ATC para «tenofovir»,24,tenofovir disoproxil
+dabigatran etexilato mesilato,dabigatrán,sin_confirmar,base,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),19,dabigatran etexilato mesilato
+benzalconio cloruro,benzalconio cloruro,sin_confirmar,exacto,el maestro de la AEMPS no tiene ATC para «benzalconio cloruro»,17,benzalconio cloruro
+micofenolato mofetile,micofenolato mofetilo,sin_confirmar,exacto,el maestro de la AEMPS no tiene ATC para «micofenolato mofetilo»,12,micofenolato mofetile
+cetilpiridinio cloruro,cetilpiridinio cloruro,sin_confirmar,exacto,el maestro de la AEMPS no tiene ATC para «cetilpiridinio cloruro»,11,cetilpiridinio cloruro
+sodio alginato,sodio alginato,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),8,sodio alginato
+dabigatran etexilato,dabigatrán,sin_confirmar,base,el maestro de la AEMPS no tiene ATC para «dabigatrán»,5,dabigatran etexilato
+clormadinone acetato,clormadinona,sin_confirmar,base,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),4,clormadinone acetato
+cobicistat,cobicistat,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),3,cobicistat
+magnesio carbonato,magnesio carbonato,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),3,magnesio carbonato
+norgestimato,norgestimato,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),3,norgestimato
+velpatasvir,velpatasvir,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),3,velpatasvir
+aclidinio,aclidinio,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),2,aclidinio
+glecaprevir,glecaprevir,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),2,glecaprevir
+paracetamol,paracetamol,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),2,paracetamol
+pibrentasvir,pibrentasvir,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),2,pibrentasvir
+triamcinolone,triamcinolona,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),2,triamcinolone
+amilmetacresolo,amilmetacresol,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,amilmetacresolo
+bictegravir,bictegravir,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,bictegravir
+bisoprolol,bisoprolol,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,bisoprolol
+calcio acetato,calcio acetato,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,calcio acetato
+cedazuridina,cedazuridina,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,cedazuridina
+clobetasol,clobetasol,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,clobetasol
+decitabina,decitabina,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,decitabina
+elvitegravir,elvitegravir,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,elvitegravir
+inavolisib,inavolisib,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,inavolisib
+magnesio ossido,magnesio óxido,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,magnesio ossido
+melissa officinalis,melissa officinalis,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,melissa officinalis
+metocarbamolo,metocarbamol,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,metocarbamolo
+nomegestrol,nomegestrol,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,nomegestrol
+norelgestromina,norelgestromina,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,norelgestromina
+pinaverio bromuro,pinaverio bromuro,sin_confirmar,exacto,el maestro de la AEMPS no tiene ATC para «pinaverio bromuro»,1,pinaverio bromuro
+polimixina b,polimixina b,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,polimixina b
+serenoa repens,serenoa repens,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,serenoa repens
+sodio citrato,sodio citrato,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,sodio citrato
+sodio fosfato,sodio fosfato,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,sodio fosfato
+trospio cloruro,trospio cloruro,sin_confirmar,exacto,el maestro de la AEMPS no tiene ATC para «trospio cloruro»,1,trospio cloruro
+voxilaprevir,voxilaprevir,sin_confirmar,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,voxilaprevir
+diclofenac,benzocaína,sugerido,exacto,"ATC de la AIFA (A01AD11) igual al de la AEMPS/CIMA para «benzocaína», pero los nombres se parecen poco (0.30): hay que revisarlo",82,diclofenac sodico | diclofenac potassico
+flurbiprofene,benzocaína,sugerido,exacto,"ATC de la AIFA (A01AD11) igual al de la AEMPS/CIMA para «benzocaína», pero los nombres se parecen poco (0.35): hay que revisarlo",59,flurbiprofene | flurbiprofene sodico
+ketoprofene,benzocaína,sugerido,exacto,"ATC de la AIFA (A01AD11) igual al de la AEMPS/CIMA para «benzocaína», pero los nombres se parecen poco (0.29): hay que revisarlo",59,ketoprofene | ketoprofene sale di lisina
+desametasone,tobramicina,sugerido,exacto,"ATC de la AIFA (S01AA12) igual al de la AEMPS/CIMA para «tobramicina», pero los nombres se parecen poco (0.35): hay que revisarlo",57,desametasone
+nimesulide,benzocaína,sugerido,exacto,"ATC de la AIFA (A01AD11) igual al de la AEMPS/CIMA para «benzocaína», pero los nombres se parecen poco (0.30): hay que revisarlo",34,nimesulide
+naproxene,naproxeno sodico,sugerido,exacto,"ATC de la AIFA (M01AE02) igual al de la AEMPS/CIMA para «naproxeno sodico», pero los nombres se parecen poco (0.72): hay que revisarlo",20,naproxene | naproxene sodico
+benzalconio cloruro,hipromelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «hipromelosa», pero los nombres se parecen poco (0.20): hay que revisarlo",17,benzalconio cloruro
+benzalconio cloruro,carbomero,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carbomero», pero los nombres se parecen poco (0.29): hay que revisarlo",17,benzalconio cloruro
+benzalconio cloruro,carmelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carmelosa», pero los nombres se parecen poco (0.21): hay que revisarlo",17,benzalconio cloruro
+dimenidrinato,difenhidramina,sugerido,exacto,"ATC de la AIFA (R06AA02) igual al de la AEMPS/CIMA para «difenhidramina», pero los nombres se parecen poco (0.74): hay que revisarlo",10,dimenidrinato
+sodio valproato,ácido valproico,sugerido,exacto,"ATC de la AIFA (N03AG01) igual al de la AEMPS/CIMA para «ácido valproico», pero los nombres se parecen poco (0.67): hay que revisarlo",9,sodio valproato
+canfora,multicomponente,sugerido,exacto,"ATC de la AIFA (M02AX10) igual al de la AEMPS/CIMA para «multicomponente», pero los nombres se parecen poco (0.18): hay que revisarlo",8,canfora
+sodio picosolfato,picosulfato de sodio,sugerido,exacto,"ATC de la AIFA (A06AB08) igual al de la AEMPS/CIMA para «picosulfato de sodio», pero los nombres se parecen poco (0.27): hay que revisarlo",8,sodio picosolfato
+acido ialuronico,hipromelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «hipromelosa», pero los nombres se parecen poco (0.30): hay que revisarlo",7,acido ialuronico sale sodico | acido ialuronico
+acido ialuronico,carbomero,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carbomero», pero los nombres se parecen poco (0.32): hay que revisarlo",7,acido ialuronico sale sodico | acido ialuronico
+acido ialuronico,carmelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carmelosa», pero los nombres se parecen poco (0.24): hay que revisarlo",7,acido ialuronico sale sodico | acido ialuronico
+procaina,benzocaína,sugerido,exacto,"ATC de la AIFA (A01AD11) igual al de la AEMPS/CIMA para «benzocaína», pero los nombres se parecen poco (0.67): hay que revisarlo",7,procaina | procaina cloridrato
+tiocolchicoside,multicomponente,sugerido,exacto,"ATC de la AIFA (M02AX10) igual al de la AEMPS/CIMA para «multicomponente», pero los nombres se parecen poco (0.27): hay que revisarlo",6,tiocolchicoside
+argento proteinato,sodio cloruro,sugerido,exacto,"ATC de la AIFA (R01AX10) igual al de la AEMPS/CIMA para «sodio cloruro», pero los nombres se parecen poco (0.26): hay que revisarlo",5,argento proteinato
+sodio ialuronato,hipromelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «hipromelosa», pero los nombres se parecen poco (0.30): hay que revisarlo",5,sodio ialuronato
+sodio ialuronato,carbomero,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carbomero», pero los nombres se parecen poco (0.24): hay que revisarlo",5,sodio ialuronato
+sodio ialuronato,carmelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carmelosa», pero los nombres se parecen poco (0.16): hay que revisarlo",5,sodio ialuronato
+valeriana,valeriana officinalis,sugerido,exacto,"ATC de la AIFA (N05CM09) igual al de la AEMPS/CIMA para «valeriana officinalis», pero los nombres se parecen poco (0.60): hay que revisarlo",5,valeriana
+benzoilperossido,peróxido de benzoilo,sugerido,exacto,"ATC de la AIFA (D10AE01) igual al de la AEMPS/CIMA para «peróxido de benzoilo», pero los nombres se parecen poco (0.46): hay que revisarlo",4,benzoilperossido
+carbomer,hipromelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «hipromelosa», pero los nombres se parecen poco (0.42): hay que revisarlo",4,carbomer
+carbomer,carmelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carmelosa», pero los nombres se parecen poco (0.59): hay que revisarlo",4,carbomer
+clorexidina digluconato,clorhexidina,sugerido,exacto,"ATC de la AIFA (A01AB03, D08AC02) igual al de la AEMPS/CIMA para «clorhexidina», pero los nombres se parecen poco (0.63): hay que revisarlo",4,clorexidina digluconato
+dapagliflozin propanediolo,dapagliflozina,sugerido,exacto,"ATC de la AIFA (A10BK01) igual al de la AEMPS/CIMA para «dapagliflozina», pero los nombres se parecen poco (0.72): hay que revisarlo",4,dapagliflozin propanediolo monoidrato
+didrogesterone,didrogesterona,sugerido,exacto,el maestro de la AEMPS no tiene ATC para «didrogesterona»,4,didrogesterone
+flurazepam monocloridrato,flurazepam,sugerido,exacto,"ATC de la AIFA (N05CD01) igual al de la AEMPS/CIMA para «flurazepam», pero los nombres se parecen poco (0.57): hay que revisarlo",4,flurazepam monocloridrato
+ibuprofene isobutanolammonio,ibuprofeno,sugerido,exacto,"ATC de la AIFA (G02CC01) igual al de la AEMPS/CIMA para «ibuprofeno», pero los nombres se parecen poco (0.53): hay que revisarlo",4,ibuprofene isobutanolammonio
+nicotina resinato,nicotina,sugerido,exacto,"ATC de la AIFA (N07BA01) igual al de la AEMPS/CIMA para «nicotina», pero los nombres se parecen poco (0.64): hay que revisarlo",4,nicotina resinato
+repentina,serenoa repens,sugerido,exacto,"ATC de la AIFA (G04CX02) igual al de la AEMPS/CIMA para «serenoa repens», pero los nombres se parecen poco (0.43): hay que revisarlo",4,repentina
+tirotricina,sodio cloruro,sugerido,exacto,"ATC de la AIFA (R01AX10) igual al de la AEMPS/CIMA para «sodio cloruro», pero los nombres se parecen poco (0.25): hay que revisarlo",4,tirotricina
+vardenafil idrocloridrato,vardenafilo,sugerido,exacto,"ATC de la AIFA (G04BE09) igual al de la AEMPS/CIMA para «vardenafilo», pero los nombres se parecen poco (0.59): hay que revisarlo",4,vardenafil idrocloridrato
+citicolina sodica,citicolina,sugerido,exacto,"ATC de la AIFA (N06BX06) igual al de la AEMPS/CIMA para «citicolina», pero los nombres se parecen poco (0.74): hay que revisarlo",3,citicolina sodica
+darunavir etanolato,darunavir,sugerido,exacto,"ATC de la AIFA (J05AE10) igual al de la AEMPS/CIMA para «darunavir», pero los nombres se parecen poco (0.64): hay que revisarlo",3,darunavir etanolato
+dimeticone attivato,simeticona,sugerido,exacto,"ATC de la AIFA (A03AX13) igual al de la AEMPS/CIMA para «simeticona», pero los nombres se parecen poco (0.62): hay que revisarlo",3,dimeticone attivato
+eparina sodica,heparina,sugerido,exacto,"ATC de la AIFA (S01XA14) igual al de la AEMPS/CIMA para «heparina», pero los nombres se parecen poco (0.64): hay que revisarlo",3,eparina sodica
+eparina sodica,hidrocortisona,sugerido,exacto,"ATC de la AIFA (C05AA01) igual al de la AEMPS/CIMA para «hidrocortisona», pero los nombres se parecen poco (0.29): hay que revisarlo",3,eparina sodica
+ertugliflozin acido l-piroglutammico,ertugliflozina,sugerido,exacto,"ATC de la AIFA (A10BK04) igual al de la AEMPS/CIMA para «ertugliflozina», pero los nombres se parecen poco (0.56): hay que revisarlo",3,ertugliflozin acido l-piroglutammico
+idrocortisone sodio fosfato,hidrocortisona,sugerido,exacto,"ATC de la AIFA (S01BA02) igual al de la AEMPS/CIMA para «hidrocortisona», pero los nombres se parecen poco (0.67): hay que revisarlo",3,idrocortisone sodio fosfato
+ketotifene fumarato acido,ketotifeno,sugerido,exacto,"ATC de la AIFA (S01GX08) igual al de la AEMPS/CIMA para «ketotifeno», pero los nombres se parecen poco (0.51): hay que revisarlo",3,ketotifene fumarato acido
+litio carbonato,litio,sugerido,exacto,"ATC de la AIFA (N05AN01) igual al de la AEMPS/CIMA para «litio», pero los nombres se parecen poco (0.50): hay que revisarlo",3,litio carbonato
+naprossene,naproxeno sodico,sugerido,exacto,"ATC de la AIFA (M01AE02) igual al de la AEMPS/CIMA para «naproxeno sodico», pero los nombres se parecen poco (0.62): hay que revisarlo",3,naprossene | naprossene sodico
+niaouli,sodio cloruro,sugerido,exacto,"ATC de la AIFA (R01AX10) igual al de la AEMPS/CIMA para «sodio cloruro», pero los nombres se parecen poco (0.30): hay que revisarlo",3,niaouli essenza
+senna,senósidos a-b,sugerido,exacto,"ATC de la AIFA (A06AB06) igual al de la AEMPS/CIMA para «senósidos a-b», pero los nombres se parecen poco (0.44): hay que revisarlo",3,senna foglia | senna estratto secco
+senna,picosulfato de sodio,sugerido,exacto,"ATC de la AIFA (A06AB06) igual al de la AEMPS/CIMA para «picosulfato de sodio», pero los nombres se parecen poco (0.16): hay que revisarlo",3,senna foglia | senna estratto secco
+triamcinolone acetonide,triamcinolona,sugerido,exacto,"ATC de la AIFA (R01AD11) igual al de la AEMPS/CIMA para «triamcinolona», pero los nombres se parecen poco (0.72): hay que revisarlo",3,triamcinolone acetonide
+acetossietilcefuroxima,cefuroxima,sugerido,exacto,"ATC de la AIFA (J01DC02) igual al de la AEMPS/CIMA para «cefuroxima», pero los nombres se parecen poco (0.65): hay que revisarlo",2,acetossietilcefuroxima
+cimicifuga,cimicifuga racemosa,sugerido,exacto,"ATC de la AIFA (G02CX04) igual al de la AEMPS/CIMA para «cimicifuga racemosa», pero los nombres se parecen poco (0.69): hay que revisarlo",2,cimicifuga estratto secco
+clebopride malato acido,cleboprida,sugerido,exacto,"ATC de la AIFA (A03FA06) igual al de la AEMPS/CIMA para «cleboprida», pero los nombres se parecen poco (0.61): hay que revisarlo",2,clebopride malato acido
+diclofenac epolamina,diclofenaco,sugerido,exacto,"ATC de la AIFA (M01AB05, M02AA15) igual al de la AEMPS/CIMA para «diclofenaco», pero los nombres se parecen poco (0.71): hay que revisarlo",2,diclofenac epolamina
+eparan,condroitín sulfato,sugerido,exacto,"ATC de la AIFA (C05BA01) igual al de la AEMPS/CIMA para «condroitín sulfato», pero los nombres se parecen poco (0.08): hay que revisarlo",2,eparan solfato
+fenitoina sodica,fenitoína,sugerido,exacto,"ATC de la AIFA (N03AB02) igual al de la AEMPS/CIMA para «fenitoína», pero los nombres se parecen poco (0.72): hay que revisarlo",2,fenitoina sodica
+glicosaminoglicanopolisolfato,condroitín sulfato,sugerido,exacto,"ATC de la AIFA (C05BA01) igual al de la AEMPS/CIMA para «condroitín sulfato», pero los nombres se parecen poco (0.43): hay que revisarlo",2,glicosaminoglicanopolisolfato
+hydrochlorothiazide,hidroclorotiazida,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),2,hydrochlorothiazide
+indapamide emidrato,indapamida,sugerido,exacto,"ATC de la AIFA (C03BA11) igual al de la AEMPS/CIMA para «indapamida», pero los nombres se parecen poco (0.69): hay que revisarlo",2,indapamide emidrato
+lavanda,esencia de lavanda,sugerido,exacto,"ATC de la AIFA (N05BX05) igual al de la AEMPS/CIMA para «esencia de lavanda», pero los nombres se parecen poco (0.56): hay que revisarlo",2,lavanda essenza
+levocloperastina fendizoato,cloperastina,sugerido,exacto,"ATC de la AIFA (R05DB21) igual al de la AEMPS/CIMA para «cloperastina», pero los nombres se parecen poco (0.62): hay que revisarlo",2,levocloperastina fendizoato
+micofenolato,ácido micofenólico,sugerido,exacto,"ATC de la AIFA (L04AA06) igual al de la AEMPS/CIMA para «ácido micofenólico», pero los nombres se parecen poco (0.67): hay que revisarlo",2,micofenolato sodico
+mupirocina calcica,mupirocina,sugerido,exacto,"ATC de la AIFA (D06AX09, R01AX06) igual al de la AEMPS/CIMA para «mupirocina», pero los nombres se parecen poco (0.71): hay que revisarlo",2,mupirocina calcica
+nitrofurantoina macrocristalli,nitrofurantoína,sugerido,exacto,"ATC de la AIFA (J01XE01) igual al de la AEMPS/CIMA para «nitrofurantoína», pero los nombres se parecen poco (0.68): hay que revisarlo",2,nitrofurantoina macrocristalli
+proguanil,proguanilo,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),2,proguanil cloridrato
+rifamicina sodica,rifamicina,sugerido,exacto,"ATC de la AIFA (A07AA13) igual al de la AEMPS/CIMA para «rifamicina», pero los nombres se parecen poco (0.74): hay que revisarlo",2,rifamicina sodica
+rivastigmina idrogeno tartrato,rivastigmina,sugerido,exacto,"ATC de la AIFA (N06DA03) igual al de la AEMPS/CIMA para «rivastigmina», pero los nombres se parecen poco (0.56): hay que revisarlo",2,rivastigmina idrogeno tartrato
+acetilsalicilato di,ácido acetilsalicílico,sugerido,exacto,"ATC de la AIFA (B01AC06) igual al de la AEMPS/CIMA para «ácido acetilsalicílico», pero los nombres se parecen poco (0.68): hay que revisarlo",1,acetilsalicilato di lisina
+agni casti fructus extractum siccum,vitex agnus castus,sugerido,exacto,"ATC de la AIFA (G02CX03) igual al de la AEMPS/CIMA para «vitex agnus castus», pero los nombres se parecen poco (0.38): hay que revisarlo",1,agni casti fructus extractum siccum
+butilbromuro di joscina,butilescopolamina bromuro,sugerido,exacto,"ATC de la AIFA (A03BB01) igual al de la AEMPS/CIMA para «butilescopolamina bromuro», pero los nombres se parecen poco (0.50): hay que revisarlo",1,butilbromuro di joscina
+carmellosa sodica,hipromelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «hipromelosa», pero los nombres se parecen poco (0.52): hay que revisarlo",1,carmellosa sodica
+carmellosa sodica,carbomero,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carbomero», pero los nombres se parecen poco (0.48): hay que revisarlo",1,carmellosa sodica
+carmellosa sodica,carmelosa,sugerido,exacto,"ATC de la AIFA (S01XA20) igual al de la AEMPS/CIMA para «carmelosa», pero los nombres se parecen poco (0.72): hay que revisarlo",1,carmellosa sodica
+diclofenac dietilamina,diclofenaco,sugerido,exacto,"ATC de la AIFA (M02AA15) igual al de la AEMPS/CIMA para «diclofenaco», pero los nombres se parecen poco (0.61): hay que revisarlo",1,diclofenac dietilamina
+emedastina difumarato,emedastina,sugerido,exacto,"ATC de la AIFA (S01GX06) igual al de la AEMPS/CIMA para «emedastina», pero los nombres se parecen poco (0.65): hay que revisarlo",1,emedastina difumarato
+estratto di lavanda,esencia de lavanda,sugerido,exacto,"ATC de la AIFA (N05BX05) igual al de la AEMPS/CIMA para «esencia de lavanda», pero los nombres se parecen poco (0.70): hay que revisarlo",1,estratto di lavanda
+fermenti lattici,lactobacillus acidophilus,sugerido,exacto,"ATC de la AIFA (A07FA01) igual al de la AEMPS/CIMA para «lactobacillus acidophilus», pero los nombres se parecen poco (0.24): hay que revisarlo",1,fermenti lattici
+ferroglicinasolfato,ferroglicina sulfato,sugerido,exacto,el maestro de la AEMPS no tiene ATC para «ferroglicina sulfato»,1,ferroglicinasolfato
+glucosamina solfato cristallina,glucosamina,sugerido,exacto,"ATC de la AIFA (M01AX05) igual al de la AEMPS/CIMA para «glucosamina», pero los nombres se parecen poco (0.54): hay que revisarlo",1,glucosamina solfato cristallina
+ipromellosa,hipromelosa,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,ipromellosa
+l-carnitina,carnitina,sugerido,exacto,el maestro de la AEMPS no tiene ATC para «carnitina»,1,l-carnitina sale interno
+l-cistina,cistina,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,l-cistina
+lamivudine,lamivudina,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,lamivudine
+linzagolix colina,linzagolix,sugerido,exacto,"ATC de la AIFA (H01CC04) igual al de la AEMPS/CIMA para «linzagolix», pero los nombres se parecen poco (0.74): hay que revisarlo",1,linzagolix colina
+metadoxina,metadona,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,metadoxina
+piroxicam betaciclodestrina,piroxicam,sugerido,exacto,"ATC de la AIFA (M01AC01) igual al de la AEMPS/CIMA para «piroxicam», pero los nombres se parecen poco (0.50): hay que revisarlo",1,piroxicam betaciclodestrina
+risedronato sodico emipentaidrato,ácido risedrónico,sugerido,exacto,"ATC de la AIFA (M05BA07) igual al de la AEMPS/CIMA para «ácido risedrónico», pero los nombres se parecen poco (0.44): hay que revisarlo",1,risedronato sodico emipentaidrato
+ruscogenine,ruscogenina,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,ruscogenine
+spironolactone,espironolactona,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,spironolactone
+terbinafine hydrochloride,terbinafina,sugerido,exacto,"ATC de la AIFA (D01AE15) igual al de la AEMPS/CIMA para «terbinafina», pero los nombres se parecen poco (0.61): hay que revisarlo",1,terbinafine hydrochloride
+tipiracil,tipiracilo,sugerido,exacto,la AIFA no da un ATC propio (el nombre solo aparece en combinaciones),1,tipiracil
+trientina diidrocloruro,trientina,sugerido,exacto,"ATC de la AIFA (A16AX12) igual al de la AEMPS/CIMA para «trientina», pero los nombres se parecen poco (0.55): hay que revisarlo",1,trientina diidrocloruro
+isoconazolo,tioconazol,contradice,exacto,"ATC de la AIFA D01AC05, G01AF07 frente a AEMPS/CIMA D01AC07, G01AF08 para «tioconazol»",6,isoconazolo nitrato
+fluticasone,fluticasona,contradice,exacto,"ATC de la AIFA R01AD12 frente a AEMPS/CIMA D07AC17, R01AD08, R03BA05 para «fluticasona»",5,fluticasone
+fluticasone furoato,fluticasona,contradice,base,"ATC de la AIFA R01AD12 frente a AEMPS/CIMA D07AC17, R01AD08, R03BA05 para «fluticasona»",5,fluticasone furoato
+metilprednisolone aceponato,metilprednisolona,contradice,base,"ATC de la AIFA D07AC14 frente a AEMPS/CIMA D07AA01, D10AA02, H02AB04 para «metilprednisolona»",5,metilprednisolone aceponato
+oxerutina,troxerutina,contradice,exacto,ATC de la AIFA C05CA54 frente a AEMPS/CIMA C05CA04 para «troxerutina»,4,oxerutina
+promazina,prometazina,contradice,exacto,"ATC de la AIFA N05AA03 frente a AEMPS/CIMA D04AA10, R06AD02 para «prometazina»",4,promazina cloridrato | promazina
+idrocortisone butirrato,hidrocortisona,contradice,base,"ATC de la AIFA D07AB02 frente a AEMPS/CIMA A01AC03, A07EA02, C05AA01, D07AA02, D07XA01, H02AB09, S01BA02, S01CB03, S02BA01 para «hidrocortisona»",3,idrocortisone butirrato
+amifampridina,fampridina,contradice,exacto,ATC de la AIFA N07XX05 frente a AEMPS/CIMA N07XX07 para «fampridina»,2,amifampridina fosfato
+bacampicillina,ampicilina,contradice,exacto,"ATC de la AIFA J01CA06 frente a AEMPS/CIMA J01CA01, S01AA19 para «ampicilina»",1,bacampicillina cloridrato
+dexametasone,dexametasona,contradice,exacto,"ATC de la AIFA S01CA01 frente a AEMPS/CIMA A01AC02, C05AA09, D07AB19, D07XB05, D10AA03, H02AB02, R01AD03, S01BA01, S01CB01, S02BA06, S03BA01 para «dexametasona»",1,dexametasone
+estazolam,ketazolam,contradice,exacto,ATC de la AIFA N05CD04 frente a AEMPS/CIMA N05BA10 para «ketazolam»,1,estazolam
+eszopiclone,zopiclona,contradice,exacto,ATC de la AIFA N05CF04 frente a AEMPS/CIMA N05CF01 para «zopiclona»,1,eszopiclone
+flunitrazepam,flurazepam,contradice,exacto,ATC de la AIFA N05CD03 frente a AEMPS/CIMA N05CD01 para «flurazepam»,1,flunitrazepam
+idrossicobalamina,hidroxocobalamina,contradice,exacto,"Wikidata (Q187706, nombre italiano «idrossicobalamina»): ATC B03BA frente a AEMPS/CIMA B03BA03, V03AB33",1,idrossicobalamina
+metildopa,metildopa,contradice,exacto,ATC de la AIFA C02AB01 frente a AEMPS/CIMA C02AB para «metildopa»,1,metildopa
+delorazepam,lorazepam,rechazado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): son sustancias distintas (el delorazepam es un profármaco de otra benzodiazepina); solo se parecen los nombres.,18,delorazepam
+dimeticone,simeticona,rechazado,exacto,Revisión manual de Claude (pendiente de visto bueno de María y de un farmacéutico): la simeticona es dimeticona activada con sílice: no es exactamente la misma sustancia que la dimeticona aunque el ATC A03AX13 agrupe ambas.,5,dimeticone

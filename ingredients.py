@@ -1,6 +1,6 @@
 """
 ingredients.py
-Enlace de principios activos entre idiomas (francés e inglés -> español).
+Enlace de principios activos entre idiomas (francés, inglés e italiano -> español).
 
 REGLA DE ORO: ningún enlace se crea solo. Un nombre francés se enlaza con uno
 español únicamente si el par está en ingredient_links.csv con estado
@@ -39,8 +39,10 @@ import unicodedata
 
 LINKS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ingredient_links.csv")
 LINKS_PATH_UK = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ingredient_links_uk.csv")
+LINKS_PATH_IT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ingredient_links_it.csv")
 LINK_FIELDS = ["nombre_fr", "nombre_es", "estado", "nivel", "evidencia", "productos_fr", "ejemplos"]
 LINK_FIELDS_UK = ["nombre_en", "nombre_es", "estado", "nivel", "evidencia", "productos_uk", "ejemplos"]
+LINK_FIELDS_IT = ["nome_it", "nombre_es", "estado", "nivel", "evidencia", "productos_it", "ejemplos"]
 LEVEL_EXACT, LEVEL_BASE = "exacto", "base"
 USABLE_STATUSES = {"confirmado", "aprobado"}
 
@@ -306,6 +308,102 @@ def propose_spanish(moiety):
     return s
 
 
+# --- Italia (nombres en italiano de la AIFA) ------------------------------------------
+# Como en inglés, la sal va DESPUÉS del principio activo ("nafazolina nitrato"). Mismas reglas
+# conservadoras: solo se quita la sal de una BASE ORGÁNICA; nunca los ésteres, ni las sales
+# inorgánicas enteras ("magnesio idrossido"). Listas cerradas a propósito.
+COUNTERIONS_IT = (
+    "cloridrato", "dicloridrato", "bromidrato", "solfato", "nitrato", "maleato", "fumarato", "emifumarato",
+    "tartrato", "bitartrato", "citrato", "succinato", "fosfato", "mesilato", "besilato", "tosilato", "isetionato",
+    "gluconato", "ossalato", "xinafoato", "teoclato", "mucato",
+)
+AMBIGUOUS_COUNTERIONS_IT = {
+    "benzoato": {"rizatriptan"},
+    "malato": {"sunitinib", "almotriptan"},
+    "acetato": {"desmopressina", "octreotide", "lanreotide", "glatiramer", "leuprorelina", "triptorelina",
+                "goserelin", "terlipressina", "ganirelix", "cetrorelix", "icatibant", "degarelix",
+                "flecainide", "clorexidina", "lisina", "indacaterolo"},
+}
+CATIONS_IT = ("sodico", "disodico", "potassico", "calcico", "magnesico", "dietilammonio", "dietilammina", "lisina",
+              "arginina", "trometamolo", "trometamina", "olamina", "erbumina", "tert-butilammina")
+HYDRATES_IT = ("monoidrato", "diidrato", "triidrato", "esaidrato", "emiidrato", "sesquiidrato", "idrato", "anidro",
+               "micronizzato")
+INORGANIC_IT = (
+    "sodio", "disodio", "potassio", "calcio", "magnesio", "zinco", "alluminio", "litio", "argento", "ferro", "rame",
+    "ammonio", "idrogeno", "acqua", "bario", "bismuto", "manganese", "cromo", "selenio", "molibdeno", "iodio", "zolfo",
+    "carbonio", "azoto", "ossigeno", "elio", "fosforo", "cloruro", "bicarbonato", "aria",
+)
+# Descriptores de plantas al final del nombre ("senna foglia", "senna estratto secco").
+BOTANICAL_IT = {
+    "foglia", "foglie", "radice", "radici", "frutto", "frutti", "fiore", "fiori", "corteccia", "cortecce", "rizoma",
+    "semi", "seme", "bulbo", "gemma", "gemme", "erba", "resina", "polvere", "essenza", "tintura", "tintura madre",
+    "olio essenziale", "estratto", "estratto secco", "estratto molle", "estratto fluido", "estratto idroalcolico",
+    "estratto acquoso", "parti aeree", "sommita fiorite", "pianta intera",
+}
+
+
+def parse_substance_it(raw):
+    """Principio activo 'limpio' en italiano (minúsculas, sin tildes) o None si no se puede interpretar con
+    seguridad. Si es una sal inorgánica o un éster se devuelve ENTERO (no se le quita nada)."""
+    s = re.sub(r"\s+", " ", strip_accents(raw.lower()).strip())
+    if not re.fullmatch(r"[a-z\- ]+", s):  # cifras, comas, paréntesis, barras: demasiado raro
+        return None
+    s = re.sub(r"\s+sale (?:di )?[a-z]+$", "", s)  # "ibuprofene sale di lisina" -> "ibuprofene"
+    words = s.split()
+    changed = True
+    while changed and len(words) > 1:  # "senna foglia", "senna estratto secco" -> "senna"
+        changed = False
+        for n in (3, 2, 1):
+            if len(words) > n and " ".join(words[-n:]) in BOTANICAL_IT:
+                words = words[:-n]
+                changed = True
+                break
+    while len(words) > 1 and words[-1] in HYDRATES_IT:
+        words.pop()
+    ambiguous_ok = len(words) == 2 and words[0] in AMBIGUOUS_COUNTERIONS_IT.get(words[-1], ())
+    if len(words) > 1 and words[-1] in CATIONS_IT and words[-2] not in INORGANIC_IT:
+        words.pop()  # "diclofenac sodico", "ibuprofene lisina"
+    elif len(words) > 1 and (words[-1] in COUNTERIONS_IT or ambiguous_ok):
+        base = words[:-1]
+        if any(w in INORGANIC_IT for w in base):
+            pass  # "zinco solfato": la sal importa
+        elif len(base) == 1:
+            words = base  # "loperamide cloridrato", "codeina fosfato"
+        else:
+            return None
+    name = " ".join(words)
+    if len(name) < 3 or name in INORGANIC_IT:
+        return None
+    return name
+
+
+_IT_SUBSTITUTIONS = (
+    ("idrossi", "hidroxi"), ("ossi", "oxi"), ("destro", "dextro"), ("ph", "f"), ("th", "t"),
+    ("y", "i"), ("ff", "f"), ("chi", "qui"), ("che", "que"), ("ll", "l"), ("zz", "z"),
+)
+_IT_ENDINGS = (
+    (r"ene\b", "eno"), (r"olo\b", "ol"), (r"one\b", "ona"), (r"ile\b", "ilo"), (r"ale\b", "al"), (r"ide\b", "ida"),
+    (r"ina\b", "ina"), (r"ico\b", "ico"), (r"ato\b", "ato"), (r"io\b", "io"),
+)
+
+
+def propose_spanish_it(moiety, k_to_c=True):
+    """Cómo se escribiría un nombre italiano en español (solo candidatos: hay que confirmarlos)."""
+    s = plain(moiety)
+    if k_to_c:
+        s = s.replace("k", "c")
+    for a, b in _IT_SUBSTITUTIONS:
+        s = s.replace(a, b)
+    s = re.sub(r"(?<!h)idro", "hidro", s)  # idrocortisone -> hidrocortisona (sin duplicar la h)
+    for pattern, replacement in _IT_ENDINGS:
+        s = re.sub(pattern, replacement, s)
+    return s
+
+
+def _parser(country):
+    return {"FR": parse_substance, "UK": parse_substance_en, "IT": parse_substance_it}[country]
+
+
 def load_links(path=LINKS_PATH, level=LEVEL_EXACT):
     """{nombre de origen sin tildes: nombre español} solo con los enlaces usables del `level`
     ("exacto" por defecto, o "base"). La primera columna del CSV es el nombre de origen
@@ -326,6 +424,9 @@ def load_links(path=LINKS_PATH, level=LEVEL_EXACT):
 ESTER_WORDS = (
     "dipropionate", "propionate", "furoate", "valerate", "butyrate", "acetate", "cilexetil", "medoxomil",
     "mofetil", "etexilate", "disoproxil", "axetil", "pivoxil", "proxetil", "probutate", "aceponate",
+    # italiano (AIFA)
+    "dipropionato", "propionato", "furoato", "valerato", "butirrato", "acetato", "mofetile", "etexilato",
+    "probutato", "aceponato",
 )
 _ESTER_RE = _alt(ESTER_WORDS)
 
@@ -333,8 +434,7 @@ _ESTER_RE = _alt(ESTER_WORDS)
 def source_key(raw, country):
     """Clave con la que se busca un nombre de origen en las tablas de enlaces de nivel base:
     la molécula ya limpia de sales si se pudo, y si no el nombre tal cual, sin tildes."""
-    parse = parse_substance if country == "FR" else parse_substance_en
-    moiety = parse(raw)
+    moiety = _parser(country)(raw)
     return plain(moiety if moiety is not None else raw)
 
 
@@ -350,6 +450,8 @@ def ester_base(raw, country):
     # va detrás del éster y no cambia qué éster es.
     if country == "FR":
         salt = re.search(rf"\s*\((?:{_COUNTERIONS_RE})\s+(?:de|d')\s*\)$|\s+(?:{_TRAILING_RE})$", p)
+    elif country == "IT":
+        salt = re.search(rf"\s+(?:{_alt(COUNTERIONS_IT + HYDRATES_IT + CATIONS_IT)})$", p)
     else:
         salt = re.search(rf"\s+(?:{_alt(COUNTERIONS_EN + HYDRATES_EN + CATIONS_EN)})$", p)
     if salt:
@@ -369,7 +471,7 @@ def ester_base(raw, country):
             rest = s[m.start("base"):m.end("base")]
     if rest is None:
         return None
-    return (parse_substance if country == "FR" else parse_substance_en)(rest.strip())
+    return _parser(country)(rest.strip())
 
 
 def build_es_index(names):

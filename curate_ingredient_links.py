@@ -38,6 +38,7 @@ Uso:
     python curate_ingredient_links.py            # Francia: propone, comprueba en Wikidata y escribe ingredient_links.csv
     python curate_ingredient_links.py --offline  # sin Wikidata (nada queda "confirmado")
     python curate_ingredient_links.py --country uk --zip RUTA_AL_ZIP   # Reino Unido
+    python curate_ingredient_links.py --country it [--dir CARPETA_AIFA] # Italia (sin Wikidata: usa el ATC de la AIFA)
 """
 
 import argparse
@@ -50,11 +51,13 @@ import pathlib
 import re
 import sqlite3
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 
+import fetch_aifa
 import fetch_bdpm
 import fetch_dmd
 import importers
@@ -155,8 +158,8 @@ def ester_candidates(catalog, country, es_components, exact_keys, id_field):
     """Nombres de `country` ("FR" o "UK") que son un ÉSTER o profármaco y cuya BASE es un nombre
     español que ya tenemos: {clave: (nombre mostrado, nombre español)}, más productos y ejemplos
     por clave. Se omiten los que ya tienen un candidato exacto (`exact_keys`)."""
-    propose = ing.propose_spanish if country == "FR" else ing.propose_spanish_en
-    parse = ing.parse_substance if country == "FR" else ing.parse_substance_en
+    propose = {"FR": ing.propose_spanish, "UK": ing.propose_spanish_en, "IT": ing.propose_spanish_it}[country]
+    parse = ing._parser(country)
     found, products, examples = {}, collections.defaultdict(set), collections.defaultdict(list)
     for item in catalog:
         for raw in item["substances"]:
@@ -169,6 +172,8 @@ def ester_candidates(catalog, country, es_components, exact_keys, id_field):
             guesses = [ing.plain(base), propose(base)]
             if country == "UK":
                 guesses.append(ing.propose_spanish_en(base, k_to_c=False))
+            elif country == "IT":
+                guesses.append(ing.propose_spanish_it(base, k_to_c=False))
             es = next((es_components[g] for g in guesses if g in es_components), None)
             if es is None:
                 continue
@@ -451,8 +456,8 @@ def sparql_retry(query, attempts=4):
             time.sleep(10 * (attempt + 1))
 
 
-def wikidata_by_english_label(moieties):
-    """Para cada nombre inglés: los elementos de Wikidata que lo tienen como etiqueta o
+def wikidata_by_english_label(moieties, lang="en"):
+    """Para cada nombre en el idioma `lang` (inglés por defecto): los elementos de Wikidata que lo tienen como etiqueta o
     alias, con su nombre en español y sus códigos ATC. Son dos consultas sencillas por
     lote (una compleja con UNION agota el tiempo de Wikidata).
     Devuelve {nombre inglés en minúsculas: {"items": set, "es": set, "atc": set}}."""
@@ -461,7 +466,7 @@ def wikidata_by_english_label(moieties):
     failed = 0
     for i in range(0, len(moieties), UK_BATCH):
         chunk = moieties[i : i + UK_BATCH]
-        values = " ".join(literal(v, "en") for m in chunk for v in variants(m))
+        values = " ".join(literal(v, lang) for m in chunk for v in variants(m))
         head = "SELECT ?lab ?item ?value WHERE { VALUES ?lab { " + values + " } ?item (rdfs:label|skos:altLabel) ?lab . "
         queries = {
             "atc": head + "?item wdt:P267 ?value }",
@@ -610,6 +615,227 @@ def main_uk(zip_path, offline):
     print(", ".join(f"{name} ({n})" for n, name in left[:60]))
 
 
+# --- Italia (AIFA) ---------------------------------------------------------------------------------
+# A diferencia de Francia y el Reino Unido, aquí NO hace falta Wikidata: la AIFA da el código ATC de
+# cada producto. Para un producto con UN solo principio activo, ese ATC es el del principio activo, y se
+# compara con el que la AEMPS da al nombre español (maestro oficial de CIMA): dos fuentes oficiales
+# distintas que no comparten nombres. Los nombres que solo aparecen en combinaciones no tienen ATC
+# propio y se quedan «sin confirmar» (no se usan).
+ATC_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aemps_atc_cache.json")
+
+
+def enrich_all_with_aemps_atc(cima_atc, spanish_names, cache_path=ATC_CACHE):
+    """Como enrich_with_aemps_atc, pero para TODOS los nombres españoles y con caché en disco (son ~1.100
+    consultas). La caché (aemps_atc_cache.json) no se sube a git: se regenera sola."""
+    cache = {}
+    if os.path.exists(cache_path):
+        with open(cache_path, encoding="utf-8") as fh:
+            cache = json.load(fh)
+    new = 0
+    for name in sorted(spanish_names):
+        key = ing.plain(name)
+        if key not in cache:
+            try:
+                cache[key] = sorted(aemps_atc(name))
+            except Exception as exc:
+                print(f"[aviso] el maestro de ATC de la AEMPS no respondió para «{name}» ({exc})")
+                continue
+            new += 1
+            time.sleep(0.25)
+            if new % 100 == 0:
+                print(f"  ...{new} nombres consultados")
+                with open(cache_path, "w", encoding="utf-8") as fh:
+                    json.dump(cache, fh, ensure_ascii=False)
+        cima_atc[key] |= set(cache[key])
+    with open(cache_path, "w", encoding="utf-8") as fh:
+        json.dump(cache, fh, ensure_ascii=False)
+
+
+def it_moieties(catalog):
+    display, products, examples = {}, collections.defaultdict(set), collections.defaultdict(list)
+    atc_of = collections.defaultdict(set)  # nombre limpio -> ATC de 7 caracteres de sus productos de UN solo principio activo
+    unparsed = collections.Counter()
+    for item in catalog:
+        for raw in item["substances"]:
+            moiety = ing.parse_substance_it(raw)
+            if moiety is None:
+                unparsed[raw.lower()] += 1
+                continue
+            key = ing.plain(moiety)
+            display[key] = moiety
+            products[key].add(item["ref"])
+            if raw.lower() not in examples[key] and len(examples[key]) < 2:
+                examples[key].append(raw.lower())
+            if len(item["substances"]) == 1 and len(item["atc"]) == 7:
+                atc_of[key].add(item["atc"])
+    return display, products, examples, unparsed, atc_of
+
+
+def it_candidates(display, examples, es_components, atc_of, es_by_atc):
+    """{nombre italiano: {nombre español: método}}. Métodos:
+    "regla"      el nombre italiano pasado al español queda IGUAL que uno que ya tenemos.
+    "atc"        el ATC de la AIFA lo da la AEMPS a ese nombre español (sirve para grafías raras, "ibuprofen").
+                 Si el nombre italiano es un éster, se propone solo de nivel base ("ester").
+    "sugerencia" nombres de una palabra casi iguales; solo se usa si el ATC lo confirma."""
+    candidates = collections.defaultdict(dict)
+    for key, moiety in display.items():
+        guesses = list(dict.fromkeys(g for g in (
+            ing.plain(moiety), ing.propose_spanish_it(moiety), ing.propose_spanish_it(moiety, k_to_c=False)) if g))
+        exact = next((g for g in guesses if g in es_components), None)
+        if exact:
+            candidates[key][es_components[exact]] = "regla"
+        # Éster solo si la palabra del éster sigue en el nombre limpio: "flecainide acetato" ya se limpió a
+        # "flecainide" (sal), pero "betametasone dipropionato" conserva "dipropionato" (éster).
+        is_ester = bool(re.search(rf"\s(?:{ing._ESTER_RE})$", moiety))
+        for code in atc_of.get(key, ()):
+            for es in es_by_atc.get(code, ()):
+                candidates[key].setdefault(es, "ester" if is_ester else "atc")
+        if not candidates[key] and " " not in moiety:
+            close = difflib.get_close_matches(ing.propose_spanish_it(moiety), list(es_components), n=1, cutoff=0.86)
+            if close:
+                candidates[key][es_components[close[0]]] = "sugerencia"
+    return candidates
+
+
+def it_wikidata_check(moiety, es, method, wikidata, cima_atc):
+    """Segunda comprobación, para los nombres que la AIFA no puede confirmar con su ATC (solo salen en
+    combinaciones): Wikidata por el nombre italiano. Vale que el ATC de Wikidata coincida con el de la AEMPS,
+    o (solo con "regla") que el mismo elemento tenga el nombre español."""
+    data = (wikidata or {}).get(moiety)
+    if not data:
+        return None
+    where = f"Wikidata ({', '.join(sorted(data['items'])[:2])}, nombre italiano «{moiety}»)"
+    reference = cima_atc.get(ing.plain(es), set())
+    if data["atc"] and reference:
+        common = data["atc"] & reference
+        if common:
+            return "confirmado", f"{where}: mismo ATC que la AEMPS/CIMA ({', '.join(sorted(common))})"
+        return "contradice", f"{where}: ATC {', '.join(sorted(data['atc']))} frente a AEMPS/CIMA {', '.join(sorted(reference))}"
+
+    def words(name):
+        return frozenset(ing.plain(without_disambiguation(name)).split()) - {"de", "del", "la", "el"}
+
+    if method == "regla" and words(es) in {words(n) for n in data["es"]}:
+        return "confirmado", f"{where}: el mismo elemento tiene el nombre español «{es}»"
+    return None
+
+
+def it_verify(key, moiety, es, method, atc_of, cima_atc, wikidata=None):
+    """(resultado, evidencia). El ATC de la AIFA (de los productos de ese solo principio activo) frente
+    al que la AEMPS da al nombre español. Para "atc" se exige además que los nombres se parezcan: un
+    mismo ATC con nombres muy distintos se deja como «sugerido» para revisarlo a mano."""
+    italian, spanish = atc_of.get(key, set()), cima_atc.get(ing.plain(es), set())
+    if not italian or not spanish:
+        found = it_wikidata_check(moiety, es, method, wikidata, cima_atc)
+        if found:
+            return found
+        if not italian:
+            return "sin_datos", "la AIFA no da un ATC propio (el nombre solo aparece en combinaciones)"
+        return "sin_datos", f"el maestro de la AEMPS no tiene ATC para «{es}»"
+    common = italian & spanish
+    if common:
+        where = f"ATC de la AIFA ({', '.join(sorted(common))}) igual al de la AEMPS/CIMA para «{es}»"
+        if method == "atc":
+            similarity = difflib.SequenceMatcher(None, ing.propose_spanish_it(moiety), ing.plain(es)).ratio()
+            if similarity < 0.75:
+                return "sugerido", f"{where}, pero los nombres se parecen poco ({similarity:.2f}): hay que revisarlo"
+        return "confirmado", where
+    return "contradice", f"ATC de la AIFA {', '.join(sorted(italian))} frente a AEMPS/CIMA {', '.join(sorted(spanish))} para «{es}»"
+
+
+def main_it(directory, offline):
+    conn = sqlite3.connect(pathlib.Path(fetch_bdpm.DB_PATH).as_uri() + "?mode=ro", uri=True)
+    _names, es_components, cima_atc = load_spanish_vocabulary(conn)
+    conn.close()
+
+    catalog, _excluded = fetch_aifa.load_catalog(directory)
+    display, products, examples, unparsed, atc_of = it_moieties(catalog)
+    print(f"\nPrincipios activos italianos distintos: {len(display)} interpretables, "
+          f"{len(unparsed)} que no se interpretan (se quedan en italiano)")
+    print(f"Con ATC propio (algún producto de un solo principio activo): {sum(1 for k in display if atc_of.get(k))}")
+
+    if not offline:
+        enrich_all_with_aemps_atc(cima_atc, es_components.values())
+    es_by_atc = collections.defaultdict(set)
+    for name, codes in cima_atc.items():
+        if name in es_components:  # solo nombres de UN principio activo
+            for code in codes:
+                es_by_atc[code].add(es_components[name])
+
+    candidates = it_candidates(display, examples, es_components, atc_of, es_by_atc)
+    # Ésteres sin ATC propio ni coincidencia: se buscan por la regla de nombres (base conocida en España).
+    esters, ester_products, ester_examples = ester_candidates(catalog, "IT", es_components, set(), "ref")
+    for key, (name, es) in esters.items():
+        if not candidates.get(key) or all(m in ("regla", "sugerencia") for m in candidates[key].values()):
+            if key not in display:
+                display[key], products[key], examples[key] = name, ester_products[key], ester_examples[key]
+            candidates[key] = {es: "ester"}
+    print(f"Candidatos: {sum(1 for c in candidates.values() if 'regla' in c.values())} por regla, "
+          f"{sum(1 for c in candidates.values() if 'atc' in c.values())} por ATC, "
+          f"{sum(1 for c in candidates.values() if 'ester' in c.values())} de nivel base (éster/profármaco)")
+
+    # Wikidata solo para los nombres que la AIFA no puede confirmar con su propio ATC.
+    wikidata = {}
+    pending = sorted({display[key] for key, options in candidates.items() for es, method in options.items()
+                      if it_verify(key, display[key], es, method, atc_of, cima_atc)[0] == "sin_datos"})
+    if pending and not offline:
+        print(f"Consultando Wikidata para {len(pending)} nombres sin ATC propio en la AIFA...")
+        wikidata = wikidata_by_english_label(pending, "it")
+
+    manual = load_manual_decisions(ing.LINKS_PATH_IT)
+    rows = []
+    for key, options in candidates.items():
+        checked = {es: (method, *it_verify(key, display[key], es, method, atc_of, cima_atc, wikidata)) for es, method in options.items()}
+        confirmed = [es for es, (_m, outcome, _e) in checked.items() if outcome == "confirmado"]
+        for es, (method, outcome, evidence) in checked.items():
+            if outcome == "confirmado" and len(confirmed) > 1:
+                status, evidence = "sugerido", f"hay {len(confirmed)} candidatos confirmados distintos; hay que decidir a mano. " + evidence
+            elif outcome == "confirmado":
+                status = "confirmado"
+                evidence = {"regla": "regla + ", "atc": "ATC + ", "sugerencia": "sugerencia + ", "ester": "éster + "}[method] + evidence
+            elif outcome == "contradice":
+                status = "contradice"
+            elif outcome == "sugerido":
+                status = "sugerido"
+            else:
+                status = "sin_confirmar" if method in ("regla", "ester") else "sugerido"
+            rows.append({
+                "nome_it": display[key], "nombre_es": es, "estado": status,
+                "nivel": ing.LEVEL_BASE if method == "ester" else ing.LEVEL_EXACT, "evidencia": evidence,
+                "productos_it": len(products[key]), "ejemplos": " | ".join(examples[key]),
+            })
+    done = {ing.plain(r["nome_it"]) for r in rows}
+    decided, merged = set(), []
+    for r in rows:  # una decisión manual sustituye a TODOS los candidatos de ese nombre, y solo cuenta una vez
+        key = ing.plain(r["nome_it"])
+        if key in manual:
+            if key not in decided:
+                decided.add(key)
+                merged.append(manual[key])
+        else:
+            merged.append(r)
+    rows = merged + [row for key, row in manual.items() if key not in done]
+
+    rows.sort(key=lambda r: (STATUS_ORDER.index(r["estado"]), -int(r["productos_it"]), r["nome_it"]))
+    with open(ing.LINKS_PATH_IT, "w", encoding="utf-8", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=ing.LINK_FIELDS_IT, restval=ing.LEVEL_EXACT)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    weight = collections.Counter()
+    for r in rows:
+        weight[r["estado"]] += int(r["productos_it"])
+    by_status = collections.Counter(r["estado"] for r in rows)
+    print(f"\nEscrito {ing.LINKS_PATH_IT} ({len(rows)} pares):")
+    for status in STATUS_ORDER:
+        if by_status[status]:
+            print(f"  {status:14} {by_status[status]:3} pares, {weight[status]:4} productos italianos afectados")
+    linked = {ing.plain(r["nome_it"]) for r in rows}
+    left = sorted(((len(products[k]), display[k]) for k in display if k not in linked), reverse=True)
+    print(f"\nSin ningún candidato ({len(left)}), los más frecuentes:")
+    print(", ".join(f"{name} ({n})" for n, name in left[:80]))
+
+
 def main_fr(offline):
     conn = sqlite3.connect(pathlib.Path(fetch_bdpm.DB_PATH).as_uri() + "?mode=ro", uri=True)
     _names, es_components, cima_atc = load_spanish_vocabulary(conn)
@@ -692,11 +918,14 @@ def main_fr(offline):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--country", choices=("fr", "uk"), default="fr")
+    ap.add_argument("--country", choices=("fr", "uk", "it"), default="fr")
     ap.add_argument("--zip", help="ZIP de NHS dm+d (solo con --country uk)")
+    ap.add_argument("--dir", help="carpeta con los CSV de la AIFA (solo con --country it); si falta, se descargan")
     ap.add_argument("--offline", action="store_true", help="sin Wikidata ni AEMPS (nada queda confirmado)")
     args = ap.parse_args()
-    if args.country == "uk":
+    if args.country == "it":
+        main_it(args.dir or fetch_aifa.download(os.path.join(tempfile.gettempdir(), "aifa")), args.offline)
+    elif args.country == "uk":
         if not args.zip:
             sys.exit("Con --country uk hace falta --zip RUTA_AL_ZIP_DE_DMD")
         main_uk(args.zip, args.offline)

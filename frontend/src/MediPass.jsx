@@ -1214,19 +1214,21 @@ export default function MediPass() {
                   <>
                     Medicamentos comercializados sin receta, de fuentes oficiales: España (CIMA, AEMPS
                     {fmtDate(dataDates.ES) ? `; datos del ${fmtDate(dataDates.ES)}` : ""}), Francia (Base de données publique des
-                    médicaments, ANSM{fmtDate(dataDates.FR) ? `; datos del ${fmtDate(dataDates.FR)}` : ""}) y Reino Unido (NHS dm+d,
+                    médicaments, ANSM{fmtDate(dataDates.FR) ? `; datos del ${fmtDate(dataDates.FR)}` : ""}), Italia (AIFA, Agenzia
+                    Italiana del Farmaco{fmtDate(dataDates.IT) ? `; datos del ${fmtDate(dataDates.IT)}` : ""}) y Reino Unido (NHS dm+d,
                     NHSBSA{fmtDate(dataDates.UK) ? `; datos del ${fmtDate(dataDates.UK)}` : ""}). Una franja ámbar indica el mismo
                     principio activo base con un nombre distinto (otro éster, sal o extracto); una azul, el mismo principio activo en
                     una forma parecida (crema o pomada). En el Reino Unido, «solo en farmacia» (P) no requiere receta pero lo
-                    dispensa un farmacéutico. Contains public sector information licensed under the Open Government Licence v3.0.
+                    dispensa un farmacéutico; en Italia, «SOP» tampoco requiere receta pero no se anuncia al público. Fonte: AIFA (dati
+                    aperti, licenza CC-BY 4.0). Contains public sector information licensed under the Open Government Licence v3.0.
                   </>
                 ) : (
                   <>
-                    Datos servidos por el backend local desde medipass.db. España (CIMA), Francia (BDPM) y Reino Unido (NHS dm+d): medicamentos comercializados, de fuentes oficiales
+                    Datos servidos por el backend local desde medipass.db. España (CIMA), Francia (BDPM), Italia (AIFA) y Reino Unido (NHS dm+d): medicamentos comercializados, de fuentes oficiales
                 {includeRx
                   ? ", sin receta y con receta (los con receta se marcan en rojo). No se incluyen inyectables ni productos de uso hospitalario. Una franja ámbar indica el mismo principio activo base con un nombre distinto (otro éster, sal o extracto); una azul, el mismo principio activo en una forma parecida (crema o pomada)."
                   : ", solo sin receta."}{" "}
-                En el Reino Unido, «solo en farmacia» (P) no requiere receta pero lo dispensa un farmacéutico. Alemania, Italia y Portugal: ejemplos manuales sin verificar. Contains public sector information licensed under the Open Government Licence v3.0.
+                En el Reino Unido, «solo en farmacia» (P) no requiere receta pero lo dispensa un farmacéutico; en Italia, «SOP» tampoco requiere receta pero no se anuncia al público. Alemania y Portugal: ejemplos manuales sin verificar. Fonte: AIFA (dati aperti, licenza CC-BY 4.0). Contains public sector information licensed under the Open Government Licence v3.0.
                   </>
                 )}
               </span>

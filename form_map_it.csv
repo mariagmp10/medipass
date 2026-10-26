@@ -1,0 +1,104 @@
+forma_it,via_it,forma_cima,productos_it,evidencia
+compressa rivestita con film,,COMPRIMIDO,2386,CIMA: «comprimido» (2.169) y «comprimido recubierto con película» (4.896) → COMPRIMIDO
+compressa,,COMPRIMIDO,1257,CIMA: «comprimido» (2.169) y «comprimido recubierto con película» (4.896) → COMPRIMIDO
+capsula rigida,,CAPSULA,571,CIMA: «cápsula dura» (1.236) y «cápsula blanda» (142) → CAPSULA
+"collirio, soluzione",,COLIRIO,296,CIMA: «colirio en solución» (155) y «colirio en suspensión» (20) → COLIRIO
+"gocce orali, soluzione",,SOLUCION/SUSPENSION GOTAS ORALES,286,CIMA: «gotas orales en solución» (53) → SOLUCION/SUSPENSION GOTAS ORALES
+crema,,CREMA,228,CIMA: «crema» (137) → CREMA; toda la crema sin receta de España es de uso cutáneo
+compressa a rilascio prolungato,,COMPRIMIDO LIBERACION MODIFICADA,213,CIMA: «comprimido de liberación prolongada» (617) y «comprimido de liberación modificada» (66) → COMPRIMIDO LIBERACION MODIFICADA
+capsula molle,,CAPSULA,176,CIMA: «cápsula dura» (1.236) y «cápsula blanda» (142) → CAPSULA
+soluzione orale,,SOLUCION/SUSPENSION ORAL,170,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+compressa rivestita,,COMPRIMIDO,161,CIMA: «comprimido» (2.169) y «comprimido recubierto con película» (4.896) → COMPRIMIDO
+sciroppo,,SOLUCION/SUSPENSION ORAL,139,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+compressa gastroresistente,,COMPRIMIDO,134,CIMA: «comprimido gastrorresistente» (251) → COMPRIMIDO
+capsula rigida gastroresistente,,CAPSULA,129,CIMA: «cápsula dura gastrorresistente» (232) → CAPSULA
+gel,,GEL,110,CIMA: «gel» (89) → GEL; todo el gel sin receta de España es de uso cutáneo
+compressa orodispersibile,,COMPRIMIDO BUCODISPERSABLE/LIOTAB,92,CIMA: «comprimido bucodispersable» (327) → COMPRIMIDO BUCODISPERSABLE/LIOTAB
+sospensione orale,,SOLUCION/SUSPENSION ORAL,90,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+compressa effervescente,,COMPRIMIDO EFERVESCENTE,81,CIMA: «comprimido efervescente» (49) → COMPRIMIDO EFERVESCENTE
+polvere per sospensione orale,,SOLUCION/SUSPENSION ORAL,80,CIMA: «polvo para solución oral» (81) y «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
+soluzione cutanea,,LIQUIDO USO TOPICO,80,CIMA: «solución cutánea» (76) y «solución para pulverización cutánea» (23) → LIQUIDO USO TOPICO
+granulato per soluzione orale,,SOLUCION/SUSPENSION ORAL,75,CIMA: «granulado» (33) y «granulado para solución oral» (67) → SOLUCION/SUSPENSION ORAL
+cerotto transdermico,,PARCHE TRANSDERMICO,72,CIMA: «parche transdérmico» (173) → PARCHE TRANSDERMICO
+compressa a rilascio modificato,,COMPRIMIDO LIBERACION MODIFICADA,70,CIMA: «comprimido de liberación prolongada» (617) y «comprimido de liberación modificada» (66) → COMPRIMIDO LIBERACION MODIFICADA
+granulato,,SOLUCION/SUSPENSION ORAL,69,CIMA: «granulado» (33) y «granulado para solución oral» (67) → SOLUCION/SUSPENSION ORAL
+supposta,,SUPOSITORIO,68,CIMA: «supositorio» (33) → SUPOSITORIO
+soluzione per nebulizzatore,,INHALACION PULMONAR,66,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+polvere per soluzione orale,,SOLUCION/SUSPENSION ORAL,63,CIMA: «polvo para solución oral» (81) y «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
+capsula rigida a rilascio prolungato,,CAPSULA LIBERACION MODIFICADA,57,CIMA: «cápsula dura de liberación prolongada» (152) y «cápsula dura de liberación modificada» (59) → CAPSULA LIBERACION MODIFICADA
+unguento,,POMADA,57,CIMA: «pomada» (70) → POMADA; toda la pomada sin receta de España es de uso cutáneo
+compressa masticabile,,COMPRIMIDO MASTICABLE,53,CIMA: «comprimido masticable» (103) → COMPRIMIDO MASTICABLE
+capsula rigida a rilascio modificato,,CAPSULA LIBERACION MODIFICADA,51,CIMA: «cápsula dura de liberación prolongada» (152) y «cápsula dura de liberación modificada» (59) → CAPSULA LIBERACION MODIFICADA
+granulato per sospensione orale,,SOLUCION/SUSPENSION ORAL,45,CIMA: «granulado para suspensión oral» (20) → SOLUCION/SUSPENSION ORAL
+"spray nasale, soluzione",,PRODUCTO USO NASAL,43,"CIMA: «solución para pulverización nasal» (36), «suspensión para pulverización nasal» (43) y «gotas nasales en solución» (6) → PRODUCTO USO NASAL"
+"spray per mucosa orale, soluzione",,PULVERIZACION BUCAL,42,CIMA: «solución para pulverización bucal» (13) → PULVERIZACION BUCAL
+compressa dispersibile,,COMPRIMIDO,40,CIMA: «comprimido dispersable» (36) → COMPRIMIDO
+polvere per inalazione,,INHALACION PULMONAR,40,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+"spray nasale, sospensione",,PRODUCTO USO NASAL,37,"CIMA: «solución para pulverización nasal» (36), «suspensión para pulverización nasal» (43) y «gotas nasales en solución» (6) → PRODUCTO USO NASAL"
+soluzione rettale,,LIQUIDO RECTAL,35,CIMA: «solución rectal» (16) → LIQUIDO RECTAL
+sospensione pressurizzata per inalazione,,INHALACION PULMONAR,35,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+pastiglia,,COMPRIMIDO BUCAL/PARA CHUPAR,32,CIMA: «comprimido para chupar» (37) y «pastilla para chupar» (41) → COMPRIMIDO BUCAL/PARA CHUPAR
+"collirio, sospensione",,COLIRIO,31,CIMA: «colirio en solución» (155) y «colirio en suspensión» (20) → COLIRIO
+"polvere per inalazione, capsula rigida",,INHALACION PULMONAR,31,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+granulato effervescente,,SOLUCION/SUSPENSION ORAL EFERVESCENTE,27,CIMA: «polvo efervescente» (6) y «granulado efervescente» (13) → SOLUCION/SUSPENSION ORAL EFERVESCENTE
+ovulo,,OVULO/CAPSULA/COMPRIMIDO VAGINAL,27,"CIMA: «óvulo» (9), «cápsula vaginal blanda» (8) y «cápsula vaginal dura» (2) → OVULO/CAPSULA/COMPRIMIDO VAGINAL"
+soluzione pressurizzata per inalazione,,INHALACION PULMONAR,27,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+"collirio, soluzione in contenitore monodose",,COLIRIO,26,CIMA: «colirio en solución» (155) y «colirio en suspensión» (20) → COLIRIO
+crema vaginale,,SEMISOLIDO VAGINAL,26,CIMA: «crema vaginal» (13) → SEMISOLIDO VAGINAL
+compressa sublinguale,,COMPRIMIDO SUBLINGUAL,21,CIMA: «comprimido sublingual» (42) → COMPRIMIDO SUBLINGUAL
+sospensione da nebulizzare,,INHALACION PULMONAR,21,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+gas medicinale compresso,,INHALACION PULMONAR,21,CIMA: «gas para inhalacion» (29) y «gas comprimido medicinal» (49) → INHALACION PULMONAR
+"gocce nasali, soluzione",,PRODUCTO USO NASAL,17,"CIMA: «solución para pulverización nasal» (36), «suspensión para pulverización nasal» (43) y «gotas nasales en solución» (6) → PRODUCTO USO NASAL"
+compressa solubile,,COMPRIMIDO,16,CIMA: «comprimido soluble» (7) → COMPRIMIDO
+emulsione cutanea,,EMULSION,16,CIMA: «emulsión cutánea» (12) → EMULSION
+"spray cutaneo, soluzione",,LIQUIDO USO TOPICO,15,CIMA: «solución cutánea» (76) y «solución para pulverización cutánea» (23) → LIQUIDO USO TOPICO
+capsula molle vaginale,,OVULO/CAPSULA/COMPRIMIDO VAGINAL,15,"CIMA: «óvulo» (9), «cápsula vaginal blanda» (8) y «cápsula vaginal dura» (2) → OVULO/CAPSULA/COMPRIMIDO VAGINAL"
+"gocce auricolari, soluzione",,LIQUIDO OTICO,15,CIMA: «gotas óticas en solución» (15) → LIQUIDO OTICO
+schiuma cutanea,,LIQUIDO USO TOPICO,14,CIMA: «espuma cutánea» (6) → LIQUIDO USO TOPICO
+smalto medicato per unghie,,BARNIZ DE UNAS,14,CIMA: «barniz de uñas medicamentoso» (16) → BARNIZ DE UNAS
+unguento oftalmico,,POMADA OFTALMICA,13,CIMA: «pomada oftálmica» (15) → POMADA OFTALMICA
+polvere cutanea,,SOLIDO USO TOPICO,12,CIMA: «polvo cutáneo» (4) → SOLIDO USO TOPICO
+"polvere per inalazione, pre-dosata",,INHALACION PULMONAR,12,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+polvere orale,,SOLUCION/SUSPENSION ORAL,11,CIMA: «polvo oral» (7) → SOLUCION/SUSPENSION ORAL
+soluzione orale in contenitore monodose,,SOLUCION/SUSPENSION ORAL,10,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+compressa orosolubile,,COMPRIMIDO BUCODISPERSABLE/LIOTAB,9,CIMA: «comprimido bucodispersable» (327) → COMPRIMIDO BUCODISPERSABLE/LIOTAB
+gel oftalmico,,GEL OFTALMICO,9,CIMA: «gel oftálmico» (9) → GEL OFTALMICO
+shampoo,,CHAMPU,9,CIMA: «champú» (12) → CHAMPU
+cerotto medicato,,APOSITO,9,CIMA: «apósito adhesivo medicamentoso» (10) → APOSITO; mismo tipo de producto que el emplasto medicamentoso
+capsula,,CAPSULA,8,CIMA: «cápsula dura» (1.236) y «cápsula blanda» (142) → CAPSULA
+compressa vaginale,,OVULO/CAPSULA/COMPRIMIDO VAGINAL,8,"CIMA: «óvulo» (9), «cápsula vaginal blanda» (8) y «cápsula vaginal dura» (2) → OVULO/CAPSULA/COMPRIMIDO VAGINAL"
+sistema a rilascio vaginale,,DISPOSITIVO VAGINAL,8,CIMA: «sistema de liberación vaginal» (8) → DISPOSITIVO VAGINAL
+polvere e solvente per sospensione orale,,SOLUCION/SUSPENSION ORAL,7,CIMA: «polvo para solución oral» (81) y «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
+liofilizzato orale,,COMPRIMIDO BUCODISPERSABLE/LIOTAB,7,CIMA: «liofilizado oral» (23) y «liofilizado sublingual» (2) → COMPRIMIDO BUCODISPERSABLE/LIOTAB
+sospensione orale in bustina,,SOLUCION/SUSPENSION ORAL,6,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+collirio,,COLIRIO,5,CIMA: «colirio en solución» (155) y «colirio en suspensión» (20) → COLIRIO
+granulato in bustina,,SOLUCION/SUSPENSION ORAL,5,CIMA: «granulado» (33) y «granulado para solución oral» (67) → SOLUCION/SUSPENSION ORAL
+granulato per soluzione orale in bustina,,SOLUCION/SUSPENSION ORAL,5,CIMA: «granulado» (33) y «granulado para solución oral» (67) → SOLUCION/SUSPENSION ORAL
+schiuma rettale,,SEMISOLIDO RECTAL,5,"CIMA: «crema rectal» (3), «espuma rectal» (3) y «pomada rectal» (11) → SEMISOLIDO RECTAL"
+soluzione orale in bustina,,SOLUCION/SUSPENSION ORAL,4,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+polvere e solvente per soluzione orale,,SOLUCION/SUSPENSION ORAL,4,CIMA: «polvo para solución oral» (81) y «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
+granulato gastroresistente,,SOLUCION/SUSPENSION ORAL,4,CIMA: «granulado gastrorresistente» (2) → SOLUCION/SUSPENSION ORAL
+granulato rivestito,,SOLUCION/SUSPENSION ORAL,4,CIMA: «granulado recubierto» (9) → SOLUCION/SUSPENSION ORAL
+crema rettale,,SEMISOLIDO RECTAL,4,"CIMA: «crema rectal» (3), «espuma rectal» (3) y «pomada rectal» (11) → SEMISOLIDO RECTAL"
+sistema a rilascio intrauterino,,DISPOSITIVO INTRAUTERINO,4,CIMA: «sistema de liberación intrauterino» (5) → DISPOSITIVO INTRAUTERINO
+film orodispersibile,,COMPRIMIDO BUCODISPERSABLE/LIOTAB,4,CIMA: «pelicula bucodispersable» (4) → COMPRIMIDO BUCODISPERSABLE/LIOTAB
+capsula molle gastroresistente,,CAPSULA,3,CIMA: «cápsula dura gastrorresistente» (232) → CAPSULA
+collirio a rilascio prolungato,,COLIRIO DE LIBERACION PROLONGADA,3,CIMA: «colirio de liberacion prolongada» (3) → COLIRIO DE LIBERACION PROLONGADA
+polvere per soluzione orale in bustina,,SOLUCION/SUSPENSION ORAL,3,CIMA: «polvo para solución oral» (81) y «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
+gel oftalmico in contenitore monodose,,GEL OFTALMICO,3,CIMA: «gel oftálmico» (9) → GEL OFTALMICO
+matita cutanea,,SOLIDO USO TOPICO,3,CIMA: «barra cutánea» (2) → SOLIDO USO TOPICO
+capsula rigida vaginale,,OVULO/CAPSULA/COMPRIMIDO VAGINAL,3,"CIMA: «óvulo» (9), «cápsula vaginal blanda» (8) y «cápsula vaginal dura» (2) → OVULO/CAPSULA/COMPRIMIDO VAGINAL"
+pastiglia orosolubile,,COMPRIMIDO BUCAL/PARA CHUPAR,3,CIMA: «comprimido para chupar» (37) y «pastilla para chupar» (41) → COMPRIMIDO BUCAL/PARA CHUPAR
+soluzione per inalazione,,INHALACION PULMONAR,3,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+gas per inalazione,,INHALACION PULMONAR,3,CIMA: «gas para inhalacion» (29) y «gas comprimido medicinal» (49) → INHALACION PULMONAR
+liofilizzato sublinguale,,COMPRIMIDO BUCODISPERSABLE/LIOTAB,3,CIMA: «liofilizado oral» (23) y «liofilizado sublingual» (2) → COMPRIMIDO BUCODISPERSABLE/LIOTAB
+"collirio, soluzione a rilascio prolungato",,COLIRIO DE LIBERACION PROLONGADA,2,CIMA: «colirio de liberacion prolongada» (3) → COLIRIO DE LIBERACION PROLONGADA
+concentrato per soluzione orale,,SOLUCION/SUSPENSION ORAL,2,"CIMA: «solución oral» (264), «suspensión oral» (99), «jarabe» (53) → SOLUCION/SUSPENSION ORAL"
+polvere per sospensione orale in bustina,,SOLUCION/SUSPENSION ORAL,2,CIMA: «polvo para solución oral» (81) y «polvo para suspensión oral» (88) → SOLUCION/SUSPENSION ORAL
+granulato rivestito in bustina,,SOLUCION/SUSPENSION ORAL,2,CIMA: «granulado recubierto» (9) → SOLUCION/SUSPENSION ORAL
+polvere orale in bustina,,SOLUCION/SUSPENSION ORAL,2,CIMA: «polvo oral» (7) → SOLUCION/SUSPENSION ORAL
+granulato a rilascio prolungato,,POLVO/GRANULADO LIBERACION MODIFICADA,2,CIMA: «granulado de liberación modificada» (5) y «granulado de liberación prolongada» (2) → POLVO/GRANULADO LIBERACION MODIFICADA
+gomma da masticare medicata,,CHICLE,2,CIMA: «chicle medicamentoso» (14) → CHICLE
+polvere per soluzione per nebulizzatore,,INHALACION PULMONAR,2,"CIMA: «polvo para inhalación» (78), «suspensión para inhalación en envase a presión» (48) y «solución para inhalación por nebulizador» (20) → INHALACION PULMONAR"
+film sublinguale,,COMPRIMIDO SUBLINGUAL,2,CIMA: «pelicula sublingual» (6) → COMPRIMIDO SUBLINGUAL
+polvere effervescente,,SOLUCION/SUSPENSION ORAL EFERVESCENTE,1,CIMA: «polvo efervescente» (6) y «granulado efervescente» (13) → SOLUCION/SUSPENSION ORAL EFERVESCENTE
